@@ -238,24 +238,3 @@ class DataEnumOption implements IDataEnumOption {
         Object.assign(this, props);
     }
 }
-
-let n = new DataColumn({
-    typeName: SqlType.CHAR,
-    length: 10,
-    name: "name",
-    nullable: false
-});
-
-let n2 = new DataColumn({
-    name: "a",
-    nullable: false,
-    typeName: SqlType.INT,
-    isEnum: true,
-    enumOptions: [
-        {
-            value: 1,
-            sign: 'a',
-            description: 'a'
-        }
-    ]
-});
