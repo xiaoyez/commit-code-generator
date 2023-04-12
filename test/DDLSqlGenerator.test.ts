@@ -1,6 +1,6 @@
-import {DDLSqlGenerator} from "../parser/DDLSqlGenerator";
-import {DataColumnDefinition} from "../definitions/DataColumnDefinition";
-import {SqlType} from "../../SqlType";
+import {DDLSqlGenerator} from "../src/parser/DDLSqlGenerator";
+import {DataColumnDefinition} from "../src/definitions/DataColumnDefinition";
+import {SqlType} from "../src/SqlType";
 
 const columnDefinition = new DataColumnDefinition({
     isEnum: false,

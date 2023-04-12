@@ -1,4 +1,4 @@
-import {SqlType} from "../../SqlType";
+import {SqlType} from "../SqlType";
 import {DataEnumOption, IDataEnumOption} from "./DataEnumOption";
 
 export interface IDataColumnDefinition extends IDataColBase {
@@ -7,11 +7,11 @@ export interface IDataColumnDefinition extends IDataColBase {
      */
     typeName: SqlType
     /**
-     * 数据类型的长度。表示浮点数，定点数时代表m；表示定长字符串时代表n。
+     * 数据类型的长度。表示数值时代表m；表示定长字符串时代表n。
      */
     length?: number
     /**
-     * 数据类型的精度。表示整数时代表m；表示浮点数和定点数时代表d。
+     * 数据类型的精度。表示浮点数和定点数时代表d。
      */
     precision?: number
     /**
@@ -68,9 +68,9 @@ interface IDataIntBase extends IDataColBase {
      */
     typeName: IntType
     /**
-     * 数据类型的精度。表示整数时代表m；表示浮点数和定点数时代表d。
+     * 数据类型的长度。表示数值时代表m；表示定长字符串时代表n。
      */
-    precision?: number
+    length?: number
     /**
      * 是否为无符号数。
      */
@@ -114,11 +114,11 @@ interface IDataRealCol extends IDataColBase {
      */
     typeName: FloatType | FixedType
     /**
-     * 数据类型的长度。表示浮点数，定点数时代表m；表示定长字符串时代表n。
+     * 数据类型的长度。表示数值时代表m；表示定长字符串时代表n。
      */
     length?: number
     /**
-     * 数据类型的精度。表示整数时代表m；表示浮点数和定点数时代表d。
+     * 数据类型的精度。表示浮点数和定点数时代表d。
      */
     precision?: number
 }
@@ -129,7 +129,7 @@ interface IDataStringCol extends IDataColBase {
      */
     typeName: StringType
     /**
-     * 数据类型的长度。表示浮点数，定点数时代表m；表示定长字符串时代表n。
+     * 数据类型的长度。表示数值时代表m；表示定长字符串时代表n。
      */
     length?: number
 }
@@ -150,16 +150,16 @@ function isIntCol(def: IDataColumnType): def is IDataIntEnumCol {
 }
 
 export class DataColumnDefinition implements IDataColumnDefinition {
-    name: string;
-    typeName: SqlType;
-    nullable: boolean;
+    name!: string;
+    typeName!: SqlType;
+    nullable!: boolean;
     isEnum:boolean = false;
     /**
-     * 数据类型的长度。表示浮点数，定点数时代表m；表示定长字符串时代表n。
+     * 数据类型的长度。表示数值时代表m；表示定长字符串时代表n。
      */
     length?: number
     /**
-     * 数据类型的精度。表示整数时代表m；表示浮点数和定点数时代表d。
+     * 数据类型的精度。表示浮点数和定点数时代表d。
      */
     precision?: number
     /**
