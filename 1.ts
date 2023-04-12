@@ -69,7 +69,7 @@ interface IDataColBase {
     defaultValue?: string
 }
 
-interface IDataIntCol extends IDataColBase {
+interface IDataIntBase extends IDataColBase {
     /**
      * 列的数据类型。
      */
@@ -82,17 +82,32 @@ interface IDataIntCol extends IDataColBase {
      * 是否为无符号数。
      */
     unsigned?: boolean
-
     /**
      * 字段是否是枚举类型。\
      * 枚举类型的typeName应为int。
      */
     isEnum: boolean;
+}
+
+interface IDataIntCol extends IDataIntBase {
+    /**
+     * 字段是否是枚举类型。\
+     * 枚举类型的typeName应为int。
+     */
+    isEnum: false;
+}
+
+interface IDataIntEnumCol extends IDataIntBase {
+    /**
+     * 字段是否是枚举类型。\
+     * 枚举类型的typeName应为int。
+     */
+    isEnum: true;
 
     /**
      * 枚举选项定义。
      */
-    enumOptions?: IDataEnumOption[];
+    enumOptions: IDataEnumOption[];
 }
 
 interface IDataRealCol extends IDataColBase {
@@ -128,7 +143,7 @@ interface IDataOtherCol extends IDataColBase {
     typeName: SqlType
 }
 
-type IDataColumnType = IDataIntCol | IDataRealCol | IDataStringCol | IDataOtherCol;
+type IDataColumnType = IDataIntCol | IDataIntEnumCol | IDataRealCol | IDataStringCol | IDataOtherCol;
 
 interface IDataColumn extends IDataColBase {
     /**
@@ -160,8 +175,8 @@ interface IDataColumn extends IDataColBase {
     enumOptions?: IDataEnumOption[];
 }
 
-function isIntCol(def: IDataColumnType): def is IDataIntCol {
-    return Object.hasOwnProperty('isEnum');
+function isIntCol(def: IDataColumnType): def is IDataIntEnumCol {
+    return (def as IDataIntBase).isEnum === true;
 }
 
 class DataColumn implements IDataColumn {
@@ -173,7 +188,7 @@ class DataColumn implements IDataColumn {
 
     constructor(props: IDataColumnType) {
         Object.assign(this, props);
-        if (isIntCol(props) && props.enumOptions) {
+        if (isIntCol(props)) {
             this.enumOptions = props.enumOptions.map(def => {
                 if (def instanceof DataEnumOption) {
                     return def;
