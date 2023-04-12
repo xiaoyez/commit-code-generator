@@ -1,8 +1,8 @@
 import {DDLSqlGenerator} from "../src/parser/DDLSqlGenerator";
-import {DataColumnDefinition} from "../src/definitions/DataColumnDefinition";
+import {DataColumnDefinition} from "../src/definitions/db/DataColumnDefinition";
 import {SqlType} from "../src/SqlType";
-import {TableCreateDefinition} from "../src/definitions/TableCreateDefinition";
-import {DbDefinition} from "../src/definitions/DbDefinition";
+import {TableCreateDefinition} from "../src/definitions/db/TableCreateDefinition";
+import {DbDefinition} from "../src/definitions/db/DbDefinition";
 
 const idDefinition = new DataColumnDefinition({
     isEnum: false,

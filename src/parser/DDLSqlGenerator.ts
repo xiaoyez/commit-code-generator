@@ -1,6 +1,6 @@
-import {DbDefinition} from "../definitions/DbDefinition";
-import {TableCreateDefinition} from "../definitions/TableCreateDefinition";
-import {DataColumnDefinition} from "../definitions/DataColumnDefinition";
+import {DbDefinition} from "../definitions/db/DbDefinition";
+import {TableCreateDefinition} from "../definitions/db/TableCreateDefinition";
+import {DataColumnDefinition} from "../definitions/db/DataColumnDefinition";
 
 export class DDLSqlGenerator {
 

@@ -1,4 +1,4 @@
-import {SqlType} from "../SqlType";
+import {SqlType} from "../../SqlType";
 import {DataEnumOption, IDataEnumOption} from "./DataEnumOption";
 
 export interface IDataColumnDefinition extends IDataColBase {
