@@ -32,7 +32,7 @@ class TbTableCreateDefinition implements ITbTableCreateDefinition {
             if (def instanceof DataColumn) {
                 return def;
             } else {
-                return new DataColumn(def);
+                return new DataColumn(def as IDataColumnType);
             }
         })
     }
@@ -44,6 +44,9 @@ type IntType = SqlType.TINYINT | SqlType.SMALLINT | SqlType.MEDIUMINT | SqlType.
 type FloatType = SqlType.FLOAT| SqlType.DOUBLE;
 type FixedType = SqlType.DECIMAL| SqlType.NUMERIC;
 type StringType = SqlType.CHAR| SqlType.VARCHAR;
+type SpecialType = IntType|FloatType|FixedType|StringType;
+
+type OtherSqlType = Exclude<SqlType,SpecialType>
 
 
 interface IDataColBase {
@@ -140,7 +143,7 @@ interface IDataOtherCol extends IDataColBase {
     /**
      * 列的数据类型。
      */
-    typeName: SqlType
+    typeName: OtherSqlType
 }
 
 type IDataColumnType = IDataIntCol | IDataIntEnumCol | IDataRealCol | IDataStringCol | IDataOtherCol;
