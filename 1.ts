@@ -43,7 +43,6 @@ class TbTableCreateDefinition implements ITbTableCreateDefinition {
 type IntType = SqlType.TINYINT | SqlType.SMALLINT | SqlType.MEDIUMINT | SqlType.INT | SqlType.INTEGER| SqlType.BIGINT;
 type FloatType = SqlType.FLOAT| SqlType.DOUBLE;
 type FixedType = SqlType.DECIMAL| SqlType.NUMERIC;
-type TimeType = SqlType.DATE| SqlType.DATETIME| SqlType.TIMESTAMP| SqlType.TIME| SqlType.YEAR;
 type StringType = SqlType.CHAR| SqlType.VARCHAR;
 
 
@@ -126,7 +125,7 @@ interface IDataOtherCol extends IDataColBase {
     /**
      * 列的数据类型。
      */
-    typeName: TimeType | SqlType.TEXT
+    typeName: SqlType
 }
 
 type IDataColumnType = IDataIntCol | IDataRealCol | IDataStringCol | IDataOtherCol;
@@ -153,7 +152,7 @@ interface IDataColumn extends IDataColBase {
      * 字段是否是枚举类型。\
      * 枚举类型的typeName应为int。
      */
-    isEnum: boolean;
+    isEnum?: boolean;
 
     /**
      * 枚举选项定义。
@@ -227,7 +226,6 @@ let n = new DataColumn({
     length: 10,
     name: "name",
     nullable: false
-
 });
 
 let n2 = new DataColumn({
