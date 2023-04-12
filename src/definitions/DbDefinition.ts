@@ -1,4 +1,4 @@
-import {TbTableCreateDefinition} from "./TbTableCreateDefinition";
+import {TableCreateDefinition} from "./TableCreateDefinition";
 
 interface IDbDefinition {
     /**
@@ -9,20 +9,20 @@ interface IDbDefinition {
     /**
      * 数据库字符编码
      */
-    charset: string;
+    charset?: string;
 
     /**
      * 数据库表定义数组。
      */
-    tables: TbTableCreateDefinition[];
+    tables: TableCreateDefinition[];
 }
 
 export class DbDefinition implements IDbDefinition{
 
-    dbName: string;
+    dbName!: string;
     charset = 'utf8';
 
-    tables: TbTableCreateDefinition[] = [];
+    tables: TableCreateDefinition[] = [];
 
     constructor(props: IDbDefinition) {
         Object.assign(this, props);

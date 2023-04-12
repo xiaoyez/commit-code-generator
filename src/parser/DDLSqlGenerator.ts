@@ -1,5 +1,5 @@
 import {DbDefinition} from "../definitions/DbDefinition";
-import {TbTableCreateDefinition} from "../definitions/TbTableCreateDefinition";
+import {TableCreateDefinition} from "../definitions/TableCreateDefinition";
 import {DataColumnDefinition} from "../definitions/DataColumnDefinition";
 
 export class DDLSqlGenerator {
@@ -7,9 +7,11 @@ export class DDLSqlGenerator {
     static generateSql(dbDefinition: DbDefinition): string {
         let sql = '';
         sql += dbDefinition?DDLSqlGenerator.generateCreateDbSql(dbDefinition):'';
+        sql += '\n';
         sql += dbDefinition.tables?.reduce((sql,table)=>{
-            return sql + DDLSqlGenerator.generateCreateTableSql(table);
+            return sql + DDLSqlGenerator.generateCreateTableSql(table) + '\n';
         },'')||'';
+
         return sql;
     }
 
@@ -19,13 +21,16 @@ export class DDLSqlGenerator {
         return sql;
     }
 
-    static generateCreateTableSql(table: TbTableCreateDefinition) {
+    static generateCreateTableSql(table: TableCreateDefinition) {
         let sql = '';
-        sql += `CREATE TABLE ${table.tableName} (`;
-        sql += table.columns?.reduce((sql, col) => {
-            return sql + DDLSqlGenerator.generateCreateColumnSql(col);
-        },'')||'';
-        return "";
+        sql += `drop table if exists \`${table.tableName}\`;` + '\n'
+        sql += `CREATE TABLE ${table.tableName} (` + '\n';
+        sql += table.columns?.map(( col) => {
+            return '\t'+DDLSqlGenerator.generateCreateColumnSql(col);
+        }).join(',\n')||'';
+        sql += '\n)';
+        sql += `ENGINE=InnoDB DEFAULT CHARSET=${table.charset} '${table.comment? `COMMENT=${table.comment}`:'' }';`
+        return sql;
     }
 
     static generateCreateColumnSql(col: DataColumnDefinition) {

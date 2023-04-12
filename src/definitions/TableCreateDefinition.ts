@@ -17,16 +17,23 @@ interface ITbTableCreateDefinition {
     comment: string;
 
     /**
+     * 字符编码
+     */
+    charset?: string;
+
+    /**
      * 表的列定义数组。
      */
     columns: IDataColumnDefinition[];
 
 }
 
-export class TbTableCreateDefinition implements ITbTableCreateDefinition {
-    tableName: string;
-    comment: string;
+export class TableCreateDefinition implements ITbTableCreateDefinition {
+    tableName!: string;
+    comment!: string;
     columns: DataColumnDefinition[];
+
+    charset: string = 'utf8';
 
     constructor(props: ITbTableCreateDefinition) {
         Object.assign(this, props);
@@ -37,5 +44,10 @@ export class TbTableCreateDefinition implements ITbTableCreateDefinition {
                 return new DataColumnDefinition(def as IDataColumnType);
             }
         })
+    }
+
+    addColumn(col: DataColumnDefinition) {
+        this.columns.push(col);
+        return this;
     }
 }
