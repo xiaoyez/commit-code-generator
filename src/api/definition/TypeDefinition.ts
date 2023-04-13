@@ -1,6 +1,7 @@
 import {JavaType} from "./JavaType";
 
-interface IPropertyDefinition {
+
+export interface IPropertyDefinition {
     /**
      * 参数名称。
      */
