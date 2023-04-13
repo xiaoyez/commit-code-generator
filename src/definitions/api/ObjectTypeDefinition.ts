@@ -1,0 +1,37 @@
+import {TypeDefinition} from "./TypeDefinition";
+
+interface IPropertyDefinition {
+    /**
+     * 参数名称。
+     */
+    paramName: string;
+
+    /**
+     * 参数类型。
+     */
+    paramType: TypeDefinition | IObjectTypeDefinition;
+
+    /**
+     * 参数描述。
+     */
+    paramDesc: string;
+}
+
+interface IObjectTypeDefinition {
+
+    properties: IPropertyDefinition[];
+
+    className: string;
+
+    packageName: string;
+}
+
+export class ObjectTypeDefinition implements IObjectTypeDefinition {
+    properties!: IPropertyDefinition[];
+    className!: string;
+    packageName!: string;
+
+    constructor(props: IObjectTypeDefinition) {
+        Object.assign(this, props);
+    }
+}
