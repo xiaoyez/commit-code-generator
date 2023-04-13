@@ -1,5 +1,5 @@
 import {ModuleDefinition} from "./ModuleDefinition";
-import {ObjectTypeDefinition} from "./ObjectTypeDefinition";
+import {TypeDefinition} from "./TypeDefinition";
 
 /**
  * R 为出参类型
@@ -23,12 +23,12 @@ interface IApiDefinition<R> {
     /**
      * 入参
      */
-    params?: ObjectTypeDefinition;
+    params?: TypeDefinition;
 
     /**
      * 返参
      */
-    result?: R;
+    result?: TypeDefinition;
 
     /**
      * 父模块

@@ -1,4 +1,4 @@
-import {TypeDefinition} from "./TypeDefinition";
+import {JavaType} from "./JavaType";
 
 interface IPropertyDefinition {
     /**
@@ -9,7 +9,7 @@ interface IPropertyDefinition {
     /**
      * 参数类型。
      */
-    paramType: TypeDefinition | IObjectTypeDefinition;
+    paramType: TypeDefinition;
 
     /**
      * 参数描述。
@@ -34,4 +34,20 @@ export class ObjectTypeDefinition implements IObjectTypeDefinition {
     constructor(props: IObjectTypeDefinition) {
         Object.assign(this, props);
     }
+}
+
+interface ITypeDefinition {
+    type: JavaType|ObjectTypeDefinition;
+    genericTypes?: ITypeDefinition[];
+
+}
+
+export class TypeDefinition implements ITypeDefinition {
+    type!: JavaType|ObjectTypeDefinition;
+    genericTypes?: ITypeDefinition[];
+
+    constructor(props: ITypeDefinition) {
+        Object.assign(this, props);
+    }
+
 }
