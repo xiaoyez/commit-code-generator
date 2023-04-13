@@ -49,8 +49,8 @@ export class TypeDefinition implements ITypeDefinition {
 
     constructor(props: ITypeDefinition) {
         Object.assign(this, props);
-        if (this.genericTypes) {
-            this.genericTypes = this.genericTypes.map(def => {
+        if (props.genericTypes) {
+            this.genericTypes = props.genericTypes.map(def => {
                 if (def instanceof TypeDefinition) {
                     return def;
                 }
