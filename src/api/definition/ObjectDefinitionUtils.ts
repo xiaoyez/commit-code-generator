@@ -2,7 +2,7 @@ import {ObjectTypeDefinition} from "./TypeDefinition";
 import {TableCreateDefinition} from "../../db/definition/TableCreateDefinition";
 import {config} from "../../config/Config";
 import {typeMapper} from "./TypeMapper";
-import {camelCase} from "lodash/string";
+import camelCase from "lodash/camelCase";
 
 export class ObjectDefinitionUtils {
 
