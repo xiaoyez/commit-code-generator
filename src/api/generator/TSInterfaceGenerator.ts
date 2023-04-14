@@ -49,3 +49,8 @@ export function generateObjectField(def: IPropertyDefinition) {
     }
     return propLine;
 }
+
+export function generateInterfaceDefine(def: ObjectTypeDefinition) {
+    let fieldLines = def.properties.map(prop => generateObjectField(prop));
+    return `export interface ${def.className} {\n${fieldLines.join('\n')}\n}`;
+}
