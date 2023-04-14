@@ -19,6 +19,7 @@
   },
   "type": "module",
   "dependencies": {
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "lodash": "^4.17.21-es"
   }
 }
