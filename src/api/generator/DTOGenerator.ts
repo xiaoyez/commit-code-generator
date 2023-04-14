@@ -17,8 +17,14 @@ export class DTOGenerator {
 
         // 生成.java文件
         const filePath = config.baseDir + `\\${definition.packageName.replace(/\./g, '\\')}\\${definition.className}.java`;
+        const fileDir = filePath.substring(0, filePath.lastIndexOf('\\'));
+        if(!fs.existsSync(fileDir))
+            fs.mkdirSync(fileDir,{recursive:true});
+        const fd = fs.openSync(filePath, 'w+');
+        if (fd === -1) {
+        }
+        fs.writeFileSync(fd,text, {flag:'w+'})
 
-        fs.writeFileSync(filePath, text);
     }
 
     private static generateImports(definition: ObjectTypeDefinition) {
@@ -78,6 +84,14 @@ export class DTOGenerator {
 
     private static generateField(prop: IPropertyDefinition) {
         let fieldText = "";
+        // 生成注释
+        const comment =
+`
+    /**
+     * ${prop.paramDesc}
+     */
+`
+        fieldText += comment;
         fieldText += `\tprivate ${DTOGenerator.generateType(prop.paramType)} ${prop.paramName};\n`;
         return fieldText;
     }

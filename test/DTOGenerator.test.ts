@@ -27,4 +27,6 @@ const objectTypeDefinition = new ObjectTypeDefinition({
     ]
 
 })
-DTOGenerator.generate(objectTypeDefinition);
+test('test generate',()=>{
+    DTOGenerator.generate(objectTypeDefinition);
+})
