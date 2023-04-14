@@ -1,4 +1,8 @@
-import {generateObjectField, generateTypeString} from "../src/api/generator/TSInterfaceGenerator";
+import {
+    generateInterfaceDefine,
+    generateObjectField,
+    generateTypeString
+} from "../src/api/generator/TSInterfaceGenerator";
 import {JavaType} from "../src/api/definition/JavaType";
 import {ObjectTypeDefinition, TypeDefinition} from "../src/api/definition/TypeDefinition";
 
@@ -45,5 +49,13 @@ describe('TSInterfaceGenerator', () => {
     it('generate field with desc', () => {
         expect(generateObjectField(interfaceDef.properties[0])).toBe(`    /** bigInt field */
     fieldA: bigint;`)
+    });
+
+    it('generate interface define', () => {
+        expect(generateInterfaceDefine(interfaceDef)).toBe(`export interface TestResp {
+    /** bigInt field */
+    fieldA: bigint;
+    fieldB: number;
+}`);
     });
 });
