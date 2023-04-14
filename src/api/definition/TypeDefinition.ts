@@ -15,7 +15,7 @@ export interface IPropertyDefinition {
     /**
      * 参数描述。
      */
-    paramDesc: string;
+    paramDesc?: string;
 }
 
 interface IObjectTypeDefinition {
@@ -45,10 +45,20 @@ interface ITypeDefinition {
 
 export class TypeDefinition implements ITypeDefinition {
     type!: JavaType|ObjectTypeDefinition;
-    genericTypes?: ITypeDefinition[];
+    genericTypes?: TypeDefinition[];
 
     constructor(props: ITypeDefinition) {
         Object.assign(this, props);
+        if (props.genericTypes) {
+            this.genericTypes = props.genericTypes.map(def => {
+                if (def instanceof TypeDefinition) {
+                    return def;
+                }
+                else {
+                    return new TypeDefinition(def);
+                }
+            });
+        }
     }
 
 }
