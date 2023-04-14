@@ -1,5 +1,7 @@
 import {IPropertyDefinition, ObjectTypeDefinition, TypeDefinition} from "../definition/TypeDefinition";
 import {JavaType} from "../definition/JavaType";
+import * as fs from "fs";
+import {config} from "../../config/Config";
 
 export class DTOGenerator {
     static generate(definition: ObjectTypeDefinition) {
@@ -14,9 +16,9 @@ export class DTOGenerator {
         text += DTOGenerator.generateClass(definition);
 
         // 生成.java文件
-        const filePath = `${definition.packageName.replace(/\./g, '/')}/${definition.className}.java`;
+        const filePath = config.baseDir + `\\${definition.packageName.replace(/\./g, '\\')}\\${definition.className}.java`;
 
-
+        fs.writeFileSync(filePath, text);
     }
 
     private static generateImports(definition: ObjectTypeDefinition) {
