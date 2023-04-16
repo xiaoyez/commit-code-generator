@@ -1,5 +1,6 @@
 import {IPropertyDefinition, ObjectTypeDefinition, TypeDefinition} from "../../dto/definition/TypeDefinition";
 import {JavaType} from "../../dto/definition/JavaType";
+import {convertPackageToPath, TSImportInfo} from "../../utils/TSImportInfo";
 
 let javaTypeInTS = {
     [JavaType.Boolean]: 'boolean',
