@@ -1,4 +1,5 @@
 import {JavaType} from "./JavaType";
+import {TimePattern} from "./TimePattern";
 
 
 export interface IPropertyDefinition {
@@ -16,6 +17,13 @@ export interface IPropertyDefinition {
      * 参数描述。
      */
     paramDesc?: string;
+
+    timePattern?: TimePattern;
+}
+
+export interface IDomainPropertyDefinition extends IPropertyDefinition {
+    isPrimaryKey: boolean;
+    autoIncrement: boolean;
 }
 
 interface IObjectTypeDefinition {
@@ -34,6 +42,20 @@ export class ObjectTypeDefinition implements IObjectTypeDefinition {
 
     constructor(props: IObjectTypeDefinition) {
         Object.assign(this, props);
+    }
+}
+
+interface IDomainTypeDefinition extends IObjectTypeDefinition {
+    properties: IDomainPropertyDefinition[];
+    comment?: string;
+}
+
+export class DomainTypeDefinition extends ObjectTypeDefinition {
+    properties!: IDomainPropertyDefinition[];
+    comment?: string;
+
+    constructor(props: IDomainTypeDefinition) {
+        super(props);
     }
 }
 

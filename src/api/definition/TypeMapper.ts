@@ -31,5 +31,5 @@ export const typeMapper = {
     [SqlType.YEAR]: JavaType.Integer,
     [SqlType.JSON]: JavaType.String,
 
-};
+} as Record<SqlType, JavaType>;
 

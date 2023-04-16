@@ -1,7 +1,13 @@
-import {IPropertyDefinition, ObjectTypeDefinition, TypeDefinition} from "../definition/TypeDefinition";
+import {
+    DomainTypeDefinition, IDomainPropertyDefinition,
+    IPropertyDefinition,
+    ObjectTypeDefinition,
+    TypeDefinition
+} from "../definition/TypeDefinition";
 import {JavaType} from "../definition/JavaType";
 import * as fs from "fs";
 import {config} from "../../config/Config";
+import {isOfType} from "../../utils/TypeUtils";
 
 export class DTOGenerator {
     static generate(definition: ObjectTypeDefinition) {
@@ -16,15 +22,33 @@ export class DTOGenerator {
         text += DTOGenerator.generateClass(definition);
 
         // 生成.java文件
+        DTOGenerator.generateJavaFile(definition, text);
+    }
+
+    static generateDomain(definition: DomainTypeDefinition) {
+        let text = '';
+
+        text += DTOGenerator.generatePackage(definition);
+
+        text += DTOGenerator.generateImports(definition);
+
+        text += DTOGenerator.generateClassComment(definition);
+
+        text += DTOGenerator.addLombokAnnotation();
+
+        text += DTOGenerator.generateClass(definition);
+
+        // 生成.java文件
+        DTOGenerator.generateJavaFile(definition, text);
+    }
+
+    private static generateJavaFile(definition: ObjectTypeDefinition, text: string) {
         const filePath = config.baseDir + `\\${definition.packageName.replace(/\./g, '\\')}\\${definition.className}.java`;
         const fileDir = filePath.substring(0, filePath.lastIndexOf('\\'));
-        if(!fs.existsSync(fileDir))
-            fs.mkdirSync(fileDir,{recursive:true});
+        if (!fs.existsSync(fileDir))
+            fs.mkdirSync(fileDir, {recursive: true});
         const fd = fs.openSync(filePath, 'w+');
-        if (fd === -1) {
-        }
-        fs.writeFileSync(fd,text, {flag:'w+'})
-
+        fs.writeFileSync(fd, text, {flag: 'w+'})
     }
 
     private static generateImports(definition: ObjectTypeDefinition) {
@@ -46,6 +70,12 @@ export class DTOGenerator {
             if (prop.paramType.type === JavaType.Date)
             {
                 importSet.add("java.util.Date");
+                importSet.add("com.fasterxml.jackson.annotation.JsonFormat");
+                importSet.add("com.fastjson.annotation.JSONField");
+            }
+            if (definition instanceof DomainTypeDefinition)
+            {
+                DTOGenerator.addJPAAnnotation(prop as IDomainPropertyDefinition, importSet);
             }
         })
 
@@ -59,6 +89,7 @@ export class DTOGenerator {
         importText += `import lombok.NoArgsConstructor;\n`;
         importText += `import lombok.AllArgsConstructor;\n`;
         importText += `import lombok.Builder;\n`;
+        importText += '\n';
 
         return importText;
     }
@@ -92,9 +123,23 @@ export class DTOGenerator {
      */
 `
         fieldText += comment;
+
+        if (isOfType<IDomainPropertyDefinition>(prop, "isPrimaryKey"))
+        {
+            fieldText += `\t@Id\n`;
+        }
+        if (isOfType<IDomainPropertyDefinition>(prop, "autoIncrement"))
+        {
+            fieldText += `\t@GeneratedValue(strategy = GenerationType.IDENTITY)\n`;
+        }
+
+        fieldText += prop.timePattern ? `\t@JsonFormat(pattern = "${prop.timePattern}", timezone = "GMT+8")\n` : '';
+        fieldText += prop.timePattern ? `\t@JSONField(format = "${prop.timePattern}")\n` : '';
         fieldText += `\tprivate ${DTOGenerator.generateType(prop.paramType)} ${prop.paramName};\n`;
         return fieldText;
     }
+
+
 
     private static generateType(paramType: TypeDefinition) {
         let typeText = "";
@@ -112,5 +157,25 @@ export class DTOGenerator {
 
     private static generatePackage(definition: ObjectTypeDefinition) {
         return `package ${definition.packageName};\n\n`;
+    }
+
+    private static addJPAAnnotation(prop: IDomainPropertyDefinition, importSet: Set<string>) {
+        if (prop.isPrimaryKey)
+        {
+            importSet.add("javax.persistence.Id");
+        }
+        importSet.add("javax.persistence.Column");
+        if (prop.autoIncrement)
+        {
+            importSet.add("javax.persistence.GeneratedValue");
+            importSet.add("javax.persistence.GenerationType");
+        }
+    }
+
+    private static generateClassComment(definition: DomainTypeDefinition) {
+        return '/**\n' +
+            ` * ${definition.comment}\n` +
+            ' */\n';
+
     }
 }
