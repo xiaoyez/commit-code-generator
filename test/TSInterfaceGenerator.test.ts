@@ -5,8 +5,32 @@ import {
 } from "../src/api/generator/TSInterfaceGenerator";
 import {JavaType} from "../src/dto/definition/JavaType";
 import {ObjectTypeDefinition, TypeDefinition} from "../src/dto/definition/TypeDefinition";
+import {DataEnum} from "../src/db/definition/DataEnum";
+import {DataEnumOption} from "../src/db/definition/DataEnumOption";
 
 describe('TSInterfaceGenerator', () => {
+    const dataEnum = new DataEnum({
+        name: "AuditStatusConstant",
+        package: "com.example.demo.ypx.constants",
+        options: [
+            new DataEnumOption({
+                description: "审核中",
+                sign: "AUDITING",
+                value: 1
+            }),
+            new DataEnumOption({
+                description: "通过",
+                sign: "PASS",
+                value: 2
+            }),new DataEnumOption({
+                description: "拒绝",
+                sign: "REJECT",
+                value: 3
+            }),
+        ],
+        ruoyiDict: "test_audit_status",
+    })
+
     let interfaceDef = new ObjectTypeDefinition({
         className: 'TestResp',
         packageName: 'testPack.testDef',
@@ -23,6 +47,13 @@ describe('TSInterfaceGenerator', () => {
                 paramType: new TypeDefinition({
                     type: JavaType.Float,
                 }),
+            },
+            {
+                paramName: "fieldC",
+                paramType: new TypeDefinition({
+                    type: JavaType.Integer,
+                }),
+                enumType: dataEnum,
             }
         ]
     });
@@ -56,6 +87,7 @@ describe('TSInterfaceGenerator', () => {
     /** bigInt field */
     fieldA: bigint;
     fieldB: number;
+    fieldC: AuditStatusConstant;
 }`);
     });
 });

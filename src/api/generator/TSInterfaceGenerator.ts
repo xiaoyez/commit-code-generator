@@ -43,7 +43,13 @@ export function generateTypeString(def: TypeDefinition) {
 }
 
 export function generateObjectField(def: IPropertyDefinition) {
-    let typeString = generateTypeString(def.paramType);
+    let typeString;
+    if (def.enumType) {
+        typeString = def.enumType.name;
+    }
+    else {
+        typeString = generateTypeString(def.paramType);
+    }
     let propLine = `    ${def.paramName}: ${typeString};`;
     if (def.paramDesc) {
         propLine = `    /** ${def.paramDesc} */\n` + propLine;
