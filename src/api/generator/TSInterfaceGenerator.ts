@@ -1,5 +1,5 @@
-import {IPropertyDefinition, ObjectTypeDefinition, TypeDefinition} from "../definition/TypeDefinition";
-import {JavaType} from "../definition/JavaType";
+import {IPropertyDefinition, ObjectTypeDefinition, TypeDefinition} from "../../dto/definition/TypeDefinition";
+import {JavaType} from "../../dto/definition/JavaType";
 
 let javaTypeInTS = {
     [JavaType.Boolean]: 'boolean',

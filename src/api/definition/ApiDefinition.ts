@@ -1,5 +1,5 @@
 import {ModuleDefinition} from "./ModuleDefinition";
-import {TypeDefinition} from "./TypeDefinition";
+import {TypeDefinition} from "../../dto/definition/TypeDefinition";
 
 /**
  * R 为出参类型

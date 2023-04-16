@@ -3,8 +3,8 @@ import {
     generateObjectField,
     generateTypeString
 } from "../src/api/generator/TSInterfaceGenerator";
-import {JavaType} from "../src/api/definition/JavaType";
-import {ObjectTypeDefinition, TypeDefinition} from "../src/api/definition/TypeDefinition";
+import {JavaType} from "../src/dto/definition/JavaType";
+import {ObjectTypeDefinition, TypeDefinition} from "../src/dto/definition/TypeDefinition";
 
 describe('TSInterfaceGenerator', () => {
     let interfaceDef = new ObjectTypeDefinition({

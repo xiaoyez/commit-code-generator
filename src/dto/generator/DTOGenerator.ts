@@ -8,7 +8,7 @@ import {JavaType} from "../definition/JavaType";
 import {config} from "../../config/Config";
 import {isOfType} from "../../utils/TypeUtils";
 import {exist, getParent, mkdirs, writeStringToFile} from "../../utils/FileUtils";
-import {getJavaFilePath} from "../../utils/JavaUtils";
+import {getDomainPackage, getJavaFilePath} from "../../utils/JavaUtils";
 
 export class DTOGenerator {
     static generate(definition: ObjectTypeDefinition) {
@@ -44,7 +44,7 @@ export class DTOGenerator {
     }
 
     private static generateJavaFile(definition: ObjectTypeDefinition, text: string) {
-        const filePath = config.baseDir + `\\${getJavaFilePath(definition.packageName,definition.className)}`;
+        const filePath = config.baseDir + `\\${getJavaFilePath(getDomainPackage(definition.packageName),definition.className)}`;
         const fileDir = getParent(filePath);
         if (!exist(fileDir))
             mkdirs(fileDir);
@@ -139,8 +139,6 @@ export class DTOGenerator {
         return fieldText;
     }
 
-
-
     private static generateType(paramType: TypeDefinition) {
         let typeText = "";
         if (paramType.type instanceof ObjectTypeDefinition) {
@@ -156,7 +154,7 @@ export class DTOGenerator {
     }
 
     private static generatePackage(definition: ObjectTypeDefinition) {
-        return `package ${definition.packageName};\n\n`;
+        return `package ${getDomainPackage(definition.packageName)};\n\n`;
     }
 
     private static addJPAAnnotation(prop: IDomainPropertyDefinition, importSet: Set<string>) {

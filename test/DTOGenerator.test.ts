@@ -1,6 +1,6 @@
-import {ObjectTypeDefinition} from "../src/api/definition/TypeDefinition";
-import {JavaType} from "../src/api/definition/JavaType";
-import {DTOGenerator} from "../src/api/generator/DTOGenerator";
+import {ObjectTypeDefinition} from "../src/dto/definition/TypeDefinition";
+import {JavaType} from "../src/dto/definition/JavaType";
+import {DTOGenerator} from "../src/dto/generator/DTOGenerator";
 
 
 const objectTypeDefinition = new ObjectTypeDefinition({

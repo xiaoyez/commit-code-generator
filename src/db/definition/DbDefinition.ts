@@ -1,4 +1,5 @@
 import {TableCreateDefinition} from "./TableCreateDefinition";
+import {ViewCreateDefinition} from "./ViewCreateDefinition";
 
 interface IDbDefinition {
     /**
@@ -23,6 +24,7 @@ export class DbDefinition implements IDbDefinition{
     charset = 'utf8';
 
     tables: TableCreateDefinition[] = [];
+    views: ViewCreateDefinition[] = [];
 
     constructor(props: IDbDefinition) {
         Object.assign(this, props);

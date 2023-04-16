@@ -1,8 +1,8 @@
 import {DataColumnDefinition} from "../src/db/definition/DataColumnDefinition";
 import {SqlType} from "../src/db/definition/SqlType";
 import {TableCreateDefinition} from "../src/db/definition/TableCreateDefinition";
-import {ObjectTypeDefinitionUtils} from "../src/api/definition/ObjectTypeDefinitionUtils";
-import {DTOGenerator} from "../src/api/generator/DTOGenerator";
+import {ObjectTypeDefinitionUtils} from "../src/dto/definition/ObjectTypeDefinitionUtils";
+import {DTOGenerator} from "../src/dto/generator/DTOGenerator";
 
 const idDefinition = new DataColumnDefinition({
     isEnum: false,
