@@ -1,5 +1,5 @@
 import {SqlType} from "./SqlType";
-import {DataEnumOption, IDataEnumOption} from "./DataEnumOption";
+import {DataEnum} from "./DataEnum";
 
 export interface IDataColumnDefinition extends IDataColBase {
     /**
@@ -26,9 +26,9 @@ export interface IDataColumnDefinition extends IDataColBase {
     isEnum?: boolean;
 
     /**
-     * 枚举选项定义。
+     * 枚举类型
      */
-    enumOptions?: IDataEnumOption[];
+    enumType?: DataEnum;
 }
 
 interface IDataColBase {
@@ -103,9 +103,9 @@ interface IDataIntEnumCol extends IDataIntBase {
     isEnum: true;
 
     /**
-     * 枚举选项定义。
+     * 枚举类型
      */
-    enumOptions: IDataEnumOption[];
+    enumType?: DataEnum;
 }
 
 interface IDataRealCol extends IDataColBase {
@@ -144,11 +144,6 @@ interface IDataOtherCol extends IDataColBase {
 export type IDataColumnType = IDataIntCol | IDataIntEnumCol | IDataRealCol | IDataStringCol | IDataOtherCol;
 
 
-
-function isIntCol(def: IDataColumnType): def is IDataIntEnumCol {
-    return (def as IDataIntBase).isEnum === true;
-}
-
 export class DataColumnDefinition implements IDataColumnDefinition {
     name!: string;
     typeName!: SqlType;
@@ -183,20 +178,13 @@ export class DataColumnDefinition implements IDataColumnDefinition {
     /**
      * 自增
      */
-    autoIncrement?: boolean;
-    enumOptions?: DataEnumOption[];
+    autoIncrement?: boolean;    /**
+     * 枚举类型
+     */
+    enumType?: DataEnum;
 
     constructor(props: IDataColumnType) {
         Object.assign(this, props);
-        if (isIntCol(props)) {
-            this.enumOptions = props.enumOptions.map(def => {
-                if (def instanceof DataEnumOption) {
-                    return def;
-                } else {
-                    return new DataEnumOption(def);
-                }
-            });
-        }
     }
 
 

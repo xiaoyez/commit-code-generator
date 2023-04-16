@@ -49,7 +49,15 @@ export class DDLSqlGenerator {
         sql += col.unsigned?' UNSIGNED':'';
         sql += col.isPrimaryKey?' PRIMARY KEY':'';
         sql += col.autoIncrement?' AUTO_INCREMENT':'';
-        sql += col.comment?` COMMENT '${col.comment}'`:'';
+        if (col.comment) {
+            let comment = col.comment;
+            if (col.isEnum) {
+                let desc = col.enumType?.options.map((option) =>
+                    `${option.value}-${option.description}`).join(', ');
+                comment += ` (${desc})`;
+            }
+            sql += ` COMMENT '${comment}'`;
+        }
         return sql;
     }
 

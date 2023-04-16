@@ -4,6 +4,8 @@ import {SqlType} from "../src/db/definition/SqlType";
 import {TableCreateDefinition} from "../src/db/definition/TableCreateDefinition";
 import {DbDefinition} from "../src/db/definition/DbDefinition";
 import {JoinType, ViewCreateDefinition} from "../src/db/definition/ViewCreateDefinition";
+import {DataEnum} from "../src/db/definition/DataEnum";
+import {DataEnumOption} from "../src/db/definition/DataEnumOption";
 
 const idDefinition = new DataColumnDefinition({
     isEnum: false,
@@ -13,6 +15,7 @@ const idDefinition = new DataColumnDefinition({
     isPrimaryKey: true,
     autoIncrement: true,
     length: 11,
+    comment: "主键"
 });
 
 const nameDefinition = new DataColumnDefinition({
@@ -20,11 +23,44 @@ const nameDefinition = new DataColumnDefinition({
     name: "name",
     nullable: false,
     typeName: SqlType.VARCHAR,
-    length: 20
+    length: 20,
+    comment: "名称"
+});
+
+const dataEnum = new DataEnum({
+    name: "AuditStatusConstant",
+    package: "com.cgmanage.web.modules.ypx.constants",
+    options: [
+        new DataEnumOption({
+            description: "审核中",
+            sign: "AUDITING",
+            value: 1
+        }),
+        new DataEnumOption({
+            description: "通过",
+            sign: "PASS",
+            value: 2
+        }),new DataEnumOption({
+            description: "拒绝",
+            sign: "REJECT",
+            value: 3
+        }),
+    ],
+
+})
+
+const statusEnumDefinition = new DataColumnDefinition({
+    isEnum: true,
+    name: "status",
+    nullable: false,
+    typeName: SqlType.INT,
+    length: 11,
+    enumType: dataEnum,
+    comment: "状态"
 });
 
 const tableUserDefinition = new TableCreateDefinition({
-    columns: [idDefinition, nameDefinition],
+    columns: [idDefinition, nameDefinition, statusEnumDefinition],
     comment: "用户表",
     tableName: "tb_user"
 });
