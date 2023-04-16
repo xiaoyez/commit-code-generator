@@ -1,4 +1,5 @@
 import {config} from "../config/Config";
+import {exist, mkdirs, writeStringToFile} from "./FileUtils";
 
 export interface TSImportInfo {
     importPath: string;
@@ -34,4 +35,14 @@ export function convertPackageToSavePath(packageName: string, subPath = "", genI
         dirPath,
         fileName,
     }
+}
+
+export function saveToPath(content: string, packageName: string, subPath = "", genIndex = false) {
+    let {dirPath, fileName} = convertPackageToSavePath(packageName, subPath, genIndex);
+    let filePath = `${dirPath}/${fileName}`;
+
+    if (!exist(dirPath))
+        mkdirs(dirPath);
+
+    writeStringToFile(filePath, content);
 }

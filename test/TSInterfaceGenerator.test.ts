@@ -1,5 +1,5 @@
 import {
-    generateInterfaceDefine,
+    generateInterfaceDefine, generateInterfaceDefsToFile,
     generateObjectField,
     generateTypeString
 } from "../src/dto/generator/TSInterfaceGenerator";
@@ -7,11 +7,12 @@ import {JavaType} from "../src/dto/definition/JavaType";
 import {ObjectTypeDefinition, TypeDefinition} from "../src/dto/definition/TypeDefinition";
 import {DataEnum} from "../src/db/definition/DataEnum";
 import {DataEnumOption} from "../src/db/definition/DataEnumOption";
+import {config} from "../src/config/Config";
 
 describe('TSInterfaceGenerator', () => {
     const dataEnum = new DataEnum({
         name: "AuditStatusConstant",
-        package: "com.example.demo.ypx.constants",
+        package: `${config.basePackage}.${config.constantPackage}.common`,
         options: [
             new DataEnumOption({
                 description: "审核中",
@@ -22,7 +23,7 @@ describe('TSInterfaceGenerator', () => {
                 description: "通过",
                 sign: "PASS",
                 value: 2
-            }),new DataEnumOption({
+            }), new DataEnumOption({
                 description: "拒绝",
                 sign: "REJECT",
                 value: 3
@@ -33,7 +34,7 @@ describe('TSInterfaceGenerator', () => {
 
     let interfaceDef = new ObjectTypeDefinition({
         className: 'TestResp',
-        packageName: 'testPack.testDef',
+        packageName: `${config.basePackage}.${config.dtoPackage}.testOther`,
         properties: [
             {
                 paramName: "fieldA",
@@ -89,5 +90,44 @@ describe('TSInterfaceGenerator', () => {
     fieldB: number;
     fieldC: AuditStatusConstant;
 }`);
+    });
+
+    let testPackage = `${config.basePackage}.${config.dtoPackage}.test`;
+    let moduleDefs = [
+        new ObjectTypeDefinition({
+            className: "TypeA",
+            packageName: testPackage,
+            properties: [
+                {
+                    paramName: "fieldA", paramType: new TypeDefinition({
+                        type: JavaType.List, genericTypes: [{type: JavaType.Date}]
+                    })
+                },
+                {paramName: "fieldB", paramType: new TypeDefinition({type: JavaType.Integer})},
+            ]
+        }),
+        new ObjectTypeDefinition({
+            className: "TypeB",
+            packageName: testPackage,
+            properties: [
+                {paramName: "fieldC", paramType: new TypeDefinition({type: interfaceDef})},
+            ]
+        }),
+        new ObjectTypeDefinition({
+            className: "TypeC",
+            packageName: testPackage,
+            properties: [
+                {
+                    paramName: "fieldD",
+                    paramType: new TypeDefinition({type: JavaType.Integer}),
+                    enumType: dataEnum,
+                },
+            ]
+        }),
+    ]
+
+    it('generate to file', () => {
+        generateInterfaceDefsToFile([interfaceDef], 'front-end');
+        generateInterfaceDefsToFile(moduleDefs, 'front-end');
     });
 });

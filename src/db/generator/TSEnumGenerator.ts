@@ -1,7 +1,6 @@
 import {DataEnumOption} from "../definition/DataEnumOption";
 import {DataEnum} from "../definition/DataEnum";
-import {convertPackageToPath, convertPackageToSavePath, TSImportInfo} from "../../utils/TSImportInfo";
-import {exist, mkdirs, writeStringToFile} from "../../utils/FileUtils";
+import {convertPackageToPath, saveToPath, TSImportInfo} from "../../utils/TSPathUtils";
 
 export function generateEnumOption(def: DataEnumOption) {
     let line = `    ${def.sign} = ${def.value},`;
@@ -48,6 +47,7 @@ export function generateEnumDefsToFile(defs: DataEnum[], subPath = "", genIndex 
     if (!defs || defs.length === 0) {
         return;
     }
+
     let enums = defs.map(def => {
         let enumStr = generateEnumDefine(def)
         if (!def.ruoyiDict) {
@@ -57,13 +57,6 @@ export function generateEnumDefsToFile(defs: DataEnum[], subPath = "", genIndex 
         return enumStr;
     });
     let content = enums.join('\n\n');
-    let packageName = defs[0].package;
 
-    let {dirPath, fileName} = convertPackageToSavePath(packageName, subPath, genIndex);
-    let filePath = `${dirPath}/${fileName}`;
-
-    if (!exist(dirPath))
-        mkdirs(dirPath);
-
-    writeStringToFile(filePath, content);
+    saveToPath(content, defs[0].package, subPath, genIndex);
 }

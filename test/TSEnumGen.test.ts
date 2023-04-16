@@ -7,11 +7,12 @@ import {
     getEnumDescImportInfo,
     getEnumImportInfo
 } from "../src/db/generator/TSEnumGenerator";
+import {config} from "../src/config/Config";
 
 describe('TSEnumGenerator', () => {
     const dataEnum = new DataEnum({
         name: "AuditStatusConstant",
-        package: "com.example.demo.constants",
+        package: `${config.basePackage}.${config.constantPackage}.common`,
         options: [
             new DataEnumOption({
                 description: "审核中",

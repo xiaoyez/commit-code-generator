@@ -1,6 +1,7 @@
 import {IPropertyDefinition, ObjectTypeDefinition, TypeDefinition} from "../definition/TypeDefinition";
 import {JavaType} from "../definition/JavaType";
-import {convertPackageToPath, TSImportInfo} from "../../utils/TSImportInfo";
+import {convertPackageToPath, saveToPath, TSImportInfo} from "../../utils/TSPathUtils";
+import {getEnumImportInfo} from "../../db/generator/TSEnumGenerator";
 
 let javaTypeInTS = {
     [JavaType.Boolean]: 'boolean',
@@ -72,4 +73,64 @@ export function getImportInfo(def: ObjectTypeDefinition): TSImportInfo {
         importPath: convertPackageToPath(def.packageName),
         importName: def.className,
     }
+}
+
+export function getTypeImportsFrom(def: TypeDefinition, cur?: Map<string, Set<string>>) {
+    if (!cur) {
+        cur = new Map();
+    }
+
+    if (def.type instanceof ObjectTypeDefinition) {
+        let info = getImportInfo(def.type);
+        let set = cur.get(info.importPath) || new Set();
+        set.add(info.importName);
+        cur.set(info.importPath, set);
+    }
+    else {
+        // some local defined types
+    }
+    if (def.genericTypes) {
+        for (let generic of def.genericTypes) {
+            getTypeImportsFrom(generic, cur);
+        }
+    }
+    return cur;
+}
+
+export function getImportsFrom(def: ObjectTypeDefinition, cur?: Map<string, Set<string>>) {
+    if (!cur) {
+        cur = new Map();
+    }
+
+    for (let prop of def.properties) {
+        if (prop.enumType) {
+            let info = getEnumImportInfo(prop.enumType);
+            let set = cur.get(info.importPath) || new Set();
+            set.add(info.importName);
+            cur.set(info.importPath, set);
+        }
+        else {
+            getTypeImportsFrom(prop.paramType, cur);
+        }
+    }
+
+    return cur;
+}
+
+export function generateInterfaceDefsToFile(defs: ObjectTypeDefinition[], subPath = "", genIndex = false) {
+    if (!defs || defs.length === 0) {
+        return;
+    }
+
+    let imports = new Map<string, Set<string>>();
+    let interfaces = defs.map(def => {
+        getImportsFrom(def, imports);
+        return generateInterfaceDefine(def);
+    });
+    let importLines = [...imports.entries()].map(([path, names]) => {
+        return `import {${[...names].join(', ')}} from "${path}";`;
+    });
+    let content = importLines.join('\n') + '\n\n' + interfaces.join('\n\n') + '\n';
+
+    saveToPath(content, defs[0].packageName, subPath, genIndex);
 }
