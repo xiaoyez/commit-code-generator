@@ -28,8 +28,13 @@ export function generateTypeString(def: TypeDefinition) {
     if (def.genericTypes) {
         let genericList = def.genericTypes
             .map(def => generateTypeString(def));
-        if (def.genericTypes.length === 1 && typeName === 'Array') {
-            typeName = `${genericList[0]}[]`;
+        if (typeName === 'Array') {
+            if (def.genericTypes.length === 1) {
+                typeName = `${genericList[0]}[]`;
+            }
+            else {
+                throw new Error('数组只能有一个泛型参数');
+            }
         }
         else {
             typeName += `<${genericList.join(', ')}>`;
@@ -37,7 +42,7 @@ export function generateTypeString(def: TypeDefinition) {
 
     }
     else if (typeName === 'Array') {
-        typeName = 'unknown[]'
+        throw new Error('数组不能没有泛型参数');
     }
     return typeName;
 }
@@ -60,4 +65,11 @@ export function generateObjectField(def: IPropertyDefinition) {
 export function generateInterfaceDefine(def: ObjectTypeDefinition) {
     let fieldLines = def.properties.map(prop => generateObjectField(prop));
     return `export interface ${def.className} {\n${fieldLines.join('\n')}\n}`;
+}
+
+export function getImportInfo(def: ObjectTypeDefinition): TSImportInfo {
+    return {
+        importPath: convertPackageToPath(def.packageName),
+        importName: def.className,
+    }
 }
