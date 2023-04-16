@@ -1,5 +1,6 @@
 import {JavaType} from "./JavaType";
 import {TimePattern} from "./TimePattern";
+import {DataEnum} from "../../db/definition/DataEnum";
 
 
 export interface IPropertyDefinition {
@@ -12,6 +13,11 @@ export interface IPropertyDefinition {
      * 参数类型。
      */
     paramType: TypeDefinition;
+
+    /**
+     * 枚举类型
+     */
+    enumType?: DataEnum;
 
     /**
      * 参数描述。

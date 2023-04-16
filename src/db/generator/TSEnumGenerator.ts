@@ -24,10 +24,6 @@ export function generateEnumDescConst(def: DataEnum) {
 }
 
 export function getEnumImportInfo(def: DataEnum): TSImportInfo {
-    // let defs = [def.name];
-    // if (!def.ruoyiDict) {
-    //     defs.push(def.name + "Desc");
-    // }
     return {
         importPath: convertPackageToPath(def.package),
         importName: def.name,
