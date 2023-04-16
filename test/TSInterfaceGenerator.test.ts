@@ -2,7 +2,7 @@ import {
     generateInterfaceDefine,
     generateObjectField,
     generateTypeString
-} from "../src/api/generator/TSInterfaceGenerator";
+} from "../src/dto/generator/TSInterfaceGenerator";
 import {JavaType} from "../src/dto/definition/JavaType";
 import {ObjectTypeDefinition, TypeDefinition} from "../src/dto/definition/TypeDefinition";
 import {DataEnum} from "../src/db/definition/DataEnum";

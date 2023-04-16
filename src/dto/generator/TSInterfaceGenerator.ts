@@ -1,5 +1,5 @@
-import {IPropertyDefinition, ObjectTypeDefinition, TypeDefinition} from "../../dto/definition/TypeDefinition";
-import {JavaType} from "../../dto/definition/JavaType";
+import {IPropertyDefinition, ObjectTypeDefinition, TypeDefinition} from "../definition/TypeDefinition";
+import {JavaType} from "../definition/JavaType";
 import {convertPackageToPath, TSImportInfo} from "../../utils/TSImportInfo";
 
 let javaTypeInTS = {
