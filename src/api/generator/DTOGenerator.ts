@@ -5,9 +5,10 @@ import {
     TypeDefinition
 } from "../definition/TypeDefinition";
 import {JavaType} from "../definition/JavaType";
-import * as fs from "fs";
 import {config} from "../../config/Config";
 import {isOfType} from "../../utils/TypeUtils";
+import {exist, getParent, mkdirs, writeStringToFile} from "../../utils/FileUtils";
+import {getJavaFilePath} from "../../utils/JavaUtils";
 
 export class DTOGenerator {
     static generate(definition: ObjectTypeDefinition) {
@@ -43,12 +44,11 @@ export class DTOGenerator {
     }
 
     private static generateJavaFile(definition: ObjectTypeDefinition, text: string) {
-        const filePath = config.baseDir + `\\${definition.packageName.replace(/\./g, '\\')}\\${definition.className}.java`;
-        const fileDir = filePath.substring(0, filePath.lastIndexOf('\\'));
-        if (!fs.existsSync(fileDir))
-            fs.mkdirSync(fileDir, {recursive: true});
-        const fd = fs.openSync(filePath, 'w+');
-        fs.writeFileSync(fd, text, {flag: 'w+'})
+        const filePath = config.baseDir + `\\${getJavaFilePath(definition.packageName,definition.className)}`;
+        const fileDir = getParent(filePath);
+        if (!exist(fileDir))
+            mkdirs(fileDir);
+        writeStringToFile(filePath,text)
     }
 
     private static generateImports(definition: ObjectTypeDefinition) {
