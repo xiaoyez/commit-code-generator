@@ -55,7 +55,7 @@ export class ControllerGenerator {
         text += `import org.springframework.web.bind.annotation.PathVariable;\n`;
         text += `import org.springframework.beans.factory.annotation.Autowired;\n`;
         // import service
-        text += `import ${packageName}.service.${module.moduleName}Service;\n`;
+        text += `import ${packageName}.service.I${module.moduleName}Service;\n`;
         // import AjaxResult and TableDataInfo
         text += `import ${config.projectPackage}.core.domain.AjaxResult;\n`;
         text += `import ${config.projectPackage}.core.page.TableDataInfo;\n`;
@@ -77,7 +77,7 @@ export class ControllerGenerator {
     private static addService(module: ModuleDefinition) {
         let text = '';
         text += `    @Autowired\n`;
-        text += `    private ${module.moduleName}Service ${module.moduleName}Service;\n\n`;
+        text += `    private I${module.moduleName.replace('Controller','')}Service ${lowerFirst(module.moduleName.replace('Controller',''))}Service;\n\n`;
         return text;
 
     }
@@ -155,20 +155,21 @@ export class ControllerGenerator {
 
 
     private static buildReturnStatement(api: ApiDefinition, resultType: string) {
+        const service = (api.module?.moduleName?lowerFirst(api.module.moduleName.replace('Controller','')) : '')+ 'Service';
         if (resultType === 'void') {
-            return `        ${api.module?.moduleName}Service.${api.apiName}(${ControllerGenerator.buildParamsName(api.params)});\n`;
+            return `        ${service}.${api.apiName}(${ControllerGenerator.buildParamsName(api.params)});\n`;
         }
         if (resultType.startsWith('AjaxResult') && [RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE].find(method => method === api.method)) {
-            return `        return AjaxResult.toAjax(${api.module?.moduleName}Service.${api.apiName}(${ControllerGenerator.buildParamsName(api.params)}));\n`;
+            return `        return AjaxResult.toAjax(${service}.${api.apiName}(${ControllerGenerator.buildParamsName(api.params)}));\n`;
         }
         if (resultType.startsWith('AjaxResult') && api.method === RequestMethod.GET) {
-            return `        return AjaxResult.success(${api.module?.moduleName}Service.${api.apiName}(${ControllerGenerator.buildParamsName(api.params)}));\n`;
+            return `        return AjaxResult.success(${service}.${api.apiName}(${ControllerGenerator.buildParamsName(api.params)}));\n`;
         }
         if (resultType.startsWith('TableDataInfo')) {
             // PageUtil.startPage();
             let text = '';
             text += `        PageUtil.startPage();\n`;
-            text += `        List<${ControllerGenerator.buildResultType(api.result?.genericTypes?.[0])}> list = ${api.module?.moduleName}Service.${api.apiName}(${ControllerGenerator.buildParamsName(api.params)});\n`;
+            text += `        List<${ControllerGenerator.buildResultType(api.result?.genericTypes?.[0])}> list = ${service}.${api.apiName}(${ControllerGenerator.buildParamsName(api.params)});\n`;
             text += `        return PageUtil.getDataTable(list);\n`;
             return text;
         }
