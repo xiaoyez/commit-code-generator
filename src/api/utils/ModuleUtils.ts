@@ -15,6 +15,16 @@ export class ModuleUtils {
         return packageName;
     }
 
+    static buildBaseUrlPrefix(module: ModuleDefinition) {
+        let baseUrlPrefix = module.baseUrlPrefix;
+        let parent = module.parent;
+        while (parent) {
+            baseUrlPrefix = parent.baseUrlPrefix + baseUrlPrefix;
+            parent = parent.parent;
+        }
+        return baseUrlPrefix;
+    }
+
     static buildParams(params: TypeDefinition | undefined) {
         return ModuleUtils.buildTypeNameByTypeDefinition(params) + ' ' + ModuleUtils.buildParamsName(params);
     }

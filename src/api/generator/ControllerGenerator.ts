@@ -22,7 +22,7 @@ export class ControllerGenerator {
         text += ControllerGenerator.addImport(module,packageName);
 
         text += `@RestController\n`;
-        text += `@RequestMapping("${ControllerGenerator.buildBaseUrlPrefix(module)}")\n`;
+        text += `@RequestMapping("${ModuleUtils.buildBaseUrlPrefix(module)}")\n`;
         text += `public class ${module.moduleName} {\n\n`;
         text += ControllerGenerator.addService(module);
         text += module.apis?.map(api => ControllerGenerator.buildApi(api)).join('\n\n') || '';
@@ -69,16 +69,6 @@ export class ControllerGenerator {
             }
         });
         return Array.from(imports).join('') + '\n';
-    }
-
-    private static buildBaseUrlPrefix(module: ModuleDefinition) {
-        let baseUrlPrefix = module.baseUrlPrefix;
-        let parent = module.parent;
-        while (parent) {
-            baseUrlPrefix = parent.baseUrlPrefix + baseUrlPrefix;
-            parent = parent.parent;
-        }
-        return baseUrlPrefix;
     }
 
     private static addService(module: ModuleDefinition) {
