@@ -24,7 +24,7 @@ export class ModuleDefinition implements IModuleDefinition {
     moduleName!: string;
     baseUrlPrefix!: string;
     isClass?: boolean;
-    children?: IModuleDefinition[];
+    parent?: IModuleDefinition;
 
     constructor(props: IModuleDefinition) {
         Object.assign(this, props);
