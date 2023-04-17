@@ -5,6 +5,7 @@ interface IViewCreateDefinition {
 
     name : string;
     items: IViewItemDefinition[];
+    comment?: string;
 }
 
 export enum JoinType {
@@ -30,6 +31,7 @@ interface IViewColumnDefinition {
 
 export class ViewCreateDefinition {
     name!: string;
+    comment?: string;
     items!: IViewItemDefinition[];
 
     constructor(props: IViewCreateDefinition) {

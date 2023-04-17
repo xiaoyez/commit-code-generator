@@ -11,6 +11,7 @@ import {camelCase,upperFirst} from "lodash";
 import {SqlType} from "../../db/definition/SqlType";
 import {TimePattern} from "./TimePattern";
 import {DataColumnDefinition} from "../../db/definition/DataColumnDefinition";
+import {ViewCreateDefinition} from "../../db/definition/ViewCreateDefinition";
 
 export class ObjectTypeDefinitionUtils {
 
@@ -20,13 +21,49 @@ export class ObjectTypeDefinitionUtils {
      */
     static castTableCreateDefinitionToObjectTypeDefinition(tableCreateDefinition: TableCreateDefinition): ObjectTypeDefinition {
         const objectTypeDefinition = new ObjectTypeDefinition({
-            className: upperFirst(camelCase(tableCreateDefinition.tableName)),
-            packageName: config.domainPackage,
+            className: ObjectTypeDefinitionUtils.castTableNameToClassName(tableCreateDefinition.tableName),
             properties: tableCreateDefinition.columns.map(column => {
                 return ObjectTypeDefinitionUtils.castDataColumnDefinitionToIPropertyDefinition(column);
             })
         })
         return objectTypeDefinition;
+    }
+
+    /**
+     * 将视图创建定义转换为对象定义。
+     * @param viewCreateDefinition
+     */
+    static castViewCreateDefinitionToDomainTypeDefinition(viewCreateDefinition: ViewCreateDefinition): DomainTypeDefinition {
+        const domainTypeDefinition = new DomainTypeDefinition({
+            className: ObjectTypeDefinitionUtils.castTableNameToClassName(viewCreateDefinition.name),
+            comment: viewCreateDefinition.comment,
+            properties: ObjectTypeDefinitionUtils.createIDomainPropertyDefinitionsByViewCreateDefinition(viewCreateDefinition)
+        })
+        return domainTypeDefinition;
+    }
+
+    static createIDomainPropertyDefinitionsByViewCreateDefinition(viewCreateDefinition: ViewCreateDefinition): IDomainPropertyDefinition[] {
+        const domainPropertyDefinitions: IDomainPropertyDefinition[] = [];
+        viewCreateDefinition.items.forEach(item => {
+            item.cols.forEach(col => {
+                if (col.col === '*') {
+                    item.table.columns.forEach(column => {
+                        domainPropertyDefinitions.push(ObjectTypeDefinitionUtils.castDataColumnDefinitionToIDomainPropertyDefinition(column));
+                    })
+                }
+                else
+                {
+                    const domainPropertyDefinition = ObjectTypeDefinitionUtils.castDataColumnDefinitionToIDomainPropertyDefinition(col.col);
+                    domainPropertyDefinition.paramName = col.alias || domainPropertyDefinition.paramName;
+                    domainPropertyDefinitions.push(domainPropertyDefinition);
+                }
+            })
+        })
+        return domainPropertyDefinitions
+    }
+
+    static castTableNameToClassName(tableName: string): string {
+        return upperFirst(camelCase(tableName));
     }
 
     static castDataColumnDefinitionToIPropertyDefinition(column: DataColumnDefinition): IPropertyDefinition {

@@ -38,7 +38,7 @@ interface IObjectTypeDefinition {
 
     className: string;
 
-    packageName: string;
+    packageName?: string;
 }
 
 export class ObjectTypeDefinition implements IObjectTypeDefinition {

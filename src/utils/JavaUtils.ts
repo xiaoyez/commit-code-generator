@@ -6,5 +6,5 @@ export function getJavaFilePath(packageName: string,className: string)
 }
 
 export function getDomainPackage(domainPackage:string) {
-    return `${config.basePackage}.${config.domainPackage}.${domainPackage}`;
+    return `${config.basePackage}.${config.domainPackage}${domainPackage? '.' + domainPackage : ''}`;
 }

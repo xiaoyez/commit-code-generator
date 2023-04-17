@@ -88,6 +88,8 @@ test('test generateSql', () => {
 });
 
 
+// 测试view用的测试数据
+
 const nameCol = new DataColumnDefinition({
     isEnum: undefined,
     name: "name",
@@ -97,16 +99,14 @@ const nameCol = new DataColumnDefinition({
     comment: '商品名称',
 })
 const imgUrlCol = new DataColumnDefinition({
-        isEnum: undefined,
-        name: "img_url",
-        nullable: false,
-        typeName: SqlType.VARCHAR,
-        length: 255,
-        comment: '商品图片',
-    })
-
-// 测试view用的测试数据
-    const
+    isEnum: undefined,
+    name: "img_url",
+    nullable: false,
+    typeName: SqlType.VARCHAR,
+    length: 255,
+    comment: '商品图片',
+})
+const
 TbCommodityTable = new TableCreateDefinition({
     tableName: 'tb_commodity',
     columns: [

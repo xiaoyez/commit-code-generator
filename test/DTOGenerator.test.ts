@@ -30,3 +30,4 @@ const objectTypeDefinition = new ObjectTypeDefinition({
 test('test generate',()=>{
     DTOGenerator.generate(objectTypeDefinition);
 })
+
