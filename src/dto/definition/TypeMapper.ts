@@ -1,7 +1,7 @@
 import {JavaType} from "./JavaType";
 import {SqlType} from "../../db/definition/SqlType";
 
-export const typeMapper = {
+export const javaTypeMapper = {
     [SqlType.INT]: JavaType.Integer,
     [SqlType.VARCHAR]: JavaType.String,
     [SqlType.DATE]: JavaType.Date,
@@ -32,4 +32,18 @@ export const typeMapper = {
     [SqlType.JSON]: JavaType.String,
 
 } as Record<SqlType, JavaType>;
+
+export const tsTypeMapper = {
+    [JavaType.Boolean]: 'boolean',
+    [JavaType.Byte]: 'number',
+    [JavaType.Short]: 'number',
+    [JavaType.Integer]: 'number',
+    [JavaType.Long]: 'bigint',
+    [JavaType.Float]: 'number',
+    [JavaType.Double]: 'number',
+    [JavaType.Character]: 'string',
+    [JavaType.String]: 'string',
+    [JavaType.Date]: 'Date',
+    [JavaType.List]: 'Array',
+} as Record<JavaType, string>;
 

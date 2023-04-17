@@ -1,13 +1,14 @@
 import {
-    generateInterfaceDefine, generateInterfaceDefsToFile,
+    generateInterfaceDefine,
+    generateInterfaceDefsToFile,
     generateObjectField,
-    generateTypeString
 } from "../src/dto/generator/TSInterfaceGenerator";
 import {JavaType} from "../src/dto/definition/JavaType";
 import {ObjectTypeDefinition, TypeDefinition} from "../src/dto/definition/TypeDefinition";
 import {DataEnum} from "../src/db/definition/DataEnum";
 import {DataEnumOption} from "../src/db/definition/DataEnumOption";
 import {config} from "../src/config/Config";
+import {tsTypeString} from "../src/utils/TypeUtils";
 
 describe('TSInterfaceGenerator', () => {
     const dataEnum = new DataEnum({
@@ -60,13 +61,13 @@ describe('TSInterfaceGenerator', () => {
     });
 
     it('generate an single type string', () => {
-        expect(generateTypeString(new TypeDefinition({
+        expect(tsTypeString(new TypeDefinition({
             type: JavaType.Date,
         }))).toBe('Date');
     });
 
     it('generate an array type string', () => {
-        expect(generateTypeString(new TypeDefinition({
+        expect(tsTypeString(new TypeDefinition({
             type: JavaType.List,
             genericTypes: [
                 {type: interfaceDef}

@@ -6,7 +6,7 @@ import {
 } from "./TypeDefinition";
 import {TableCreateDefinition} from "../../db/definition/TableCreateDefinition";
 import {config} from "../../config/Config";
-import {typeMapper} from "./TypeMapper";
+import {javaTypeMapper} from "./TypeMapper";
 import {camelCase,upperFirst} from "lodash";
 import {SqlType} from "../../db/definition/SqlType";
 import {TimePattern} from "./TimePattern";
@@ -70,7 +70,7 @@ export class ObjectTypeDefinitionUtils {
         return {
             paramName: camelCase(column.name),
             paramType: {
-                type: typeMapper[column.typeName]
+                type: javaTypeMapper[column.typeName]
             },
             paramDesc: column.comment,
             timePattern: column.typeName === SqlType.DATETIME ? TimePattern.DATETIME

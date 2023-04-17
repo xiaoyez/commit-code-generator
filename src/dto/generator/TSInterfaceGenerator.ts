@@ -1,52 +1,16 @@
 import {IPropertyDefinition, ObjectTypeDefinition, TypeDefinition} from "../definition/TypeDefinition";
-import {JavaType} from "../definition/JavaType";
 import {convertPackageToPath, saveToPath, TSImportInfo} from "../../utils/TSPathUtils";
 import {getEnumImportInfo} from "../../db/generator/TSEnumGenerator";
+import {config} from "../../config/Config";
+import {tsTypeString} from "../../utils/TypeUtils";
 
-let javaTypeInTS = {
-    [JavaType.Boolean]: 'boolean',
-    [JavaType.Byte]: 'number',
-    [JavaType.Short]: 'number',
-    [JavaType.Integer]: 'number',
-    [JavaType.Long]: 'bigint',
-    [JavaType.Float]: 'number',
-    [JavaType.Double]: 'number',
-    [JavaType.Character]: 'string',
-    [JavaType.String]: 'string',
-    [JavaType.Date]: 'Date',
-    [JavaType.List]: 'Array',
-} as Record<JavaType, string>;
+const BasePackage = `${config.basePackage}.${config.dtoPackage}`;
+const CoreModule = `${BasePackage}.core`;
 
-export function generateTypeString(def: TypeDefinition) {
-    let typeName: string;
-    if (def.type instanceof ObjectTypeDefinition) {
-        typeName = def.type.className;
-    }
-    else {
-        typeName = javaTypeInTS[def.type];
-    }
-
-    if (def.genericTypes) {
-        let genericList = def.genericTypes
-            .map(def => generateTypeString(def));
-        if (typeName === 'Array') {
-            if (def.genericTypes.length === 1) {
-                typeName = `${genericList[0]}[]`;
-            }
-            else {
-                throw new Error('数组只能有一个泛型参数');
-            }
-        }
-        else {
-            typeName += `<${genericList.join(', ')}>`;
-        }
-
-    }
-    else if (typeName === 'Array') {
-        throw new Error('数组不能没有泛型参数');
-    }
-    return typeName;
-}
+let preDefinedTypes = new Map([
+    ['AjaxResult', CoreModule],
+    ['TableDataInfo', CoreModule],
+]);
 
 export function generateObjectField(def: IPropertyDefinition) {
     let typeString;
@@ -54,7 +18,7 @@ export function generateObjectField(def: IPropertyDefinition) {
         typeString = def.enumType.name;
     }
     else {
-        typeString = generateTypeString(def.paramType);
+        typeString = tsTypeString(def.paramType);
     }
     let propLine = `    ${def.paramName}: ${typeString};`;
     if (def.paramDesc) {
@@ -69,6 +33,13 @@ export function generateInterfaceDefine(def: ObjectTypeDefinition) {
 }
 
 export function getImportInfo(def: ObjectTypeDefinition): TSImportInfo {
+    if (preDefinedTypes.has(def.className)) {
+        return {
+            importPath: convertPackageToPath(preDefinedTypes.get(def.className)!),
+            importName: def.className,
+        }
+    }
+
     return {
         importPath: convertPackageToPath(def.packageName),
         importName: def.className,

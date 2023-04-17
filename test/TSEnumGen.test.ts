@@ -54,14 +54,14 @@ describe('TSEnumGenerator', () => {
 
     it('get import info of an define', () => {
         expect(getEnumImportInfo(dataEnum)).toEqual({
-            importPath: "@/constants",
+            importPath: "@/constant/common",
             importName: "AuditStatusConstant",
         })
     })
 
     it('get desc import info of an define', () => {
         expect(getEnumDescImportInfo(dataEnum)).toEqual({
-            importPath: "@/constants",
+            importPath: "@/constant/common",
             importName: "AuditStatusConstantDesc",
         })
     })
