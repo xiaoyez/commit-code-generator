@@ -78,7 +78,6 @@ export class ControllerGenerator {
             baseUrlPrefix = parent.baseUrlPrefix + baseUrlPrefix;
             parent = parent.parent;
         }
-        baseUrlPrefix += module.baseUrlPrefix;
         return baseUrlPrefix;
     }
 
@@ -118,7 +117,7 @@ export class ControllerGenerator {
         if (resultType === 'void') {
             return `        ${service}.${api.apiName}(${ModuleUtils.buildParamsName(api.params)});\n`;
         }
-        if (resultType.startsWith('AjaxResult') && [RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE].find(method => method === api.method)) {
+        if (resultType.startsWith('AjaxResult') && new Set([RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE]).has(api.method)) {
             return `        return AjaxResult.toAjax(${service}.${api.apiName}(${ModuleUtils.buildParamsName(api.params)}));\n`;
         }
         if (resultType.startsWith('AjaxResult') && api.method === RequestMethod.GET) {
