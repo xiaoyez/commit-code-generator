@@ -13,6 +13,9 @@ export function convertPackageToPath(packageName: string) {
 
 export function convertPackageToSavePath(packageName: string, subPath = "", genIndex = false) {
     let fePath = packageName.replace(config.basePackage, "");
+    if (!fePath.startsWith('.')) {
+        fePath = '.' + fePath;
+    }
 
     let pathPackage: string;
     let fileName: string;
