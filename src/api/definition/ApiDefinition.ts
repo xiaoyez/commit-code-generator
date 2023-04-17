@@ -1,10 +1,11 @@
 import {ModuleDefinition} from "./ModuleDefinition";
 import {TypeDefinition} from "../../dto/definition/TypeDefinition";
+import {RequestMethod} from "./RequestMethod";
 
 /**
  * R 为出参类型
  */
-interface IApiDefinition<R> {
+interface IApiDefinition {
     /**
      * 接口名称。
      */
@@ -18,7 +19,7 @@ interface IApiDefinition<R> {
     /**
      * 请求方式
      */
-    method: string;
+    method: RequestMethod;
 
     /**
      * 入参
@@ -34,4 +35,21 @@ interface IApiDefinition<R> {
      * 父模块
      */
     module?: ModuleDefinition;
+}
+
+export class ApiDefinition implements IApiDefinition {
+    apiName!: string;
+    url!: string;
+    method!: RequestMethod;
+    params?: TypeDefinition;
+    result?: TypeDefinition;
+    module?: ModuleDefinition;
+
+    constructor(props: IApiDefinition) {
+        Object.assign(this, props);
+    }
+
+    static create(apiName: string, url: string, method: RequestMethod, params?: TypeDefinition, result?: TypeDefinition) {
+        return new ApiDefinition({apiName, url, method, params, result});
+    }
 }

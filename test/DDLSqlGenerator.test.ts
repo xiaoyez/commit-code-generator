@@ -59,7 +59,7 @@ const statusEnumDefinition = new DataColumnDefinition({
     comment: "状态"
 });
 
-const tableUserDefinition = new TableCreateDefinition({
+export const tableUserDefinition = new TableCreateDefinition({
     columns: [idDefinition, nameDefinition, statusEnumDefinition],
     comment: "用户表",
     tableName: "tb_user"

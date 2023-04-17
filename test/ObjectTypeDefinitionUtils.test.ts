@@ -4,6 +4,7 @@ import {TableCreateDefinition} from "../src/db/definition/TableCreateDefinition"
 import {ObjectTypeDefinitionUtils} from "../src/dto/definition/ObjectTypeDefinitionUtils";
 import {DTOGenerator} from "../src/dto/generator/DTOGenerator";
 import {JoinType, ViewCreateDefinition} from "../src/db/definition/ViewCreateDefinition";
+import {generateInterfaceDefine} from "../src/dto/generator/TSInterfaceGenerator";
 
 const idDefinition = new DataColumnDefinition({
     isEnum: false,
@@ -157,4 +158,9 @@ test('test castViewCreateDefinitionToObjectTypeDefinition',()=>{
 test('test 根据ViewCreateDefinition经过ObjectTypeDefinition生产java文件',()=>{
     const domainTypeDefinition = ObjectTypeDefinitionUtils.castViewCreateDefinitionToDomainTypeDefinition(viewOrderItem);
     DTOGenerator.generateDomain(domainTypeDefinition);
+})
+
+test('test 根据ViewCreateDefinition经过ObjectTypeDefinition生产ts interface',()=>{
+    const domainTypeDefinition = ObjectTypeDefinitionUtils.castViewCreateDefinitionToDomainTypeDefinition(viewOrderItem);
+    console.log(generateInterfaceDefine(domainTypeDefinition))
 })

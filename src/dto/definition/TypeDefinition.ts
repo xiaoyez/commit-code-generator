@@ -49,6 +49,10 @@ export class ObjectTypeDefinition implements IObjectTypeDefinition {
     constructor(props: IObjectTypeDefinition) {
         Object.assign(this, props);
     }
+
+    static create(className: string, packageName: string, properties: IPropertyDefinition[]) {
+        return new ObjectTypeDefinition({className, packageName, properties});
+    }
 }
 
 interface IDomainTypeDefinition extends IObjectTypeDefinition {
@@ -63,9 +67,13 @@ export class DomainTypeDefinition extends ObjectTypeDefinition {
     constructor(props: IDomainTypeDefinition) {
         super(props);
     }
+
+    static create(className: string, packageName: string, properties: IDomainPropertyDefinition[], comment?: string) {
+        return new DomainTypeDefinition({className, packageName, properties, comment});
+    }
 }
 
-interface ITypeDefinition {
+export interface ITypeDefinition {
     type: JavaType|ObjectTypeDefinition;
     genericTypes?: ITypeDefinition[];
 
@@ -87,6 +95,10 @@ export class TypeDefinition implements ITypeDefinition {
                 }
             });
         }
+    }
+
+    static create(type: JavaType|ObjectTypeDefinition, genericTypes?: TypeDefinition[]) {
+        return new TypeDefinition({type, genericTypes});
     }
 
 }

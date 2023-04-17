@@ -5,4 +5,5 @@ export const config = {
     constantPackage: 'constant',
     dtoPackage: 'dto',
     basePackage: 'com.example.demo',
+    projectPackage: 'com.ruoyi.common',
 }

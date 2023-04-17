@@ -1,6 +1,8 @@
+import {ApiDefinition} from "./ApiDefinition";
+
 interface IModuleDefinition {
     /**
-     * 模块名称。
+     * 模块名称。 如果是文件，就是文件名，否则是文件夹名
      */
     moduleName: string;
 
@@ -10,23 +12,34 @@ interface IModuleDefinition {
     baseUrlPrefix: string;
 
     /**
-     * 是否对应一个类
+     * 是否对应一个文件
      */
-    isClass?: boolean;
+    isFile?: boolean;
 
     /**
      * 父模块
      */
     parent?: IModuleDefinition;
+
+    /**
+     * api列表
+     */
+    apis?: ApiDefinition[];
 }
 
 export class ModuleDefinition implements IModuleDefinition {
     moduleName!: string;
     baseUrlPrefix!: string;
-    isClass?: boolean;
+    isFile?: boolean;
     parent?: IModuleDefinition;
+
+    apis: ApiDefinition[] = [];
 
     constructor(props: IModuleDefinition) {
         Object.assign(this, props);
+    }
+
+    addApi(api: ApiDefinition) {
+        this.apis.push(api);
     }
 }
