@@ -5,11 +5,14 @@
     "lib": ["esnext"],
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "esModuleInterop": true,
+    "esModuleInterop": true
   },
   "include": [
     "src/**/*",
     "index.ts"
+  ],
+  "exclude": [
+    "node_modules/**/*"
   ],
   "ts-node": {
     "esm": true

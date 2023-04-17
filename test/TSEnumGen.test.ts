@@ -2,15 +2,17 @@ import {DataEnum} from "../src/db/definition/DataEnum";
 import {DataEnumOption} from "../src/db/definition/DataEnumOption";
 import {
     generateEnumDefine,
+    generateEnumDefsToFile,
     generateEnumDescConst,
     getEnumDescImportInfo,
     getEnumImportInfo
 } from "../src/db/generator/TSEnumGenerator";
+import {config} from "../src/config/Config";
 
 describe('TSEnumGenerator', () => {
     const dataEnum = new DataEnum({
         name: "AuditStatusConstant",
-        package: "com.example.demo.ypx.constants",
+        package: `${config.basePackage}.${config.constantPackage}.common`,
         options: [
             new DataEnumOption({
                 description: "审核中",
@@ -21,7 +23,8 @@ describe('TSEnumGenerator', () => {
                 description: "通过",
                 sign: "PASS",
                 value: 2
-            }),new DataEnumOption({
+            }),
+            new DataEnumOption({
                 description: "拒绝",
                 sign: "REJECT",
                 value: 3
@@ -46,20 +49,40 @@ describe('TSEnumGenerator', () => {
     [AuditStatusConstant.AUDITING]: '审核中',
     [AuditStatusConstant.PASS]: '通过',
     [AuditStatusConstant.REJECT]: '拒绝',
-}`)
+} as Record<AuditStatusConstant, string>`);
     });
 
     it('get import info of an define', () => {
         expect(getEnumImportInfo(dataEnum)).toEqual({
-            importPath: "@/ypx/constants",
+            importPath: "@/constants",
             importName: "AuditStatusConstant",
         })
     })
 
     it('get desc import info of an define', () => {
         expect(getEnumDescImportInfo(dataEnum)).toEqual({
-            importPath: "@/ypx/constants",
+            importPath: "@/constants",
             importName: "AuditStatusConstantDesc",
         })
+    })
+    const enum2 = new DataEnum({
+        name: "TestEnum2",
+        package: "com.example.demo.constants",
+        options: [
+            new DataEnumOption({
+                description: "选1",
+                sign: "Test1",
+                value: 1
+            }),
+            new DataEnumOption({
+                description: "选2",
+                sign: "Test2",
+                value: 2
+            }),
+        ],
+    })
+
+    it('generate to file', () => {
+        generateEnumDefsToFile([dataEnum, enum2], 'front-end', true);
     })
 });

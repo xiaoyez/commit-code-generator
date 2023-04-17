@@ -1,6 +1,6 @@
 import {DataEnumOption} from "../definition/DataEnumOption";
 import {DataEnum} from "../definition/DataEnum";
-import {convertPackageToPath, TSImportInfo} from "../../utils/TSImportInfo";
+import {convertPackageToPath, saveToPath, TSImportInfo} from "../../utils/TSPathUtils";
 
 export function generateEnumOption(def: DataEnumOption) {
     let line = `    ${def.sign} = ${def.value},`;
@@ -20,7 +20,7 @@ export function generateEnumDescConst(def: DataEnum) {
         `    [${def.name}.${prop.sign}]: '${prop.description}',`);
     return `export const ${def.name}Desc = {\n${
         fieldLines.join('\n')
-    }\n}`;
+    }\n} as Record<${def.name}, string>`;
 }
 
 export function getEnumImportInfo(def: DataEnum): TSImportInfo {
@@ -35,4 +35,28 @@ export function getEnumDescImportInfo(def: DataEnum): TSImportInfo {
         importPath: convertPackageToPath(def.package),
         importName: def.name + "Desc",
     };
+}
+
+/**
+ * 生成定义Enum和常量定义的ts文件
+ * @param defs 需保证所有定义的package相同
+ * @param subPath 子项目根路径
+ * @param genIndex 是否生成为index.ts
+ */
+export function generateEnumDefsToFile(defs: DataEnum[], subPath = "", genIndex = false) {
+    if (!defs || defs.length === 0) {
+        return;
+    }
+
+    let enums = defs.map(def => {
+        let enumStr = generateEnumDefine(def)
+        if (!def.ruoyiDict) {
+            let descStr = generateEnumDescConst(def);
+            enumStr += '\n\n' + descStr;
+        }
+        return enumStr;
+    });
+    let content = enums.join('\n\n');
+
+    saveToPath(content, defs[0].package, subPath, genIndex);
 }
