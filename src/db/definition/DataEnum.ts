@@ -5,6 +5,7 @@ interface IDataEnum {
     options: IDataEnumOption[];
     package: string;
     ruoyiDict?: string;
+    comment: string;
 }
 
 export class DataEnum {
@@ -12,6 +13,7 @@ export class DataEnum {
     options!: DataEnumOption[];
     package!: string;
     ruoyiDict?: string;
+    comment!: string;
 
     constructor(dataEnum: IDataEnum) {
         Object.assign(this,dataEnum);

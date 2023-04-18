@@ -21,6 +21,7 @@ export class JavaConstantClassGenerator {
         let text = '';
         text += `package ${packageName};` + '\n\n';
 
+        text += `/** ${dataEnum.comment} */` + '\n';
         text += `public class ${className} {` + '\n';
 
         dataEnum.options.forEach(option => {

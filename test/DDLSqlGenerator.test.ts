@@ -27,9 +27,10 @@ const nameDefinition = new DataColumnDefinition({
     comment: "名称"
 });
 
-const dataEnum = new DataEnum({
+export const dataEnum = new DataEnum({
     name: "AuditStatusConstant",
     package: "com.cgmanage.web.modules.ypx.constants",
+    comment: "审核状态",
     options: [
         new DataEnumOption({
             description: "审核中",
