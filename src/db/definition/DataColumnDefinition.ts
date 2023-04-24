@@ -1,5 +1,6 @@
 import {SqlType} from "./SqlType";
 import {DataEnum} from "./DataEnum";
+import {TableCreateDefinition} from "./TableCreateDefinition";
 
 export interface IDataColumnDefinition extends IDataColBase {
     /**
@@ -29,6 +30,21 @@ export interface IDataColumnDefinition extends IDataColBase {
      * 枚举类型
      */
     enumType?: DataEnum;
+
+    /**
+     * 是否为外键
+     */
+    foreignKey?: boolean;
+
+    /**
+     * 外键对应的表
+     */
+    referenceTable?: TableCreateDefinition;
+
+    /**
+     * 外键对应的列
+     */
+    referenceColumn?: string| DataColumnDefinition;
 }
 
 interface IDataColBase {
@@ -182,6 +198,24 @@ export class DataColumnDefinition implements IDataColumnDefinition {
      * 枚举类型
      */
     enumType?: DataEnum;
+
+    /**
+     * 是否为外键
+     */
+    foreignKey?: boolean;
+
+    /**
+     * 外键对应的表
+     */
+    referenceTable?: TableCreateDefinition;
+
+    /**
+     * 外键对应的列
+     */
+    referenceColumn?: string| DataColumnDefinition;
+
+
+
 
     constructor(props: IDataColumnType) {
         Object.assign(this, props);

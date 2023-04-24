@@ -1,6 +1,8 @@
 import {JavaType} from "./JavaType";
 import {TimePattern} from "./TimePattern";
 import {DataEnum} from "../../db/definition/DataEnum";
+import {TableCreateDefinition} from "../../db/definition/TableCreateDefinition";
+import {DataColumnDefinition} from "../../db/definition/DataColumnDefinition";
 
 
 export interface IPropertyDefinition {
@@ -25,6 +27,22 @@ export interface IPropertyDefinition {
     paramDesc?: string;
 
     timePattern?: TimePattern;
+
+
+    /**
+     * 是否为外键
+     */
+    foreignKey?: boolean;
+
+    /**
+     * 外键对应的表
+     */
+    referenceTable?: TableCreateDefinition;
+
+    /**
+     * 外键对应的列
+     */
+    referenceColumn?: string| DataColumnDefinition;
 }
 
 export interface IDomainPropertyDefinition extends IPropertyDefinition {

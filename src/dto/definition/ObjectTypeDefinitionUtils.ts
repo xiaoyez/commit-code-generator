@@ -74,7 +74,10 @@ export class ObjectTypeDefinitionUtils {
             },
             paramDesc: column.comment,
             timePattern: column.typeName === SqlType.DATETIME ? TimePattern.DATETIME
-                : column.typeName === SqlType.DATE ? TimePattern.DATE : undefined
+                : column.typeName === SqlType.DATE ? TimePattern.DATE : undefined,
+            foreignKey: column.foreignKey,
+            referenceTable: column.referenceTable,
+            referenceColumn: column.referenceColumn
         };
     }
 
