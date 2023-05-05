@@ -33,4 +33,8 @@ export class ClassDefinition {
     addImport(importName: string) {
         this.imports.add(importName);
     }
+
+    addAnnotation(annotation: AnnotationDefinition) {
+        this.annotations.push(annotation);
+    }
 }
