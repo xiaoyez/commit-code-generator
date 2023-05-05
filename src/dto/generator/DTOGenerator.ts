@@ -19,6 +19,13 @@ import {ClassGenerator} from "../../java/generator/ClassGenerator";
 export class DTOGenerator {
     static generate(definition: ObjectTypeDefinition) {
 
+        const dtoClassDefinition = DTOGenerator.castToClassDefinition(definition);
+
+        // 生成.java文件
+        DTOGenerator.generateJavaFile(definition, ClassGenerator.generate(dtoClassDefinition));
+    }
+
+    static castToClassDefinition(definition: ObjectTypeDefinition) {
         const packageName = DTOGenerator.generatePackage(definition);
 
         const dtoClassDefinition = new ClassDefinition(packageName,definition.className);
@@ -30,9 +37,7 @@ export class DTOGenerator {
         });
 
         dtoClassDefinition.fields = fields;
-
-        // 生成.java文件
-        DTOGenerator.generateJavaFile(definition, ClassGenerator.generate(dtoClassDefinition));
+        return dtoClassDefinition;
     }
 
     private static generateJavaFile(definition: ObjectTypeDefinition, text: string) {
@@ -48,16 +53,6 @@ export class DTOGenerator {
         definition.addAnnotation(LombokAnnotationDefinitions.NO_ARGS_CONSTRUCTOR);
         definition.addAnnotation(LombokAnnotationDefinitions.ALL_ARGS_CONSTRUCTOR);
         definition.addAnnotation(LombokAnnotationDefinitions.BUILDER);
-    }
-
-    private static generateClass(definition: ObjectTypeDefinition) {
-        let classText = "";
-        classText += `public class ${definition.className} {\n`;
-        definition.properties.forEach(prop => {
-            classText += DTOGenerator.generateField(prop);
-        });
-        classText += `}\n`;
-        return classText;
     }
 
     private static generateField(prop: IPropertyDefinition) {
@@ -86,16 +81,4 @@ export class DTOGenerator {
         return getDomainPackage(definition.packageName);
     }
 
-    private static addJPAAnnotation(prop: IDomainPropertyDefinition, importSet: Set<string>) {
-        if (prop.isPrimaryKey)
-        {
-            importSet.add("javax.persistence.Id");
-        }
-        importSet.add("javax.persistence.Column");
-        if (prop.autoIncrement)
-        {
-            importSet.add("javax.persistence.GeneratedValue");
-            importSet.add("javax.persistence.GenerationType");
-        }
-    }
 }

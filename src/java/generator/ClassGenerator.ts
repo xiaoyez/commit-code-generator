@@ -1,9 +1,9 @@
 import {ClassDefinition} from "../definition/ClassDefinition";
 import {ObjectTypeDefinition, TypeDefinition} from "../../dto/definition/TypeDefinition";
-import {JavaType} from "../../dto/definition/JavaType";
 import {FieldDefinition} from "../definition/FieldDefinition";
 import {MethodDefinition} from "../definition/MethodDefinition";
 import {AnnotationDefinition} from "../definition/AnnotationDefinition";
+import {JavaGeneratorUtils} from "./utils/JavaGeneratorUtils";
 
 export class ClassGenerator {
     static generate(classDefinition: ClassDefinition) : string{
@@ -19,14 +19,20 @@ export class ClassGenerator {
 
         text += '\n';
 
-        text = ClassGenerator.generateClassComment(classDefinition, text);
+        text = JavaGeneratorUtils.generateTypeComment(classDefinition);
 
         classDefinition.annotations.forEach(annotation => {
-            text += ClassGenerator.generateAnnotation(annotation) + '\n';
+            text += JavaGeneratorUtils.generateAnnotation(annotation) + '\n';
         })
-        text += `public class ${classDefinition.className}`;
+        text += `public class ${classDefinition.typeName}`;
         if (classDefinition.baseClass) {
-            text += ` extends ${ClassGenerator.generateType(classDefinition.baseClass)}`;
+            text += ` extends ${JavaGeneratorUtils.generateType(classDefinition.baseClass)}`;
+        }
+        if (classDefinition.baseInterfaces && classDefinition.baseInterfaces.length > 0) {
+            text += ' implements ';
+            text += classDefinition.baseInterfaces.map(baseInterface => {
+                return baseInterface.typeName;
+            }).join(',');
         }
 
         text += ' {\n\n';
@@ -44,48 +50,22 @@ export class ClassGenerator {
         return text;
     }
 
-    private static generateClassComment(classDefinition: ClassDefinition, text: string) {
-        if (classDefinition.comment) {
-            text += `/**\n * ${classDefinition.comment}\n*/\n`;
-        }
-        return text;
-    }
-
     private static buildImports(classDefinition: ClassDefinition) {
         ClassGenerator.buildBaseClassImport(classDefinition);
+
+        ClassGenerator.buildBaseInterfaceImports(classDefinition);
 
         ClassGenerator.buildAnnotationImports(classDefinition);
 
         ClassGenerator.buildFieldImports(classDefinition);
 
-        ClassGenerator.buildMethodImports(classDefinition);
+        JavaGeneratorUtils.buildMethodImports(classDefinition);
     }
 
-    private static buildMethodImports(classDefinition: ClassDefinition) {
-        classDefinition.methods.forEach(method => {
-            const importByType = ClassGenerator.buildImportByType(method.returnType);
-            if (importByType)
-                classDefinition.addImport(importByType);
-
-            method.annotations.forEach(annotation => {
-                classDefinition.addImport(annotation.packageName + '.' + annotation.annotationName);
-            })
-
-            method.parameters.forEach(parameter => {
-                const importByType = ClassGenerator.buildImportByType(parameter.type);
-                if (importByType)
-                    classDefinition.addImport(importByType);
-
-                parameter.annotations.forEach(annotation => {
-                    classDefinition.addImport(annotation.packageName + '.' + annotation.annotationName);
-                })
-            });
-        });
-    }
 
     private static buildFieldImports(classDefinition: ClassDefinition) {
         classDefinition.fields.forEach(field => {
-            const importByType = ClassGenerator.buildImportByType(field.type);
+            const importByType = JavaGeneratorUtils.buildImportByType(field.type);
             if (importByType)
                 classDefinition.addImport(importByType);
         });
@@ -99,40 +79,15 @@ export class ClassGenerator {
 
     private static buildBaseClassImport(classDefinition: ClassDefinition) {
         if (classDefinition.baseClass) {
-            const importByType = ClassGenerator.buildImportByType(classDefinition.baseClass);
+            const importByType = JavaGeneratorUtils.buildImportByType(classDefinition.baseClass);
             if (importByType)
                 classDefinition.addImport(importByType);
         }
     }
 
-    private static buildImportByType(type: TypeDefinition|ClassDefinition) {
-        if (type instanceof ClassDefinition) {
-            return `${type.packageName}.${type.className}`;
-        }
-        else
-        {
-            const typeType = type.type;
-            if (typeType instanceof ObjectTypeDefinition) {
-                return `${typeType.packageName}.${typeType.className}`;
-            } else if (typeType === JavaType.Date) {
-                return 'java.util.Date';
-            }
-        }
-    }
 
-    private static generateType(type: ClassDefinition | TypeDefinition) {
-        if (type instanceof ClassDefinition) {
-            return type.className;
-        }
-        else
-        {
-            const typeType = type.type;
-            if (typeType instanceof ObjectTypeDefinition) {
-                return typeType.className;
-            } else
-                return typeType;
-        }
-    }
+
+
 
     private static generateField(field: FieldDefinition) {
 
@@ -141,10 +96,10 @@ export class ClassGenerator {
         text += ClassGenerator.generateFieldComment(field);
 
         field.annotations.forEach(annotation => {
-            text += `\t${ClassGenerator.generateAnnotation(annotation)}\n`;
+            text += `\t${JavaGeneratorUtils.generateAnnotation(annotation)}\n`;
         });
 
-        text += `\t ${field.modifier} ${ClassGenerator.generateType(field.type)} ${field.name};\n\n`;
+        text += `\t ${field.modifier} ${JavaGeneratorUtils.generateType(field.type)} ${field.name};\n\n`;
 
         return text;
     }
@@ -160,14 +115,14 @@ export class ClassGenerator {
 
         let text = '';
 
-        text += ClassGenerator.generateMethodComment(method);
+        text += JavaGeneratorUtils.generateMethodComment(method);
 
         method.annotations.forEach(annotation => {
-            text += `\t${ClassGenerator.generateAnnotation(annotation)}\n`;
+            text += `\t${JavaGeneratorUtils.generateAnnotation(annotation)}\n`;
         });
 
-        text += `\t ${method.modifier} ${ClassGenerator.generateType(method.returnType)} ${method.name}(${method.parameters.map((param) => {
-            return `${param.annotations.map(annotation => ClassGenerator.generateAnnotation(annotation) + ' ').join()}${ClassGenerator.generateType(param.type)} ${param.name}`;
+        text += `\t ${method.modifier} ${JavaGeneratorUtils.generateType(method.returnType)} ${method.name}(${method.parameters.map((param) => {
+            return `${param.annotations.map(annotation => JavaGeneratorUtils.generateAnnotation(annotation) + ' ').join()}${JavaGeneratorUtils.generateType(param.type)} ${param.name}`;
         }).join(',')}) {\n`;
 
         text += `\t\t//TODO: implement\n`;
@@ -177,23 +132,13 @@ export class ClassGenerator {
         return text;
     }
 
-    private static generateMethodComment(method: MethodDefinition) {
-        if (method.comment) {
-            return `\t/**\n \t * ${method.comment}\n ${method.parameters.map((param) => {
-                return `\t * @param ${param.name} ${param.comment}\n`;
-            }).join('')} */\n`;
-        }
-        return "";
-    }
 
-    private static generateAnnotation(annotation: AnnotationDefinition) {
-        let text = '';
-        text += `@${annotation.annotationName}`;
-        if (annotation.properties.length > 0) {
-            text += `(${annotation.properties.map((property) => {
-                return `${property.name} = ${property.value}`;
-            }).join(',')})`;
+
+    private static buildBaseInterfaceImports(classDefinition: ClassDefinition) {
+        if (classDefinition.baseInterfaces && classDefinition.baseInterfaces.length > 0) {
+            classDefinition.baseInterfaces.forEach(baseInterface => {
+                classDefinition.addImport(baseInterface.packageName + '.' + baseInterface.typeName);
+            });
         }
-        return text;
     }
 }

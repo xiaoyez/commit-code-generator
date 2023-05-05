@@ -42,13 +42,19 @@ export class ModuleUtils {
         {
             typeName = type.type;
         }
+        typeName += ModuleUtils.buildGenericTypeText(type);
+        return typeName;
+    }
+
+    static buildGenericTypeText(type: TypeDefinition) {
+        let genericTypeText = '';
         // 加泛型
         if (type.genericTypes && type.genericTypes.length > 0) {
-            typeName += '<';
-            typeName += type.genericTypes.map(type => ModuleUtils.buildResultType(type)).join(',');
-            typeName += '>';
+            genericTypeText += '<';
+            genericTypeText += type.genericTypes.map(type => ModuleUtils.buildResultType(type)).join(',');
+            genericTypeText += '>';
         }
-        return typeName;
+        return genericTypeText;
     }
 
     static buildResultType(result: TypeDefinition | undefined) {

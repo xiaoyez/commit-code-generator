@@ -1,29 +1,24 @@
 import {DomainTypeDefinition} from "../definition/TypeDefinition";
 import {config} from "../../config/Config";
-import {getDomainPackage} from "../../utils/JavaUtils";
 import {exist, mkdirs, writeStringToFile} from "../../utils/FileUtils";
+import {InterfaceDefinition} from "../../java/definition/InterfaceDefinition";
+import {XyMapperDefinitions} from "../../java/definition/common/XyMapperDefinitions";
+import {DTOGenerator} from "./DTOGenerator";
+import {InterfaceGenerator} from "../../java/generator/InterfaceGenerator";
 
 export class MapperGenerator {
     static generate(domain: DomainTypeDefinition) {
-        let text = '';
-        text += `package ${config.basePackage}.${config.mapperPackage};\n\n`;
 
-        text += MapperGenerator.addImport(domain);
+        const mapperDefinition = new InterfaceDefinition(`${config.basePackage}.${config.mapperPackage}`, `${domain.className}Mapper`);
+        mapperDefinition.comment = domain.comment + 'Mapper接口';
 
-        text += `public interface ${domain.className}Mapper extends Mapper<${domain.className}>, ISearchMapper<${domain.className}>, IBatchMapper<${domain.className}> {\n\n`;
-        text += `}\n`;
+        const domainClassDefinition = DTOGenerator.castToClassDefinition(domain);
 
-        MapperGenerator.writeFile(domain, text);
-    }
+        mapperDefinition.addBaseInterface(XyMapperDefinitions.mapper(domainClassDefinition));
+        mapperDefinition.addBaseInterface(XyMapperDefinitions.batchMapper(domainClassDefinition));
+        mapperDefinition.addBaseInterface(XyMapperDefinitions.searchMapper(domainClassDefinition));
 
-    private static addImport(domain: DomainTypeDefinition) {
-        let text = '';
-        text += `import com.xy.common.mapper.IBatchMapper;
-import com.xy.common.mapper.ISearchMapper;
-import com.xy.common.mapper.Mapper;\n`;
-        text += `import java.util.List;\n`;
-        text += `\nimport ${getDomainPackage(domain.packageName)}.${domain.className};\n\n`;
-        return text;
+        MapperGenerator.writeFile(domain, InterfaceGenerator.generate(mapperDefinition));
     }
 
     private static writeFile(domain: DomainTypeDefinition, content: string) {
