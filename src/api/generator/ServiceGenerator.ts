@@ -2,12 +2,15 @@ import {ModuleDefinition} from "../definition/ModuleDefinition";
 import {ModuleUtils} from "../utils/ModuleUtils";
 import {AjaxResultTypeDefinition} from "../definition/AjaxResultTypeDefinition";
 import {TableDataInfoTypeDefinition} from "../definition/TableDataInfoTypeDefinition";
-import {ObjectTypeDefinition, TypeDefinition} from "../../dto/definition/TypeDefinition";
-import {getDomainPackage} from "../../utils/JavaUtils";
+import {TypeDefinition} from "../../dto/definition/TypeDefinition";
 import {ApiDefinition} from "../definition/ApiDefinition";
-import {RequestMethod} from "../definition/RequestMethod";
 import {config} from "../../config/Config";
 import {exist, mkdirs, writeStringToFile} from "../../utils/FileUtils";
+import {InterfaceDefinition} from "../../java/definition/InterfaceDefinition";
+import {MethodDefinition} from "../../java/definition/MethodDefinition";
+import {JavaType} from "../../dto/definition/JavaType";
+import {InterfaceGenerator} from "../../java/generator/InterfaceGenerator";
+import {ParameterDefinition} from "../../java/definition/ParameterDefinition";
 
 export class ServiceGenerator {
 
@@ -15,38 +18,21 @@ export class ServiceGenerator {
         if (!module.isFile) {
             return;
         }
-        let text = '';
         const packageName = ModuleUtils.buildPackageName(module) + '.service';
-        text += `package ${packageName};\n\n`;
-        text += ServiceGenerator.addImport(module, packageName);
-        text += `public interface I${module.moduleName}Service {\n\n`;
-        text += module.apis?.map(api => ServiceGenerator.buildService(api)).join('\n\n') || '';
-        text += `\n}\n`;
+        const serviceInterfaceDefinition = ServiceGenerator.buildServiceInterfaceDefinition(module);
         // 创建java文件并写入内容
-        ServiceGenerator.writeFile(packageName,text,module.moduleName);
+        ServiceGenerator.writeFile(packageName,InterfaceGenerator.generate(serviceInterfaceDefinition),module.moduleName);
     }
 
-    private static addImport(module: ModuleDefinition, packageName: string) {
-        let imports = new Set<string>();
-        imports.add(`import ${packageName}.${ServiceGenerator.getServiceName(module.moduleName)};\n`);
-        // import apis resultType and paramsType
-        module.apis?.forEach(api => {
-            if (api.result && (api.result instanceof AjaxResultTypeDefinition || api.result instanceof TableDataInfoTypeDefinition)) {
-                const genericTypes = api.result.genericTypes;
-                if (genericTypes) {
-                    genericTypes.forEach(type => {
-                        if (type.type instanceof ObjectTypeDefinition) {
-                            imports.add(`import ${getDomainPackage(type.type.packageName)}.${type.type.className};\n`);
-                        }
-                    })
-                }
-            }
-            if (api.params) {
-                if(api.params.type instanceof ObjectTypeDefinition)
-                    imports.add(`import ${getDomainPackage(api.params.type.packageName)}.${api.params.type.className};\n`);
-            }
-        });
-        return Array.from(imports).join('') + '\n';
+    static buildServiceInterfaceDefinition(module: ModuleDefinition) {
+        const packageName = ModuleUtils.buildPackageName(module) + '.service';
+
+        const serviceInterfaceAnnotation = new InterfaceDefinition(packageName, ServiceGenerator.getServiceName(module.moduleName));
+
+        const methods: MethodDefinition[] = module.apis?.map(api => ServiceGenerator.buildMethod(api));
+
+        serviceInterfaceAnnotation.methods = methods;
+        return serviceInterfaceAnnotation;
     }
 
     private static getServiceName(moduleName: string) {
@@ -64,18 +50,13 @@ export class ServiceGenerator {
         if (api.result && (api.result instanceof AjaxResultTypeDefinition || api.result instanceof TableDataInfoTypeDefinition)) {
             if (api.result.genericTypes && api.result.genericTypes.length > 0) {
                 const type = api.result.genericTypes[0];
-                let typeName = '';
-                if (type.type instanceof ObjectTypeDefinition) {
-                    typeName = type.type.className;
-                }
-                else
-                    typeName = type.type;
                 if (api.result instanceof TableDataInfoTypeDefinition)
-                    typeName = `List<${typeName}>`;
-                return typeName;
+                    return TypeDefinition.create(JavaType.List, [type]);
+                else
+                    return type;
             }
         }
-        return 'int';
+        return TypeDefinition.create(JavaType.int);
     }
 
     private static writeFile(packageName: string, content: string, moduleName: string) {
@@ -84,5 +65,16 @@ export class ServiceGenerator {
             mkdirs(path);
         const file = `${path}\\${ServiceGenerator.getServiceName(moduleName)}.java`;
         writeStringToFile(file, content);
+    }
+
+    private static buildMethod(api: ApiDefinition) {
+        const methodDefinition = new MethodDefinition(api.apiName,ServiceGenerator.buildResultType(api),api.comment);
+        if (api.params)
+        {
+            const paramDefinition = new ParameterDefinition(ModuleUtils.buildParamsName(api.params),TypeDefinition.create(api.params.type,api.params.genericTypes));
+            methodDefinition.addParameter(paramDefinition);
+        }
+        return methodDefinition;
+
     }
 }

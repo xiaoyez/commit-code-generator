@@ -12,6 +12,11 @@ interface IApiDefinition {
     apiName: string;
 
     /**
+     * 接口描述
+     */
+    comment?: string;
+
+    /**
      * url
      */
     url: string;
@@ -44,12 +49,13 @@ export class ApiDefinition implements IApiDefinition {
     params?: TypeDefinition;
     result?: TypeDefinition;
     module?: ModuleDefinition;
+    comment?: string;
 
     constructor(props: IApiDefinition) {
         Object.assign(this, props);
     }
 
-    static create(apiName: string, url: string, method: RequestMethod, params?: TypeDefinition, result?: TypeDefinition) {
-        return new ApiDefinition({apiName, url, method, params, result});
+    static create(apiName: string, url: string, method: RequestMethod, comment?:string, params?: TypeDefinition, result?: TypeDefinition) {
+        return new ApiDefinition({apiName, url, method, params, result,comment});
     }
 }

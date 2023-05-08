@@ -1,6 +1,7 @@
 import {ModuleDefinition} from "../definition/ModuleDefinition";
 import {ObjectTypeDefinition, TypeDefinition} from "../../dto/definition/TypeDefinition";
 import {lowerFirst} from "lodash";
+import {ParameterDefinition} from "../../java/definition/ParameterDefinition";
 
 export class ModuleUtils {
     static buildPackageName(module: ModuleDefinition) {
@@ -26,7 +27,10 @@ export class ModuleUtils {
     }
 
     static buildParams(params: TypeDefinition | undefined) {
-        return ModuleUtils.buildTypeNameByTypeDefinition(params) + ' ' + ModuleUtils.buildParamsName(params);
+        if (!params) {
+            return undefined;
+        }
+        return new ParameterDefinition(ModuleUtils.buildParamsName(params),TypeDefinition.create(params.type,params.genericTypes));
     }
 
     static buildTypeNameByTypeDefinition(type: TypeDefinition | undefined) {
@@ -51,14 +55,10 @@ export class ModuleUtils {
         // 加泛型
         if (type.genericTypes && type.genericTypes.length > 0) {
             genericTypeText += '<';
-            genericTypeText += type.genericTypes.map(type => ModuleUtils.buildResultType(type)).join(',');
+            genericTypeText += type.genericTypes.map(type => ModuleUtils.buildTypeNameByTypeDefinition(type)).join(',');
             genericTypeText += '>';
         }
         return genericTypeText;
-    }
-
-    static buildResultType(result: TypeDefinition | undefined) {
-        return ModuleUtils.buildTypeNameByTypeDefinition(result);
     }
 
     static buildParamsName(params: TypeDefinition | undefined) {

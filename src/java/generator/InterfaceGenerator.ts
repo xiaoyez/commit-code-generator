@@ -96,7 +96,7 @@ export class InterfaceGenerator {
 
         text += `\t ${JavaGeneratorUtils.generateType(method.returnType)} ${method.name}(${method.parameters.map((param) => {
             return `${param.annotations.map(annotation => JavaGeneratorUtils.generateAnnotation(annotation) + ' ').join()}${JavaGeneratorUtils.generateType(param.type)} ${param.name}`;
-        }).join(',')}) ;\n`;
+        }).join(',')}) ;\n\n`;
 
         return text;
     }

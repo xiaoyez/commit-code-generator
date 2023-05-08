@@ -2,76 +2,60 @@ import {ModuleDefinition} from "../definition/ModuleDefinition";
 import {ApiDefinition} from "../definition/ApiDefinition";
 import {ObjectTypeDefinition, TypeDefinition} from "../../dto/definition/TypeDefinition";
 import {RequestMethod} from "../definition/RequestMethod";
-import {lowerFirst, upperFirst} from "lodash";
+import {lowerFirst} from "lodash";
 import {config} from "../../config/Config";
 import {exist, mkdirs, writeStringToFile} from "../../utils/FileUtils";
 import {DTOGenerator} from "../../dto/generator/DTOGenerator";
 import {ModuleUtils} from "../utils/ModuleUtils";
-import {getDomainPackage} from "../../utils/JavaUtils";
-import {AjaxResultTypeDefinition} from "../definition/AjaxResultTypeDefinition";
-import {TableDataInfoTypeDefinition} from "../definition/TableDataInfoTypeDefinition";
+import {ClassDefinition} from "../../java/definition/ClassDefinition";
+import {SpringAnnotationDefinitions} from "../../java/definition/common/SpringAnnotationDefinitions";
+import {ServiceGenerator} from "./ServiceGenerator";
+import {FieldDefinition} from "../../java/definition/FieldDefinition";
+import {MethodDefinition} from "../../java/definition/MethodDefinition";
+import {JavaType} from "../../dto/definition/JavaType";
+import {ClassGenerator} from "../../java/generator/ClassGenerator";
 
 export class ControllerGenerator {
     static generate(module: ModuleDefinition) {
         if(!module.isFile) {
             return;
         }
-        let text = '';
         const packageName = ModuleUtils.buildPackageName(module)+ '.controller';
-        text += `package ${packageName};\n\n`;
-        text += ControllerGenerator.addImport(module,packageName);
 
-        text += `@RestController\n`;
-        text += `@RequestMapping("${ModuleUtils.buildBaseUrlPrefix(module)}")\n`;
-        text += `public class ${module.moduleName} {\n\n`;
-        text += ControllerGenerator.addService(module);
-        text += module.apis?.map(api => ControllerGenerator.buildApi(api)).join('\n\n') || '';
-        text += `}\n`;
+        const controllerClassDefinition = new ClassDefinition(packageName,module.moduleName);
+
+        ControllerGenerator.addSpringAnnotations(controllerClassDefinition, module);
+
+        ControllerGenerator.addServiceField(module, controllerClassDefinition);
+
+        ControllerGenerator.buildMethods(module, controllerClassDefinition);
 
         // 创建java文件并写入内容
-        ControllerGenerator.writeFile(packageName,text,module.moduleName);
+        ControllerGenerator.writeFile(packageName,ClassGenerator.generate(controllerClassDefinition),module.moduleName);
         // 生成入参java文件
         ControllerGenerator.generateParamDTOs(module);
     }
 
+    private static buildMethods(module: ModuleDefinition, controllerClassDefinition: ClassDefinition) {
+        const methods = module.apis?.map(api => ControllerGenerator.buildMethod(api));
+        controllerClassDefinition.methods = methods;
+    }
 
-    private static addImport(module: ModuleDefinition,packageName:string) {
-        const imports = new Set<string>();
-        imports.add(`import org.springframework.web.bind.annotation.RestController;\n`);
-        imports.add(`import org.springframework.web.bind.annotation.RequestMapping;\n`);
-        imports.add(`import org.springframework.web.bind.annotation.GetMapping;\n`);
-        imports.add(`import org.springframework.web.bind.annotation.PostMapping;\n`);
-        imports.add(`import org.springframework.web.bind.annotation.PutMapping;\n`);
-        imports.add(`import org.springframework.web.bind.annotation.DeleteMapping;\n`);
-        imports.add(`import org.springframework.web.bind.annotation.RequestBody;\n`);
-        imports.add(`import org.springframework.web.bind.annotation.PathVariable;\n`);
-        imports.add(`import org.springframework.beans.factory.annotation.Autowired;\n`);
-        // import service
-        imports.add(`import ${packageName}.service.I${module.moduleName}Service;\n`);
-        // import AjaxResult and TableDataInfo
-        imports.add(`import ${config.projectPackage}.core.domain.AjaxResult;\n`);
-        imports.add(`import ${config.projectPackage}.core.page.TableDataInfo;\n`);
-        // import apis resultType and paramsType
-        module.apis?.forEach(api => {
-            if (api.result && (api.result instanceof AjaxResultTypeDefinition || api.result instanceof TableDataInfoTypeDefinition)) {
-                const genericTypes = api.result.genericTypes;
-                if (genericTypes) {
-                    genericTypes.forEach(type => {
-                        if (type.type instanceof ObjectTypeDefinition) {
-                            imports.add(`import ${getDomainPackage(type.type.packageName)}.${type.type.className};\n`);
-                        }
-                    })
-                }
-            }
-            if (api.params) {
-                if(api.params.type instanceof ObjectTypeDefinition)
-                    imports.add(`import ${getDomainPackage(api.params.type.packageName)}.${api.params.type.className};\n`);
-            }
-        });
-        return Array.from(imports).join('') + '\n';
+    private static addServiceField(module: ModuleDefinition, controllerClassDefinition: ClassDefinition) {
+        const serviceName = lowerFirst(module.moduleName.replace('Controller', '')) + 'Service';
+        const serviceFieldDefinition = new FieldDefinition(serviceName, ServiceGenerator.buildServiceInterfaceDefinition(module));
+        serviceFieldDefinition.addAnnotation(SpringAnnotationDefinitions.Autowired);
+        controllerClassDefinition.fields.push(serviceFieldDefinition);
+    }
+
+    private static addSpringAnnotations(controllerClassDefinition: ClassDefinition, module: ModuleDefinition) {
+        // 添加注解
+        controllerClassDefinition.addAnnotation(SpringAnnotationDefinitions.RestController);
+        controllerClassDefinition.addAnnotation(SpringAnnotationDefinitions.RequestMapping(ModuleUtils.buildBaseUrlPrefix(module)));
     }
 
     private static addService(module: ModuleDefinition) {
+
         let text = '';
         text += `    @Autowired\n`;
         text += `    private I${module.moduleName.replace('Controller','')}Service ${lowerFirst(module.moduleName.replace('Controller',''))}Service;\n\n`;
@@ -79,49 +63,33 @@ export class ControllerGenerator {
 
     }
 
-    static buildApi(api: ApiDefinition) {
-        let text = '';
-        text += `    @${ControllerGenerator.buildMethod(api.method)}("${api.url}")\n`;
-        const resultType = ModuleUtils.buildResultType(api.result);
-        text += `    public ${resultType} ${api.apiName}(${(api.method === RequestMethod.POST || api.method === RequestMethod.PUT)?'@RequestBody ':''}${ModuleUtils.buildParams(api.params)}) {\n`;
-        text += ControllerGenerator.buildReturnStatement(api,resultType);
-        text += `    }\n`;
-        return text;
+    static buildMethod(api: ApiDefinition) {
+        const resultType = api.result?TypeDefinition.create(api.result.type,api.result.genericTypes):TypeDefinition.create(JavaType.void);
+        const methodDefinition = new MethodDefinition(api.apiName, resultType);
+        methodDefinition.addAnnotation(ControllerGenerator.buildRequestMappingAnnotation(api.method,api.url));
+        if (api.params) {
+            const paramDefinition = ModuleUtils.buildParams(api.params);
+            if (paramDefinition)
+            {
+                if(api.method === RequestMethod.POST || api.method === RequestMethod.PUT)
+                    paramDefinition?.addAnnotation(SpringAnnotationDefinitions.RequestBody);
+                methodDefinition.addParameter(paramDefinition);
+            }
+        }
+        return methodDefinition;
     }
 
-    private static buildMethod(method: RequestMethod) {
+    private static buildRequestMappingAnnotation(method: RequestMethod,path:string) {
         switch (method) {
             case RequestMethod.GET:
-                return 'GetMapping';
+                return SpringAnnotationDefinitions.GetMapping(path);
             case RequestMethod.POST:
-                return 'PostMapping';
+                return SpringAnnotationDefinitions.PostMapping(path);
             case RequestMethod.PUT:
-                return 'PutMapping';
+                return SpringAnnotationDefinitions.PutMapping(path);
             case RequestMethod.DELETE:
-                return 'DeleteMapping';
+                return SpringAnnotationDefinitions.DeleteMapping(path);
         }
-    }
-
-    private static buildReturnStatement(api: ApiDefinition, resultType: string) {
-        const service = (api.module?.moduleName?lowerFirst(api.module.moduleName.replace('Controller','')) : '')+ 'Service';
-        if (resultType === 'void') {
-            return `        ${service}.${api.apiName}(${ModuleUtils.buildParamsName(api.params)});\n`;
-        }
-        if (resultType.startsWith('AjaxResult') && new Set([RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE]).has(api.method)) {
-            return `        return AjaxResult.toAjax(${service}.${api.apiName}(${ModuleUtils.buildParamsName(api.params)}));\n`;
-        }
-        if (resultType.startsWith('AjaxResult') && api.method === RequestMethod.GET) {
-            return `        return AjaxResult.success(${service}.${api.apiName}(${ModuleUtils.buildParamsName(api.params)}));\n`;
-        }
-        if (resultType.startsWith('TableDataInfo')) {
-            // PageUtil.startPage();
-            let text = '';
-            text += `        PageUtil.startPage();\n`;
-            text += `        List<${ModuleUtils.buildResultType(api.result?.genericTypes?.[0])}> list = ${service}.${api.apiName}(${ModuleUtils.buildParamsName(api.params)});\n`;
-            text += `        return PageUtil.getDataTable(list);\n`;
-            return text;
-        }
-        return '';
     }
 
     private static writeFile(packageName: string, content:string, moduleName: string) {

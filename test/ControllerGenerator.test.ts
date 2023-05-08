@@ -64,8 +64,8 @@ const addUserApi = new ApiDefinition({
 userController.addApi(listUserApi);
 userController.addApi(addUserApi);
 
-test("test controller buildApi", () => {
-    console.log(ControllerGenerator.buildApi(listUserApi));
+test("test controller buildMethod", () => {
+    console.log(ControllerGenerator.buildMethod(listUserApi));
 })
 
 test("test controller generate", () => {

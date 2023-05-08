@@ -28,6 +28,7 @@ const listUserApi = new ApiDefinition({
     apiName: "listUser",
     url: "/listUser",
     method: RequestMethod.GET,
+    comment: "查询用户列表",
     module: userController,
     result: TableDataInfoTypeDefinition.createTableDataInfo(ObjectTypeDefinitionUtils.castTableCreateDefinitionToObjectTypeDefinition(tableUserDefinition)),
     params: TypeDefinition.create(
@@ -50,6 +51,7 @@ const addUserApi = new ApiDefinition({
     apiName: "addUser",
     url: "/addUser",
     method: RequestMethod.POST,
+    comment: "添加用户",
     module: userController,
     result: AjaxResultTypeDefinition.createAjax(),
     params: TypeDefinition.create(ObjectTypeDefinition.create("UserAddDTO", "dto", [

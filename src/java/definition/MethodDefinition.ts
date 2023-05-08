@@ -13,13 +13,21 @@ export class MethodDefinition {
     annotations: AnnotationDefinition[] = [];
     parameters: ParameterDefinition[] = [];
 
-    constructor(name: string, returnType: TypeDefinition, comment?: string, modifier: Modifier = Modifier.PUBLIC, parameters: ParameterDefinition[] = [], annotations: AnnotationDefinition[] = []) {
+    constructor(name: string, returnType: TypeDefinition|ClassDefinition, comment?: string, modifier: Modifier = Modifier.PUBLIC, parameters: ParameterDefinition[] = [], annotations: AnnotationDefinition[] = []) {
         this.name = name;
         this.returnType = returnType;
         this.comment = comment;
         this.modifier = modifier;
         this.parameters = parameters;
         this.annotations = annotations;
+    }
+
+    addAnnotation(annotation: AnnotationDefinition) {
+        this.annotations.push(annotation);
+    }
+
+    addParameter(parameter: ParameterDefinition) {
+        this.parameters.push(parameter);
     }
 
 }

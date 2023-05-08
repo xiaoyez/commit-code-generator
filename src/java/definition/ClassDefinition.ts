@@ -41,6 +41,10 @@ export class ClassDefinition implements JavaTypeDefinition {
         this.imports.add(importName);
     }
 
+    addField(field: FieldDefinition) {
+        this.fields.push(field);
+    }
+
     addAnnotation(annotation: AnnotationDefinition) {
         this.annotations.push(annotation);
     }

@@ -19,7 +19,7 @@ export class ClassGenerator {
 
         text += '\n';
 
-        text = JavaGeneratorUtils.generateTypeComment(classDefinition);
+        text += JavaGeneratorUtils.generateTypeComment(classDefinition);
 
         classDefinition.annotations.forEach(annotation => {
             text += JavaGeneratorUtils.generateAnnotation(annotation) + '\n';
@@ -99,7 +99,7 @@ export class ClassGenerator {
             text += `\t${JavaGeneratorUtils.generateAnnotation(annotation)}\n`;
         });
 
-        text += `\t ${field.modifier} ${JavaGeneratorUtils.generateType(field.type)} ${field.name};\n\n`;
+        text += `\t${field.modifier} ${JavaGeneratorUtils.generateType(field.type)} ${field.name};\n\n`;
 
         return text;
     }
@@ -121,7 +121,7 @@ export class ClassGenerator {
             text += `\t${JavaGeneratorUtils.generateAnnotation(annotation)}\n`;
         });
 
-        text += `\t ${method.modifier} ${JavaGeneratorUtils.generateType(method.returnType)} ${method.name}(${method.parameters.map((param) => {
+        text += `\t${method.modifier} ${JavaGeneratorUtils.generateType(method.returnType)} ${method.name}(${method.parameters.map((param) => {
             return `${param.annotations.map(annotation => JavaGeneratorUtils.generateAnnotation(annotation) + ' ').join()}${JavaGeneratorUtils.generateType(param.type)} ${param.name}`;
         }).join(',')}) {\n`;
 

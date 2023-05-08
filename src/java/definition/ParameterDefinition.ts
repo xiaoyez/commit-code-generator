@@ -13,4 +13,8 @@ export class ParameterDefinition {
         this.comment = comment;
         this.annotations = annotations;
     }
+
+    addAnnotation(annotation: AnnotationDefinition) {
+        this.annotations.push(annotation);
+    }
 }

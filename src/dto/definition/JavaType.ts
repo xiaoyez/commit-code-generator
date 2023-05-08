@@ -14,4 +14,15 @@ export enum JavaType {
     Date= 'Date',
     // 列表
     List= 'List',
+
+    int= 'int',
+    long= 'long',
+    float= 'float',
+    double= 'double',
+    boolean= 'boolean',
+    char= 'char',
+    byte= 'byte',
+    short= 'short',
+    void = 'void',
+
 }

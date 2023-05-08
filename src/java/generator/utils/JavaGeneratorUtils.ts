@@ -7,8 +7,11 @@ import {MethodDefinition} from "../../definition/MethodDefinition";
 import {ModuleUtils} from "../../../api/utils/ModuleUtils";
 
 export class JavaGeneratorUtils {
-    static buildImportByType(type: TypeDefinition|ClassDefinition) {
-        if (type instanceof ClassDefinition) {
+
+
+
+    static buildImportByType(type: TypeDefinition|JavaTypeDefinition) {
+        if (JavaGeneratorUtils.isJavaTypeDefinition(type)) {
             return `${type.packageName}.${type.typeName}`;
         }
         else
@@ -56,7 +59,7 @@ export class JavaGeneratorUtils {
         text += `@${annotation.annotationName}`;
         if (annotation.properties.length > 0) {
             text += `(${annotation.properties.map((property) => {
-                return `${property.name} = ${property.value}`;
+                return `${property.name} = "${property.value}"`;
             }).join(',')})`;
         }
         return text;
@@ -65,8 +68,8 @@ export class JavaGeneratorUtils {
     static generateMethodComment(method: MethodDefinition) {
         if (method.comment) {
             return `\t/**\n \t * ${method.comment}\n ${method.parameters.map((param) => {
-                return `\t * @param ${param.name} ${param.comment}\n`;
-            }).join('')} */\n`;
+                return `\t * @param ${param.name} ${param.comment?param.comment:''}\n`;
+            }).join('')}\t */\n`;
         }
         return "";
     }
