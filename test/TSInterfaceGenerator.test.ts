@@ -31,6 +31,7 @@ describe('TSInterfaceGenerator', () => {
             }),
         ],
         ruoyiDict: "test_audit_status",
+        comment: "审核状态"
     })
 
     let interfaceDef = new ObjectTypeDefinition({

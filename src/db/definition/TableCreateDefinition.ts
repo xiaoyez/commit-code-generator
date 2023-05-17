@@ -29,7 +29,7 @@ interface ITbTableCreateDefinition<T extends Record<string, DataColumnDefinition
 
 }
 
-export class TableCreateDefinition<T extends Record<string, DataColumnDefinition>> implements ITbTableCreateDefinition<T> {
+export class TableCreateDefinition<T extends Record<string, DataColumnDefinition> = any> implements ITbTableCreateDefinition<T> {
     tableName!: string;
     comment!: string;
     columns: T;

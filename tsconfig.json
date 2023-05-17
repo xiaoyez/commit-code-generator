@@ -5,7 +5,8 @@
     "lib": ["esnext"],
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "moduleResolution": "Node"
   },
   "include": [
     "src/**/*",

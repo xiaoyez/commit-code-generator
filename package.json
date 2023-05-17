@@ -21,6 +21,7 @@
   "type": "module",
   "dependencies": {
     "lodash": "^4.17.21-es",
+    "pluralize-esm": "^9.0.5",
     "ts-node": "^10.9.1"
   }
 }

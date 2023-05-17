@@ -8,6 +8,7 @@ import {ObjectTypeDefinition, TypeDefinition} from "../src/dto/definition/TypeDe
 import {JavaType} from "../src/dto/definition/JavaType";
 import {ControllerGenerator} from "../src/api/generator/ControllerGenerator";
 import {AjaxResultTypeDefinition} from "../src/api/definition/AjaxResultTypeDefinition";
+import {singular} from "../src/utils/StringUtils";
 
 const ypxModule = new ModuleDefinition({
     baseUrlPrefix: "/ypx", moduleName: "ypx"
@@ -70,4 +71,8 @@ test("test controller buildMethod", () => {
 
 test("test controller generate", () => {
     ControllerGenerator.generate(userController)
+})
+
+test('singular', ()=>{
+    console.log(singular('arrayList'))
 })

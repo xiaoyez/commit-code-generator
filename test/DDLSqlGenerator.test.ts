@@ -61,7 +61,11 @@ const statusEnumDefinition = new DataColumnDefinition({
 });
 
 export const tableUserDefinition = new TableCreateDefinition({
-    columns: [idDefinition, nameDefinition, statusEnumDefinition],
+    columns: {
+        id: idDefinition,
+        name: nameDefinition,
+        status: statusEnumDefinition
+    },
     comment: "用户表",
     tableName: "tb_user"
 });
@@ -110,8 +114,8 @@ const imgUrlCol = new DataColumnDefinition({
 const
 TbCommodityTable = new TableCreateDefinition({
     tableName: 'tb_commodity',
-    columns: [
-        new DataColumnDefinition({
+    columns: {
+        id:new DataColumnDefinition({
             isEnum: false,
             name: "id",
             nullable: false,
@@ -121,7 +125,7 @@ TbCommodityTable = new TableCreateDefinition({
             isPrimaryKey: true,
             autoIncrement: true,
         }),
-        new DataColumnDefinition({
+        number: new DataColumnDefinition({
             isEnum: undefined,
             name: "number",
             nullable: false,
@@ -129,17 +133,17 @@ TbCommodityTable = new TableCreateDefinition({
             length: 255,
             comment: '商品编号',
         }),
-        nameCol,
-        imgUrlCol
-    ],
+        name: nameCol,
+        imgUrl: imgUrlCol
+    },
     comment: '商品表'
 })
 
 const TbOrderItemTable = new TableCreateDefinition({
     tableName: "tb_order_item",
     comment: "订单商品项表",
-    columns: [
-        new DataColumnDefinition({
+    columns: {
+        id:new DataColumnDefinition({
             isEnum: false,
             name: "id",
             nullable: false,
@@ -149,7 +153,7 @@ const TbOrderItemTable = new TableCreateDefinition({
             isPrimaryKey: true,
             autoIncrement: true,
         }),
-        new DataColumnDefinition({
+        orderId: new DataColumnDefinition({
             isEnum: false,
             name: "order_id",
             nullable: false,
@@ -157,7 +161,7 @@ const TbOrderItemTable = new TableCreateDefinition({
             length: 11,
             comment: '订单id',
         }),
-        new DataColumnDefinition({
+        productId: new DataColumnDefinition({
             isEnum: false,
             name: "product_id",
             nullable: false,
@@ -166,7 +170,7 @@ const TbOrderItemTable = new TableCreateDefinition({
             comment: '商品id',
         }),
 
-    ],
+    },
 
 });
 
@@ -198,15 +202,15 @@ test('test 根据ViewCreateDefinition生成创建视图的sql', ()=>{
 })
 
 const table = new TableCreateDefinition({
-    columns: [
-        new DataColumnDefinition({
+    columns: {
+        aaa: new DataColumnDefinition({
             isEnum: false, name: "aaa", nullable: false, typeName: SqlType.INT
 
         })
-    ], comment: "", tableName: ""
+    }, comment: "", tableName: ""
 
 })
 
 test('', ()=>{
-    console.log(table.cols.aaa)
+    console.log(table.columns.aaa)
 })
