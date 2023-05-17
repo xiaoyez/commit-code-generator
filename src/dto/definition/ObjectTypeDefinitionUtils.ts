@@ -19,12 +19,12 @@ export class ObjectTypeDefinitionUtils {
      * 将表创建定义转换为对象定义。
      * @param tableCreateDefinition
      */
-    static castTableCreateDefinitionToObjectTypeDefinition(tableCreateDefinition: TableCreateDefinition): ObjectTypeDefinition {
+    static castTableCreateDefinitionToObjectTypeDefinition<T extends Record<string, DataColumnDefinition>>(tableCreateDefinition: TableCreateDefinition<T>): ObjectTypeDefinition {
         const objectTypeDefinition = new ObjectTypeDefinition({
             className: ObjectTypeDefinitionUtils.castTableNameToClassName(tableCreateDefinition.tableName),
-            properties: tableCreateDefinition.columns.map(column => {
+            properties: tableCreateDefinition.columns?Object.values(tableCreateDefinition.columns).map(column => {
                 return ObjectTypeDefinitionUtils.castDataColumnDefinitionToIPropertyDefinition(column);
-            })
+            }):[]
         })
         return objectTypeDefinition;
     }
@@ -46,10 +46,14 @@ export class ObjectTypeDefinitionUtils {
         const domainPropertyDefinitions: IDomainPropertyDefinition[] = [];
         viewCreateDefinition.items.forEach(item => {
             item.cols.forEach(col => {
-                if (col.col === '*') {
-                    item.table.columns.forEach(column => {
-                        domainPropertyDefinitions.push(ObjectTypeDefinitionUtils.castDataColumnDefinitionToIDomainPropertyDefinition(column));
-                    })
+                if (col.col === '*')
+                {
+                    if (item.table.columns)
+                    {
+                        Object.values(item.table.columns).forEach(column => {
+                            domainPropertyDefinitions.push(ObjectTypeDefinitionUtils.castDataColumnDefinitionToIDomainPropertyDefinition(column as DataColumnDefinition));
+                        })
+                    }
                 }
                 else
                 {
@@ -92,13 +96,13 @@ export class ObjectTypeDefinitionUtils {
         return domainPropertyDefinition;
     }
 
-    static castTableCreateDefinitionToDomainTypeDefinition(tableCreateDefinition: TableCreateDefinition): DomainTypeDefinition {
+    static castTableCreateDefinitionToDomainTypeDefinition<T extends Record<string, DataColumnDefinition>>(tableCreateDefinition: TableCreateDefinition<T>): DomainTypeDefinition {
         const domainTypeDefinition = new DomainTypeDefinition({
             className: upperFirst(camelCase(tableCreateDefinition.tableName)),
             packageName: config.domainPackage,
-            properties: tableCreateDefinition.columns.map(column => {
+            properties: tableCreateDefinition.columns?Object.values(tableCreateDefinition.columns).map(column => {
                 return ObjectTypeDefinitionUtils.castDataColumnDefinitionToIDomainPropertyDefinition(column)
-            }),
+            }):[],
             comment: tableCreateDefinition.comment
         })
         return domainTypeDefinition;

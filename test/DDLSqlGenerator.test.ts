@@ -196,3 +196,17 @@ const viewOrderItem = new ViewCreateDefinition({
 test('test 根据ViewCreateDefinition生成创建视图的sql', ()=>{
     console.log(DDLSqlGenerator.generateCreateViewSql(viewOrderItem))
 })
+
+const table = new TableCreateDefinition({
+    columns: [
+        new DataColumnDefinition({
+            isEnum: false, name: "aaa", nullable: false, typeName: SqlType.INT
+
+        })
+    ], comment: "", tableName: ""
+
+})
+
+test('', ()=>{
+    console.log(table.cols.aaa)
+})

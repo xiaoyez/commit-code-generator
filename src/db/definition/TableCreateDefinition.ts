@@ -1,10 +1,11 @@
-import {DataColumnDefinition, IDataColumnDefinition, IDataColumnType} from "./DataColumnDefinition";
+import {DataColumnDefinition, IDataColumnType} from "./DataColumnDefinition";
+import {SqlType} from "./SqlType";
 
 
 /**
  * 表示用于创建数据库表的表定义。
  */
-interface ITbTableCreateDefinition {
+interface ITbTableCreateDefinition<T extends Record<string, DataColumnDefinition>> {
 
     /**
      * 表的名称。
@@ -24,30 +25,29 @@ interface ITbTableCreateDefinition {
     /**
      * 表的列定义数组。
      */
-    columns: IDataColumnDefinition[];
+    columns: T;
 
 }
 
-export class TableCreateDefinition implements ITbTableCreateDefinition {
+export class TableCreateDefinition<T extends Record<string, DataColumnDefinition>> implements ITbTableCreateDefinition<T> {
     tableName!: string;
     comment!: string;
-    columns: DataColumnDefinition[];
+    columns: T;
 
     charset: string = 'utf8';
 
-    constructor(props: ITbTableCreateDefinition) {
+    constructor(props: ITbTableCreateDefinition<T>) {
+        this.columns = {} as T
         Object.assign(this, props);
-        this.columns = props.columns.map(def => {
-            if (def instanceof DataColumnDefinition) {
-                return def;
-            } else {
-                return new DataColumnDefinition(def as IDataColumnType);
+        for (let key in props.columns)
+        {
+            let def = props.columns[key];
+            if(def instanceof DataColumnDefinition)
+            {
+                this.columns[key] = def;
             }
-        })
-    }
-
-    addColumn(col: DataColumnDefinition) {
-        this.columns.push(col);
-        return this;
+            else
+                this.columns[key] = new DataColumnDefinition(def as IDataColumnType) as T[typeof key]
+        }
     }
 }

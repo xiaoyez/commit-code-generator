@@ -14,9 +14,9 @@ export enum JoinType {
     INNER_JOIN = 'inner join'
 }
 
-interface IViewItemDefinition {
+interface IViewItemDefinition<T extends Record<string, DataColumnDefinition> = any> {
 
-    table: TableCreateDefinition;
+    table: TableCreateDefinition<T>;
     joinType: JoinType;
     alias?: string;
     cols: IViewColumnDefinition[];
