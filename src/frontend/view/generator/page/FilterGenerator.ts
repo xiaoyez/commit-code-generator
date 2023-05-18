@@ -46,12 +46,12 @@ export class FilterGenerator {
         text += `    <el-form-item label="${itemDef.label}" prop="${itemDef.prop}">\n`;
         text += FilterGenerator.generateFilterItemControlTemplate(modelName, itemDef.inputControl) + '\n';
         text += '    </el-form-item>'
-        return "";
+        return text;
     }
 
     private static generateFilterItemControlTemplate<T extends InputControl>(modelName: string, defControl: T) {
         let gen = (FilterGenerator.filterItemGenMap.get(defControl.constructor) as (modelName: string, def: T) => string)
-            || (n => '<el-input placeholder="Error" />');
+            || (() => '<el-input placeholder="Error" />');
         return gen(modelName, defControl);
     }
 
