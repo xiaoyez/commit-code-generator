@@ -1,7 +1,11 @@
+import {ApiDefinition} from "../../../../api/definition/ApiDefinition";
+
 export interface FilterDefinition {
     fileName: string;
 
-    filterFormDefinition: FilterFormDefinition
+    filterFormDefinition: FilterFormDefinition;
+
+    api: ApiDefinition;
 
 }
 
@@ -9,7 +13,7 @@ export interface FilterFormDefinition {
     modelName?: string;
     refName?: string;
     vShowName?: string;
-    items: FilterFormItemDefinition[]
+    items: FilterFormItemDefinition[];
 }
 
 export interface FilterFormItemDefinition {

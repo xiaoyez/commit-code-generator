@@ -5,6 +5,7 @@ import {
     FilterFormDefinition,
     FilterFormItemDefinition, InputControl, SelectInputControl, TextInputControl
 } from "../../definition/page/FilterDefinition";
+import {ObjectTypeDefinition} from "../../../../dto/definition/TypeDefinition";
 
 type InputControlTempGen = (modelName: string, def: InputControl) => string;
 
@@ -19,6 +20,7 @@ export class FilterGenerator {
     static generate(filterDefinition: FilterDefinition) {
         let text = '';
         text += FilterGenerator.generateTemplate(filterDefinition.filterFormDefinition);
+        text += FilterGenerator.generateScript(filterDefinition);
         return text;
     }
 
@@ -36,6 +38,7 @@ export class FilterGenerator {
       <el-button type="primary" icon="Search" size="small" @click="handleQuery">搜索</el-button>
       <el-button icon="Refresh" size="small" @click="resetQuery">重置</el-button>
     </el-form-item>`;
+        text += `    <div v-if="noActBtn" class="tail-spacing"></div>`;
         text += `  </el-form>\n`
         text += '</template>\n';
         return text;
@@ -82,5 +85,58 @@ export class FilterGenerator {
         value-format="${defControl.format}"
         type="${compType}"${otherProps}
       />`;
+    }
+
+    private static generateScript(filterDefinition: FilterDefinition) {
+        const filterFormDefinition = filterDefinition.filterFormDefinition;
+        let text = '';
+        text += '<script setup lang="ts">';
+        text += 'import {ref} from "vue";\n' +
+            'import {ElForm} from "element-plus";\n';
+
+        text += `const ${filterFormDefinition.refName} = ref<InstanceType<typeof ElForm>|null>(null);\n`;
+        text += `defineProps<{
+    ${filterFormDefinition.vShowName}: boolean;
+    noActBtn?: boolean;
+}>();
+`;
+        const api = filterDefinition.api;
+        if (api.params?.type instanceof ObjectTypeDefinition)
+        {
+
+            text += `const emit = defineEmits<{
+    (e:'handleQuery', query: ${api.params.type.className}): void,
+}>();
+`;
+            text += `const ${filterFormDefinition.modelName} = inject<Ref<${api.params.type.className}>>('${filterFormDefinition.modelName}', () => ref<${api.params.type.className}>({}), true);\n`;
+        }
+
+        const dateRangeItems = filterFormDefinition.items.filter(item=> item.inputControl instanceof DateInputControl && item.inputControl.isRange);
+        dateRangeItems.forEach(dateRangeItem => {
+            text += `const ${dateRangeItem.prop}Range: Ref<[string,string]> = ref([]);
+
+watch(${dateRangeItem.prop}Range, ([start, end]) => {
+    if (start && end) {
+        queryParams.${dateRangeItem.prop}Start = start;
+        queryParams.${dateRangeItem.prop}End = end;
+    } else {
+        queryParams.${dateRangeItem.prop}Start = void 0;
+        queryParams.${dateRangeItem.prop}End = void 0;
+    }
+})\n`;
+        })
+
+
+        text += `function handleQuery() {
+    emit('handleQuery', queryParams.value);
+}
+
+function resetQuery() {
+    queryForm.value?.resetFields();
+    handleQuery();
+}\n`;
+
+        text += '</script>';
+        return text;
     }
 }
