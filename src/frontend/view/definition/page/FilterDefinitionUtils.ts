@@ -18,7 +18,7 @@ export class FilterDefinitionUtils {
             return {
                 label: propertyDefinition.paramDesc || '',
                 prop: propertyDefinition.paramName,
-                inputControl: new TextInputControl(propertyDefinition.paramName, propertyDefinition.paramDesc || '')
+                inputControl: new TextInputControl(propertyDefinition.paramName, "请输入" + propertyDefinition.paramDesc || '')
             }
         }
         else if (propertyDefinition.paramType.type === JavaType.Integer)

@@ -38,7 +38,7 @@ export class SelectInputControl extends InputControl {
     placeholder: string;
     listName: string;
     iterName: string;
-    key:string;
+    key?: string;
     label: string;
     value: string;
 
@@ -80,7 +80,9 @@ export class DateInputControl extends InputControl {
         this.startPlaceholder = startPlaceholder;
         this.endPlaceholder = endPlaceholder;
         this.format = format;
-        this.rangeSeparator = rangeSeparator;
+        if (isRange) {
+            this.rangeSeparator = rangeSeparator || "-";
+        }
         this.model = model;
     }
 }
