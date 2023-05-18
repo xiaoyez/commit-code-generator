@@ -1,4 +1,9 @@
-import {IPropertyDefinition, ObjectTypeDefinition} from "../../../../dto/definition/TypeDefinition";
+import {
+    DomainTypeDefinition,
+    IDomainPropertyDefinition,
+    IPropertyDefinition,
+    ObjectTypeDefinition
+} from "../../../../dto/definition/TypeDefinition";
 import {JavaType} from "../../../../dto/definition/JavaType";
 import {
     DictSelectInputControl,
@@ -10,8 +15,11 @@ import {lowerFirst} from "lodash";
 import {ObjectTypeDefinitionUtils} from "../../../../dto/definition/ObjectTypeDefinitionUtils";
 import {singular} from "../../../../utils/StringUtils.js";
 import {DataColumnDefinition} from "../../../../db/definition/DataColumnDefinition.js";
+import {TableColDefinition, TableColType, TableDefinition} from "./TableViewDefinition";
+import {ApiDefinition} from "../../../../api/definition/ApiDefinition";
+import {TableDataInfoTypeDefinition} from "../../../../api/definition/TableDataInfoTypeDefinition";
 
-export class FilterDefinitionUtils {
+export class ViewUtils {
     static castPropertyDefinitionToFilterFormItemDefinition(propertyDefinition: IPropertyDefinition): FilterFormItemDefinition {
         if (propertyDefinition.paramType.type === JavaType.String)
         {
@@ -26,7 +34,7 @@ export class FilterDefinitionUtils {
             return {
                 label: propertyDefinition.paramDesc || '',
                 prop: propertyDefinition.paramName,
-                inputControl: FilterDefinitionUtils.castPropertyDefinitionToSelectInputControl(propertyDefinition)
+                inputControl: ViewUtils.castPropertyDefinitionToSelectInputControl(propertyDefinition)
             }
         }
         return undefined!;
@@ -76,5 +84,24 @@ export class FilterDefinitionUtils {
         }
         else
             return undefined!;
+    }
+
+    static castApiDefinitionToTableDefinition(apiDefinition: ApiDefinition): TableDefinition | null {
+        if (apiDefinition.result && apiDefinition.result.genericTypes && apiDefinition.result.genericTypes[0] instanceof DomainTypeDefinition)
+        {
+            const cols = apiDefinition.result.genericTypes[0].properties.map(property => ViewUtils.castDomainPropertyDefinitionToTableColDefinition(property));
+            return new TableDefinition(cols, apiDefinition, undefined ,apiDefinition.result instanceof TableDataInfoTypeDefinition);
+        }
+        return null;
+    }
+
+    private static castDomainPropertyDefinitionToTableColDefinition(property: IDomainPropertyDefinition): TableColDefinition {
+
+        return {
+            label: property.paramDesc || '',
+            prop: property.paramName,
+            // 若该字段是图片，需手动将type设为图片
+            type: property.enumType?TableColType.DICT:TableColType.TEXT
+        };
     }
 }
