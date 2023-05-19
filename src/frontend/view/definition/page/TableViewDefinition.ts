@@ -7,7 +7,11 @@ export enum ActBtn {
 
 export interface TableViewDefinition {
     actBtnArr: ActBtn[],
-    tableDef:  TableColDefinition
+    tableDef:  TableDefinition
+}
+
+export enum ColActBtn {
+    EDIT,REMOVE,INFO
 }
 
 export class TableDefinition {
@@ -15,8 +19,9 @@ export class TableDefinition {
     cols: TableColDefinition[];
     isPage: boolean;
     api: ApiDefinition;
+    colActBtnArr: ColActBtn[] = [];
 
-    constructor(cols: TableColDefinition[], api: ApiDefinition,dataName?: string,  isPage?: boolean) {
+    constructor(cols: TableColDefinition[], api: ApiDefinition, dataName?: string, isPage?: boolean) {
         this.dataName = dataName || 'valueList';
         this.cols = cols;
         this.isPage = isPage === undefined ? true : isPage;
@@ -26,6 +31,10 @@ export class TableDefinition {
     setColTypeAsImg(...colProps: string[]) {
         this.cols.filter(col=> contains(colProps,col.prop))
             .forEach(col => col.type = TableColType.IMG)
+    }
+
+    addActBtn(...actBtns: ColActBtn[]) {
+        this.colActBtnArr.push(...actBtns);
     }
 }
 

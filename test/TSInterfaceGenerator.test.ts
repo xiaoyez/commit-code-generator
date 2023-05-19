@@ -129,7 +129,7 @@ describe('TSInterfaceGenerator', () => {
     ]
 
     it('generate to file', () => {
-        generateInterfaceDefsToFile([interfaceDef], 'front-end');
-        generateInterfaceDefsToFile(moduleDefs, 'front-end');
+        generateInterfaceDefsToFile([interfaceDef]);
+        generateInterfaceDefsToFile(moduleDefs);
     });
 });

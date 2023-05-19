@@ -7,4 +7,6 @@ export const config = {
     dtoPackage: 'dto',
     basePackage: 'com.example.demo',
     projectPackage: 'com.ruoyi.common',
+    projectName: 'test'
+
 }
