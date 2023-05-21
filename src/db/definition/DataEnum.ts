@@ -1,4 +1,5 @@
 import {DataEnumOption, IDataEnumOption} from "./DataEnumOption";
+import {config} from "../../config/Config";
 
 interface IDataEnum {
     name: string;
@@ -24,6 +25,16 @@ export class DataEnum {
             else {
                 return new DataEnumOption(option);
             }
+        });
+    }
+
+    static createCommon(name: string, options: IDataEnumOption[], comment: string, ruoyiDict?: string) {
+        return new DataEnum({
+            name,
+            options,
+            package: `${config.basePackage}.${config.constantPackage}.${config.projectName}`,
+            comment,
+            ruoyiDict,
         });
     }
 }
