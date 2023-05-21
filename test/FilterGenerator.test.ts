@@ -23,11 +23,11 @@ describe("FilterGenerator", () => {
     })
 
     const userApi = new ModuleDefinition({
-        baseUrlPrefix: "/user", moduleName: "member", parent: demoModule, isFile: true
+        baseUrlPrefix: "/member", moduleName: "member", parent: demoModule, isFile: true
     });
 
     let dtoPack = `${config.basePackage}.${config.dtoPackage}`;
-    let userDtoPack = `${dtoPack}.user`;
+    let memberDtoPack = `${dtoPack}.member`;
 
     const dataEnum = new DataEnum({
         name: "MemberStatusConstant",
@@ -54,7 +54,7 @@ describe("FilterGenerator", () => {
     })
 
     const reqList = TypeDefinition.create(
-        ObjectTypeDefinition.create("MemberSearchDTO", userDtoPack, [
+        ObjectTypeDefinition.create("MemberSearchDTO", memberDtoPack, [
             {
                 paramName: "name",
                 paramType: TypeDefinition.create(JavaType.String),
