@@ -88,7 +88,7 @@ export function getImportsFrom(def: ObjectTypeDefinition, cur?: Map<string, Set<
     return cur;
 }
 
-export function generateInterfaceDefsToFile(defs: ObjectTypeDefinition[], subPath = "/src/dataType", genIndex = false) {
+export function generateInterfaceDefsToFile(defs: ObjectTypeDefinition[], subPath = "/src", genIndex = false) {
     if (!defs || defs.length === 0) {
         return;
     }
