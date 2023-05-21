@@ -18,8 +18,21 @@ import {DataColumnDefinition} from "../../../../db/definition/DataColumnDefiniti
 import {TableColDefinition, TableColType, TableDefinition} from "./TableViewDefinition";
 import {ApiDefinition} from "../../../../api/definition/ApiDefinition";
 import {TableDataInfoTypeDefinition} from "../../../../api/definition/TableDataInfoTypeDefinition";
+import {FilterFormDefinition} from "./FilterDefinition";
 
 export class ViewUtils {
+
+    static castApiDefinitionToFilterFormDefinition(apiDefinition: ApiDefinition): FilterFormDefinition {
+        let filterFormDefinition: FilterFormDefinition = {
+            items: []
+        }
+        const apiParamType = apiDefinition.params?.type;
+        if(apiParamType && apiParamType instanceof ObjectTypeDefinition) {
+            filterFormDefinition.items = apiParamType.properties.map(property=>ViewUtils.castPropertyDefinitionToFilterFormItemDefinition(property))
+        }
+        return filterFormDefinition
+    }
+
     static castPropertyDefinitionToFilterFormItemDefinition(propertyDefinition: IPropertyDefinition): FilterFormItemDefinition {
         if (propertyDefinition.paramType.type === JavaType.String)
         {
