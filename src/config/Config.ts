@@ -4,7 +4,7 @@ export const config = {
     domainPackage: 'domain',
     mapperPackage: 'mapper',
     constantPackage: 'constant',
-    dtoPackage: 'dto',
+    dtoPackage: 'dataType',
     basePackage: 'com.example.demo',
     projectPackage: 'com.ruoyi.common',
     projectName: 'test'

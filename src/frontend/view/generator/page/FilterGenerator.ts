@@ -89,14 +89,17 @@ export class FilterGenerator {
 
     private static generateScript(filterDefinition: FilterDefinition) {
         const filterFormDefinition = filterDefinition.filterFormDefinition;
+        const modelName = filterFormDefinition.modelName || "queryParams";
+        const refName = filterFormDefinition.refName || "queryForm";
+        const vShowName = filterFormDefinition.vShowName || "showSearch";
         let text = '';
         text += '<script setup lang="ts">';
         text += 'import {ref} from "vue";\n' +
             'import {ElForm} from "element-plus";\n';
 
-        text += `const ${filterFormDefinition.refName} = ref<InstanceType<typeof ElForm>|null>(null);\n`;
+        text += `const ${refName} = ref<InstanceType<typeof ElForm>|null>(null);\n`;
         text += `defineProps<{
-    ${filterFormDefinition.vShowName}: boolean;
+    ${vShowName}: boolean;
     noActBtn?: boolean;
 }>();
 `;
@@ -108,7 +111,7 @@ export class FilterGenerator {
     (e:'handleQuery', query: ${api.params.type.className}): void,
 }>();
 `;
-            text += `const ${filterFormDefinition.modelName} = inject<Ref<${api.params.type.className}>>('${filterFormDefinition.modelName}', () => ref<${api.params.type.className}>({}), true);\n`;
+            text += `const ${modelName} = inject<Ref<${api.params.type.className}>>('${modelName}', () => ref<${api.params.type.className}>({}), true);\n`;
         }
 
         const dateRangeItems = filterFormDefinition.items.filter(item=> item.inputControl instanceof DateInputControl && item.inputControl.isRange);
