@@ -49,6 +49,28 @@ export const memberStatusEnumDef = new DataEnum({
     ruoyiDict: "ypx_member_status",
 })
 
+export const auditStatusEnumDef = DataEnum.createCommon(
+    "AuditStatusConstant",
+    [
+        new DataEnumOption({
+            description: "审核中",
+            sign: "AUDITING",
+            value: 1
+        }),
+        new DataEnumOption({
+            description: "通过",
+            sign: "PASS",
+            value: 2
+        }), new DataEnumOption({
+            description: "拒绝",
+            sign: "REJECT",
+            value: 3
+        }),
+    ],
+    "审核状态",
+    "test_audit_status",
+);
+
 export const reqMemberListDef = TypeDefinition.create(
     ObjectTypeDefinition.create("MemberSearchDTO", memberDtoPack, [
         {
