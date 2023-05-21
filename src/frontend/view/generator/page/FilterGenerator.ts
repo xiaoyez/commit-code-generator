@@ -6,7 +6,7 @@ import {
     FilterFormItemDefinition, InputControl, SelectInputControl, TextInputControl
 } from "../../definition/page/FilterDefinition";
 import {ObjectTypeDefinition} from "../../../../dto/definition/TypeDefinition";
-import {getTypeImportsFrom} from "../../../../dto/generator/TSInterfaceGenerator";
+import {getTypeImportsFrom} from "../../../../utils/TSImportUtils";
 
 type InputControlTempGen = (modelName: string, def: InputControl) => string;
 

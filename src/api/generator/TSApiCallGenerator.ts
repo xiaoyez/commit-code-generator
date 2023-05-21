@@ -1,7 +1,7 @@
 import {ApiDefinition} from "../definition/ApiDefinition";
 import {tsTypeString} from "../../utils/TypeUtils";
 import {ModuleDefinition} from "../definition/ModuleDefinition";
-import {getTypeImportsFrom} from "../../dto/generator/TSInterfaceGenerator";
+import {getTypeImportsFrom} from "../../utils/TSImportUtils";
 import {ModuleUtils} from "../utils/ModuleUtils";
 import {saveToPath} from "../../utils/TSPathUtils";
 

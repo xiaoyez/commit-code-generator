@@ -1,16 +1,7 @@
-import {IPropertyDefinition, ObjectTypeDefinition, TypeDefinition} from "../definition/TypeDefinition";
-import {convertPackageToPath, saveToPath, TSImportInfo} from "../../utils/TSPathUtils";
-import {getEnumImportInfo} from "../../db/generator/TSEnumGenerator";
-import {config} from "../../config/Config";
+import {IPropertyDefinition, ObjectTypeDefinition} from "../definition/TypeDefinition";
+import {saveToPath} from "../../utils/TSPathUtils";
 import {tsTypeString} from "../../utils/TypeUtils";
-
-const BasePackage = `${config.basePackage}.${config.dtoPackage}`;
-const CoreModule = `${BasePackage}.core`;
-
-let preDefinedTypes = new Map([
-    ['AjaxResult', CoreModule],
-    ['TableDataInfo', CoreModule],
-]);
+import {getTypeUsingImports} from "../../utils/TSImportUtils";
 
 export function generateObjectField(def: IPropertyDefinition) {
     let typeString;
@@ -32,62 +23,6 @@ export function generateInterfaceDefine(def: ObjectTypeDefinition) {
     return `export interface ${def.className} {\n${fieldLines.join('\n')}\n}`;
 }
 
-export function getImportInfo(def: ObjectTypeDefinition): TSImportInfo {
-    if (preDefinedTypes.has(def.className)) {
-        return {
-            importPath: convertPackageToPath(preDefinedTypes.get(def.className)!),
-            importName: def.className,
-        }
-    }
-
-    return {
-        importPath: convertPackageToPath(def.packageName),
-        importName: def.className,
-    }
-}
-
-export function getTypeImportsFrom(def: TypeDefinition, cur?: Map<string, Set<string>>) {
-    if (!cur) {
-        cur = new Map();
-    }
-
-    if (def.type instanceof ObjectTypeDefinition) {
-        let info = getImportInfo(def.type);
-        let set = cur.get(info.importPath) || new Set();
-        set.add(info.importName);
-        cur.set(info.importPath, set);
-    }
-    else {
-        // some local defined types
-    }
-    if (def.genericTypes) {
-        for (let generic of def.genericTypes) {
-            getTypeImportsFrom(generic, cur);
-        }
-    }
-    return cur;
-}
-
-export function getImportsFrom(def: ObjectTypeDefinition, cur?: Map<string, Set<string>>) {
-    if (!cur) {
-        cur = new Map();
-    }
-
-    for (let prop of def.properties) {
-        if (prop.enumType) {
-            let info = getEnumImportInfo(prop.enumType);
-            let set = cur.get(info.importPath) || new Set();
-            set.add(info.importName);
-            cur.set(info.importPath, set);
-        }
-        else {
-            getTypeImportsFrom(prop.paramType, cur);
-        }
-    }
-
-    return cur;
-}
-
 export function generateInterfaceDefsToFile(defs: ObjectTypeDefinition[], subPath = "/src", genIndex = false) {
     if (!defs || defs.length === 0) {
         return;
@@ -95,7 +30,7 @@ export function generateInterfaceDefsToFile(defs: ObjectTypeDefinition[], subPat
 
     let imports = new Map<string, Set<string>>();
     let interfaces = defs.map(def => {
-        getImportsFrom(def, imports);
+        getTypeUsingImports(def, imports);
         return generateInterfaceDefine(def);
     });
     let importLines = [...imports.entries()].map(([path, names]) => {
