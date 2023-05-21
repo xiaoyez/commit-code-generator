@@ -13,6 +13,7 @@ describe('TSEnumGenerator', () => {
     const dataEnum = new DataEnum({
         name: "AuditStatusConstant",
         package: `${config.basePackage}.${config.constantPackage}.common`,
+        comment: "审核状态",
         options: [
             new DataEnumOption({
                 description: "审核中",
@@ -67,6 +68,7 @@ describe('TSEnumGenerator', () => {
     })
     const enum2 = new DataEnum({
         name: "TestEnum2",
+        comment: "",
         package: "com.example.demo.constants",
         options: [
             new DataEnumOption({
