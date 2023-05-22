@@ -1,7 +1,7 @@
 import {IPropertyDefinition, ObjectTypeDefinition} from "../definition/TypeDefinition";
 import {saveToPath} from "../../utils/TSPathUtils";
 import {tsTypeString} from "../../utils/TypeUtils";
-import {getTypeUsingImports} from "../../utils/TSImportUtils";
+import {emptyImportLines, generateImportLines, getTypeUsingImports} from "../../utils/TSImportUtils";
 
 export function generateObjectField(def: IPropertyDefinition) {
     let typeString;
@@ -28,15 +28,12 @@ export function generateInterfaceDefsToFile(defs: ObjectTypeDefinition[], subPat
         return;
     }
 
-    let imports = new Map<string, Set<string>>();
+    let imports = emptyImportLines();
     let interfaces = defs.map(def => {
         getTypeUsingImports(def, imports);
         return generateInterfaceDefine(def);
     });
-    let importLines = [...imports.entries()].map(([path, names]) => {
-        return `import {${[...names].join(', ')}} from "${path}";`;
-    });
-    let content = importLines.join('\n') + '\n\n' + interfaces.join('\n\n') + '\n';
+    let content = generateImportLines(imports) + '\n' + interfaces.join('\n\n') + '\n';
 
     saveToPath(content, defs[0].packageName, subPath, genIndex);
 }

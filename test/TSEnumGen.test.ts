@@ -3,9 +3,7 @@ import {DataEnumOption} from "../src/db/definition/DataEnumOption";
 import {
     generateEnumDefine,
     generateEnumDefsToFile,
-    generateEnumDescConst,
-    getEnumDescImportInfo,
-    getEnumImportInfo
+    generateEnumDescConst
 } from "../src/db/generator/TSEnumGenerator";
 import {config} from "../src/config/Config";
 
@@ -53,19 +51,6 @@ describe('TSEnumGenerator', () => {
 } as Record<AuditStatusConstant, string>`);
     });
 
-    it('get import info of an define', () => {
-        expect(getEnumImportInfo(dataEnum)).toEqual({
-            importPath: "@/constant/common",
-            importName: "AuditStatusConstant",
-        })
-    })
-
-    it('get desc import info of an define', () => {
-        expect(getEnumDescImportInfo(dataEnum)).toEqual({
-            importPath: "@/constant/common",
-            importName: "AuditStatusConstantDesc",
-        })
-    })
     const enum2 = new DataEnum({
         name: "TestEnum2",
         comment: "",

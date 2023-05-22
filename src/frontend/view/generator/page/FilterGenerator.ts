@@ -6,7 +6,7 @@ import {
     FilterFormItemDefinition, InputControl, SelectInputControl, TextInputControl
 } from "../../definition/page/FilterDefinition";
 import {ObjectTypeDefinition} from "../../../../dto/definition/TypeDefinition";
-import {getTypeImportsFrom} from "../../../../utils/TSImportUtils";
+import {generateImportLines, getTypeImportsFrom} from "../../../../utils/TSImportUtils";
 
 type InputControlTempGen = (modelName: string, def: InputControl) => string;
 
@@ -98,12 +98,9 @@ export class FilterGenerator {
         text += 'import {ref} from "vue";\n' +
             'import {ElForm} from "element-plus";\n';
 
-        let apiReqType = filterDefinition.api.params?.type;
-        if (filterDefinition.api.params && apiReqType instanceof ObjectTypeDefinition) {
+        if (filterDefinition.api.params) {
             let importInfo = getTypeImportsFrom(filterDefinition.api.params);
-            for (let [module, types] of importInfo) {
-                text += `import type {${[...types].join(', ')}} from "${module}";\n`;
-            }
+            text += generateImportLines(importInfo);
         }
 
         text += `const ${refName} = ref<InstanceType<typeof ElForm>|null>(null);\n`;
