@@ -1,10 +1,13 @@
 import {
-    DateInputControl,
-    DictSelectInputControl,
     FilterDefinition,
     FilterFormDefinition,
-    FilterFormItemDefinition, InputControl, SelectInputControl, TextInputControl
+    FilterFormItemDefinition,
 } from "../../definition/page/FilterDefinition";
+import {
+    DateInputControl,
+    DictSelectInputControl,
+    InputControl, SelectInputControl, TextInputControl
+} from "../../definition/page/FormDefinition";
 import {ObjectTypeDefinition} from "../../../../dto/definition/TypeDefinition";
 import {generateImportLines, getTypeImportsFrom} from "../../../../utils/TSImportUtils";
 

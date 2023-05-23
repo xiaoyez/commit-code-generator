@@ -12,10 +12,13 @@ export interface FormItemDefinition {
 }
 
 export class InputControl {
+}
+
+export class DisabledInputControl extends InputControl {
     disabled?: boolean;
 }
 
-export class TextInputControl extends InputControl {
+export class TextInputControl extends DisabledInputControl {
     vModelName: string;
     placeholder: string;
 
@@ -26,7 +29,7 @@ export class TextInputControl extends InputControl {
     }
 }
 
-export class SelectInputControl extends InputControl {
+export class SelectInputControl extends DisabledInputControl {
     vModelName: string;
     placeholder: string;
     listName: string;
@@ -54,7 +57,7 @@ export class DictSelectInputControl extends SelectInputControl {
     }
 }
 
-export class DateInputControl extends InputControl {
+export class DateInputControl extends DisabledInputControl {
     isRange: boolean;
     // 是否带时分秒
     withTime: boolean;
@@ -80,7 +83,7 @@ export class DateInputControl extends InputControl {
     }
 }
 
-export class ImgInputControl extends InputControl {
+export class ImgInputControl extends DisabledInputControl {
 
 }
 
