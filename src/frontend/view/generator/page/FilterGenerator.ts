@@ -15,10 +15,10 @@ type InputControlTempGen = (modelName: string, def: InputControl) => string;
 
 export class FilterGenerator {
     private static filterItemGenMap = new Map<InputControl, InputControlTempGen>([
-        [TextInputControl, FilterGenerator.generateTextInputControlTemplate as InputControlTempGen],
-        [SelectInputControl, FilterGenerator.generateSelectInputControlTemplate as InputControlTempGen],
-        [DictSelectInputControl, FilterGenerator.generateSelectInputControlTemplate as InputControlTempGen],
-        [DateInputControl, FilterGenerator.generateDateInputControlTemplate as InputControlTempGen],
+        [TextInputControl as InputControl, FilterGenerator.generateTextInputControlTemplate as InputControlTempGen],
+        [SelectInputControl as InputControl, FilterGenerator.generateSelectInputControlTemplate as InputControlTempGen],
+        [DictSelectInputControl as InputControl, FilterGenerator.generateSelectInputControlTemplate as InputControlTempGen],
+        [DateInputControl as InputControl, FilterGenerator.generateDateInputControlTemplate as InputControlTempGen],
     ]);
 
     static generate(filterDefinition: FilterDefinition) {
@@ -57,7 +57,7 @@ export class FilterGenerator {
     }
 
     private static generateFilterItemControlTemplate<T extends InputControl>(modelName: string, defControl: T) {
-        let gen = (FilterGenerator.filterItemGenMap.get(defControl.constructor) as (modelName: string, def: T) => string)
+        let gen = FilterGenerator.filterItemGenMap.get(defControl.constructor as InputControl)
             || (() => '<el-input placeholder="Error" />');
         return gen(modelName, defControl);
     }
