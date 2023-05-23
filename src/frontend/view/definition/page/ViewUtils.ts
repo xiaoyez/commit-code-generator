@@ -7,10 +7,10 @@ import {
 import {JavaType} from "../../../../dto/definition/JavaType";
 import {
     DictSelectInputControl,
-    FilterFormItemDefinition,
+    FormItemDefinition,
     SelectInputControl,
     TextInputControl
-} from "./FilterDefinition";
+} from "./FormDefinition";
 import {lowerFirst} from "lodash";
 import {ObjectTypeDefinitionUtils} from "../../../../dto/definition/ObjectTypeDefinitionUtils";
 import {singular} from "../../../../utils/StringUtils.js";
@@ -33,7 +33,7 @@ export class ViewUtils {
         return filterFormDefinition
     }
 
-    static castPropertyDefinitionToFilterFormItemDefinition(propertyDefinition: IPropertyDefinition): FilterFormItemDefinition {
+    static castPropertyDefinitionToFilterFormItemDefinition(propertyDefinition: IPropertyDefinition): FormItemDefinition {
         if (propertyDefinition.paramType.type === JavaType.String)
         {
             return {
