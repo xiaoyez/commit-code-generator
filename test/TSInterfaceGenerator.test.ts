@@ -5,34 +5,11 @@ import {
 } from "../src/dto/generator/TSInterfaceGenerator";
 import {JavaType} from "../src/dto/definition/JavaType";
 import {ObjectTypeDefinition, TypeDefinition} from "../src/dto/definition/TypeDefinition";
-import {DataEnum} from "../src/db/definition/DataEnum";
-import {DataEnumOption} from "../src/db/definition/DataEnumOption";
 import {config} from "../src/config/Config";
 import {tsTypeString} from "../src/utils/TypeUtils";
+import {auditStatusEnumDef} from "./common";
 
 describe('TSInterfaceGenerator', () => {
-    const dataEnum = new DataEnum({
-        name: "AuditStatusConstant",
-        package: `${config.basePackage}.${config.constantPackage}.common`,
-        options: [
-            new DataEnumOption({
-                description: "审核中",
-                sign: "AUDITING",
-                value: 1
-            }),
-            new DataEnumOption({
-                description: "通过",
-                sign: "PASS",
-                value: 2
-            }), new DataEnumOption({
-                description: "拒绝",
-                sign: "REJECT",
-                value: 3
-            }),
-        ],
-        ruoyiDict: "test_audit_status",
-        comment: "审核状态"
-    })
 
     let interfaceDef = new ObjectTypeDefinition({
         className: 'TestResp',
@@ -56,7 +33,7 @@ describe('TSInterfaceGenerator', () => {
                 paramType: new TypeDefinition({
                     type: JavaType.Integer,
                 }),
-                enumType: dataEnum,
+                enumType: auditStatusEnumDef,
             }
         ]
     });
@@ -122,7 +99,7 @@ describe('TSInterfaceGenerator', () => {
                 {
                     paramName: "fieldD",
                     paramType: new TypeDefinition({type: JavaType.Integer}),
-                    enumType: dataEnum,
+                    enumType: auditStatusEnumDef,
                 },
             ]
         }),

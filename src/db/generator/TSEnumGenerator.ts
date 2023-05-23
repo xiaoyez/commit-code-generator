@@ -1,6 +1,6 @@
 import {DataEnumOption} from "../definition/DataEnumOption";
 import {DataEnum} from "../definition/DataEnum";
-import {convertPackageToPath, saveToPath, TSImportInfo} from "../../utils/TSPathUtils";
+import {saveToPath} from "../../utils/TSPathUtils";
 
 export function generateEnumOption(def: DataEnumOption) {
     let line = `    ${def.sign} = ${def.value},`;
@@ -21,20 +21,6 @@ export function generateEnumDescConst(def: DataEnum) {
     return `export const ${def.name}Desc = {\n${
         fieldLines.join('\n')
     }\n} as Record<${def.name}, string>`;
-}
-
-export function getEnumImportInfo(def: DataEnum): TSImportInfo {
-    return {
-        importPath: convertPackageToPath(def.package),
-        importName: def.name,
-    };
-}
-
-export function getEnumDescImportInfo(def: DataEnum): TSImportInfo {
-    return {
-        importPath: convertPackageToPath(def.package),
-        importName: def.name + "Desc",
-    };
 }
 
 /**

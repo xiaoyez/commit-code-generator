@@ -1,7 +1,7 @@
 import {ApiDefinition} from "../definition/ApiDefinition";
 import {tsTypeString} from "../../utils/TypeUtils";
 import {ModuleDefinition} from "../definition/ModuleDefinition";
-import {getTypeImportsFrom} from "../../dto/generator/TSInterfaceGenerator";
+import {addNewImport, emptyImportLines, generateImportLines, getTypeImportsFrom} from "../../utils/TSImportUtils";
 import {ModuleUtils} from "../utils/ModuleUtils";
 import {saveToPath} from "../../utils/TSPathUtils";
 
@@ -35,17 +35,13 @@ export function generateTsApiFileModule(modDef: ModuleDefinition, subPath = "", 
             importMap = getTypeImportsFrom(apiDef.result, importMap);
         }
         return importMap;
-    }, new Map<string, Set<string>>());
-
-    let importLines = [...imports.entries()].map(([path, names]) => {
-        return `import {${[...names].join(', ')}} from "${path}";`;
-    });
-    importLines.unshift('import {request} from "@/utils/request";');
+    }, emptyImportLines());
+    addNewImport({ importName: "request", importPath: "@/utils/request" }, imports);
 
     let prefix = ModuleUtils.buildBaseUrlPrefix(modDef);
     let apiFuncs = modDef.apis.map(apiDef => generateTsApiFunc(apiDef, prefix));
 
-    let content = importLines.join('\n') + '\n\n' + apiFuncs.join('\n\n') + '\n';
+    let content = generateImportLines(imports) + '\n' + apiFuncs.join('\n\n') + '\n';
     let packageName = ModuleUtils.buildPackageName(modDef);
 
     saveToPath(content, packageName, subPath, genIndex);

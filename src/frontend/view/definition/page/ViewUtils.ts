@@ -13,8 +13,8 @@ import {
 } from "./FormDefinition";
 import {lowerFirst} from "lodash";
 import {ObjectTypeDefinitionUtils} from "../../../../dto/definition/ObjectTypeDefinitionUtils";
-import {singular} from "../../../../utils/StringUtils.js";
-import {DataColumnDefinition} from "../../../../db/definition/DataColumnDefinition.js";
+import {singular} from "../../../../utils/StringUtils";
+import {DataColumnDefinition} from "../../../../db/definition/DataColumnDefinition";
 import {TableColDefinition, TableColType, TableDefinition} from "./TableViewDefinition";
 import {ApiDefinition} from "../../../../api/definition/ApiDefinition";
 import {TableDataInfoTypeDefinition} from "../../../../api/definition/TableDataInfoTypeDefinition";

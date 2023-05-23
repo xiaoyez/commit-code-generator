@@ -103,7 +103,7 @@ ${TableViewGenerator.actBtnTemplate[btn]}
         {{ calcOrder($index) }}
       </template>
     </el-table-column>\n`;
-        const dataTypeName = ApiUtils.getResultTypeName(tableDef.api);
+        const dataTypeName = ApiUtils.getResultDataTypeName(tableDef.api);
         text += tableDef.cols.map(col => {
             return TableViewGenerator.generateTableColTemplate(tableDef,col, dataTypeName,tableDef.api);
         }).join('\n');
