@@ -1,14 +1,12 @@
 import {ClassDefinition} from "../definition/ClassDefinition";
 import {JavaGeneratorUtils} from "./utils/JavaGeneratorUtils";
-import {template} from "lodash";
 import {ejsTmp} from "../../ejsTmp/EjsTmp";
-import {readFile} from "../../utils/FileUtils";
+import {compileEjsTmp} from "../../ejsTmp/EjsUtils";
 
 export class ClassGenerator {
     static generate(classDefinition: ClassDefinition) : string{
         ClassGenerator.buildImports(classDefinition);
-        const tmpStr = readFile(ejsTmp.javaClassTmp.filePath);
-        return template(tmpStr, {'imports': ejsTmp.javaClassTmp.imports})(classDefinition);
+        return compileEjsTmp(ejsTmp.javaClassTmp, classDefinition);
 
     }
 
