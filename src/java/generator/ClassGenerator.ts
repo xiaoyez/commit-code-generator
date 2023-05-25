@@ -1,56 +1,18 @@
 import {ClassDefinition} from "../definition/ClassDefinition";
-import {ObjectTypeDefinition, TypeDefinition} from "../../dto/definition/TypeDefinition";
-import {FieldDefinition} from "../definition/FieldDefinition";
-import {MethodDefinition} from "../definition/MethodDefinition";
-import {AnnotationDefinition} from "../definition/AnnotationDefinition";
 import {JavaGeneratorUtils} from "./utils/JavaGeneratorUtils";
+import {template} from "lodash";
+import {ejsTmp} from "../../ejsTmp/EjsTmp";
+import {readFile} from "../../utils/FileUtils";
 
 export class ClassGenerator {
     static generate(classDefinition: ClassDefinition) : string{
-        let text = '';
-
-        text += `package ${classDefinition.packageName};\n\n`;
-
         ClassGenerator.buildImports(classDefinition);
+        const tmpStr = readFile(ejsTmp.javaClassTmp.filePath);
+        return template(tmpStr, {'imports': ejsTmp.javaClassTmp.imports})(classDefinition);
 
-        classDefinition.imports.forEach(importName => {
-            text += `import ${importName};\n`;
-        });
-
-        text += '\n';
-
-        text += JavaGeneratorUtils.generateTypeComment(classDefinition);
-
-        classDefinition.annotations.forEach(annotation => {
-            text += JavaGeneratorUtils.generateAnnotation(annotation) + '\n';
-        })
-        text += `public class ${classDefinition.typeName}`;
-        if (classDefinition.baseClass) {
-            text += ` extends ${JavaGeneratorUtils.generateType(classDefinition.baseClass)}`;
-        }
-        if (classDefinition.baseInterfaces && classDefinition.baseInterfaces.length > 0) {
-            text += ' implements ';
-            text += classDefinition.baseInterfaces.map(baseInterface => {
-                return baseInterface.typeName;
-            }).join(',');
-        }
-
-        text += ' {\n\n';
-
-        classDefinition.fields.forEach(field => {
-            text += ClassGenerator.generateField(field);
-        });
-
-        classDefinition.methods.forEach(method => {
-            text += ClassGenerator.generateMethod(method);
-        });
-
-        text += '}';
-
-        return text;
     }
 
-    private static buildImports(classDefinition: ClassDefinition) {
+    public static buildImports(classDefinition: ClassDefinition) {
         ClassGenerator.buildBaseClassImport(classDefinition);
 
         ClassGenerator.buildBaseInterfaceImports(classDefinition);
@@ -84,55 +46,6 @@ export class ClassGenerator {
                 classDefinition.addImport(importByType);
         }
     }
-
-
-
-
-
-    private static generateField(field: FieldDefinition) {
-
-        let text = '';
-
-        text += ClassGenerator.generateFieldComment(field);
-
-        field.annotations.forEach(annotation => {
-            text += `\t${JavaGeneratorUtils.generateAnnotation(annotation)}\n`;
-        });
-
-        text += `\t${field.modifier} ${JavaGeneratorUtils.generateType(field.type)} ${field.name};\n\n`;
-
-        return text;
-    }
-
-    private static generateFieldComment(field: FieldDefinition) {
-        if (field.comment) {
-            return `\t/** ${field.comment} */\n`;
-        }
-        return "";
-    }
-
-    private static generateMethod(method: MethodDefinition) {
-
-        let text = '';
-
-        text += JavaGeneratorUtils.generateMethodComment(method);
-
-        method.annotations.forEach(annotation => {
-            text += `\t${JavaGeneratorUtils.generateAnnotation(annotation)}\n`;
-        });
-
-        text += `\t${method.modifier} ${JavaGeneratorUtils.generateType(method.returnType)} ${method.name}(${method.parameters.map((param) => {
-            return `${param.annotations.map(annotation => JavaGeneratorUtils.generateAnnotation(annotation) + ' ').join()}${JavaGeneratorUtils.generateType(param.type)} ${param.name}`;
-        }).join(',')}) {\n`;
-
-        text += `\t\t//TODO: implement\n`;
-        text += `\t\treturn null;\n`;
-        text += `\t}\n\n`;
-
-        return text;
-    }
-
-
 
     private static buildBaseInterfaceImports(classDefinition: ClassDefinition) {
         if (classDefinition.baseInterfaces && classDefinition.baseInterfaces.length > 0) {

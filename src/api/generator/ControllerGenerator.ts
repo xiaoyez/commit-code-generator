@@ -22,18 +22,23 @@ export class ControllerGenerator {
         }
         const packageName = ModuleUtils.buildPackageName(module)+ '.controller';
 
-        const controllerClassDefinition = new ClassDefinition(packageName,module.moduleName);
+        const controllerClassDefinition = ControllerGenerator.castToClassDefinition(packageName, module);
+
+        // 创建java文件并写入内容
+        ControllerGenerator.writeFile(packageName,ClassGenerator.generate(controllerClassDefinition),module.moduleName);
+        // 生成入参java文件
+        ControllerGenerator.generateParamDTOs(module);
+    }
+
+    static castToClassDefinition(packageName: string, module: ModuleDefinition) {
+        const controllerClassDefinition = new ClassDefinition(packageName, module.moduleName);
 
         ControllerGenerator.addSpringAnnotations(controllerClassDefinition, module);
 
         ControllerGenerator.addServiceField(module, controllerClassDefinition);
 
         ControllerGenerator.buildMethods(module, controllerClassDefinition);
-
-        // 创建java文件并写入内容
-        ControllerGenerator.writeFile(packageName,ClassGenerator.generate(controllerClassDefinition),module.moduleName);
-        // 生成入参java文件
-        ControllerGenerator.generateParamDTOs(module);
+        return controllerClassDefinition;
     }
 
     private static buildMethods(module: ModuleDefinition, controllerClassDefinition: ClassDefinition) {

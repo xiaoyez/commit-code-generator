@@ -13,6 +13,10 @@ export function writeStringToFile(filePath: string, content: string){
     fs.writeFileSync(fd, content, {flag: 'w+'})
 }
 
+export function readFile(filePath: string) {
+    return fs.readFileSync(filePath, {encoding: 'utf-8'})
+}
+
 export function getParent(filePath: string) {
     return filePath.substring(0, filePath.lastIndexOf('\\'));
 }

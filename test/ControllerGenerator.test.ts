@@ -19,7 +19,7 @@ const userModule = new ModuleDefinition({
     baseUrlPrefix: "/user", moduleName: "user", parent: ypxModule
 });
 
-const userController = new ModuleDefinition({
+export const userController = new ModuleDefinition({
     baseUrlPrefix: "/user", moduleName: "UserController", parent: userModule, isFile: true
 });
 
