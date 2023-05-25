@@ -24,7 +24,7 @@ public class <%= typeName%> <%
     <%= JavaGeneratorUtils.generateAnnotation(annotation)%>
 <%})%>    <%=method.modifer || 'public'%> <%=JavaGeneratorUtils.generateType(method.returnType)%> <%=method.name%>(<%forEach(method.parameters, (param, index) => {
         %><%forEach(param.annotations, annotation => {%><%= JavaGeneratorUtils.generateAnnotation(annotation) + ' '
-%><%})%><%=JavaGeneratorUtils.generateType(param.type)%> <%=param.name%><%if (index < method.parameters.length - 1) {%>, <%}%><%})%>);
+%><%})%><%=JavaGeneratorUtils.generateType(param.type)%> <%=param.name%><%if (index < method.parameters.length - 1) {%>, <%}%><%})%>)
     {
         // TODO: implement
         return null;
