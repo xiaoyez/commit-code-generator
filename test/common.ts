@@ -13,6 +13,13 @@ import {RequestMethod} from "../src/api/definition/RequestMethod";
 import {TableDataInfoTypeDefinition} from "../src/api/definition/TableDataInfoTypeDefinition";
 import {FilterDefinition} from "../src/frontend/view/definition/page/FilterDefinition";
 import {ViewUtils} from "../src/frontend/view/definition/page/ViewUtils";
+import {
+    ActBtn,
+    TableColType,
+    TableDefinition,
+    TableViewDefinition
+} from "../src/frontend/view/definition/page/TableViewDefinition";
+import {cloneDeep} from "lodash";
 
 const rootModule = new ModuleDefinition({
     baseUrlPrefix: `/${config.projectName}`, moduleName: config.projectName
@@ -62,10 +69,10 @@ export const auditStatusEnumDef = DataEnum.createCommon(
             sign: "PASS",
             value: 2
         }), new DataEnumOption({
-            description: "拒绝",
-            sign: "REJECT",
-            value: 3
-        }),
+        description: "拒绝",
+        sign: "REJECT",
+        value: 3
+    }),
     ],
     "审核状态",
     "test_audit_status",
@@ -94,7 +101,7 @@ export const tbMemberTableDef = new TableCreateDefinition({
     tableName: "tb_member",
     comment: "会员表",
     columns: {
-        id:new DataColumnDefinition({
+        id: new DataColumnDefinition({
             isEnum: false,
             name: "id",
             nullable: false,
@@ -118,6 +125,13 @@ export const tbMemberTableDef = new TableCreateDefinition({
             length: 18,
             comment: '会员身份证',
         }),
+        avatar: new DataColumnDefinition({
+            name: "avatar",
+            nullable: true,
+            typeName: SqlType.VARCHAR,
+            length: 200,
+            comment: '会员头像',
+        }),
         status: new DataColumnDefinition({
             isEnum: true,
             name: "status",
@@ -132,13 +146,22 @@ export const tbMemberTableDef = new TableCreateDefinition({
 
 export let memberDomainDef = ObjectTypeDefinitionUtils.castTableCreateDefinitionToDomainTypeDefinition(tbMemberTableDef);
 
+export let memberClientDomainDef = cloneDeep(memberDomainDef) as ObjectTypeDefinition;
+memberClientDomainDef.className = "MemberInfo";
+memberClientDomainDef.packageName = memberDtoPack;
+memberClientDomainDef.comment = "会员信息";
+memberClientDomainDef.properties.push(
+    {paramName: "deptName", paramDesc: "所属门店", paramType: {type: JavaType.String}},
+    {paramName: "salesmanNickName", paramDesc: "所属业务员", paramType: {type: JavaType.String}},
+)
+
 export let queryMemberApiDef = new ApiDefinition({
     apiName: "listMember",
     comment: "请求会员列表",
     method: RequestMethod.GET,
     module: userApiModuleDef,
     params: reqMemberListDef,
-    result: TableDataInfoTypeDefinition.createTableDataInfo(memberDomainDef),
+    result: TableDataInfoTypeDefinition.createTableDataInfo(memberClientDomainDef),
     url: "/list"
 });
 
@@ -147,3 +170,15 @@ export const memberFilterViewDef: FilterDefinition = {
     fileName: "",
     filterFormDefinition: ViewUtils.castApiDefinitionToFilterFormDefinition(queryMemberApiDef),
 };
+
+export const memberTableViewDef: TableViewDefinition = {
+    actBtnArr: [ActBtn.ADD, ActBtn.EDIT, ActBtn.REMOVE, ActBtn.EXPORT],
+    tableDef: new TableDefinition([
+        // TODO: 写个工具函数来转换
+        {label: "会员身份证", prop: "idCardNum", type: TableColType.TEXT, width: "120px", align: "center"},
+        {label: "所属门店", prop: "deptName", type: TableColType.TEXT},
+        {label: "所属业务员", prop: "salesmanNickName", type: TableColType.TEXT},
+        {label: "会员头像", prop: "avatar", type: TableColType.IMG, align: "center"},
+        {label: "会员类型", prop: "status", type: TableColType.DICT, dictName: "ypx_member_type", align: "center"},
+    ], queryMemberApiDef, "memberList", true),
+}

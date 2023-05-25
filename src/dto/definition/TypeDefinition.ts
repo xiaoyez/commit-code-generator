@@ -56,6 +56,8 @@ interface IObjectTypeDefinition {
 
     className: string;
 
+    comment?: string;
+
     packageName?: string;
 }
 
@@ -63,24 +65,23 @@ export class ObjectTypeDefinition implements IObjectTypeDefinition {
     properties!: IPropertyDefinition[];
     className!: string;
     packageName!: string;
+    comment?: string;
 
     constructor(props: IObjectTypeDefinition) {
         Object.assign(this, props);
     }
 
-    static create(className: string, packageName: string, properties: IPropertyDefinition[]) {
-        return new ObjectTypeDefinition({className, packageName, properties});
+    static create(className: string, packageName: string, properties: IPropertyDefinition[], comment?: string) {
+        return new ObjectTypeDefinition({className, packageName, properties, comment});
     }
 }
 
 interface IDomainTypeDefinition extends IObjectTypeDefinition {
     properties: IDomainPropertyDefinition[];
-    comment?: string;
 }
 
 export class DomainTypeDefinition extends ObjectTypeDefinition {
     properties!: IDomainPropertyDefinition[];
-    comment?: string;
 
     constructor(props: IDomainTypeDefinition) {
         super(props);
