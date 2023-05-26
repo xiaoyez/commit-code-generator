@@ -1,26 +1,14 @@
-import {DataEnumOption} from "../definition/DataEnumOption";
 import {DataEnum} from "../definition/DataEnum";
 import {saveToPath} from "../../utils/TSPathUtils";
+import {compileEjsTmp} from "../../ejsTmp/EjsUtils";
+import {ejsTmp} from "../../ejsTmp/EjsTmp";
 
-export function generateEnumOption(def: DataEnumOption) {
-    let line = `    ${def.sign} = ${def.value},`;
-    if (def.description) {
-        line = `    /** ${def.description} */\n` + line;
-    }
-    return line;
+export function generateSingleEnumDefine(def: DataEnum) {
+    return compileEjsTmp(ejsTmp.tsEnumGenTmp, def);
 }
 
-export function generateEnumDefine(def: DataEnum) {
-    let fieldLines = def.options.map(prop => generateEnumOption(prop));
-    return `export enum ${def.name} {\n${fieldLines.join('\n')}\n}`;
-}
-
-export function generateEnumDescConst(def: DataEnum) {
-    let fieldLines = def.options.map(prop =>
-        `    [${def.name}.${prop.sign}]: '${prop.description}',`);
-    return `export const ${def.name}Desc = {\n${
-        fieldLines.join('\n')
-    }\n} as Record<${def.name}, string>`;
+export function generateEnumModuleDefine(defs: DataEnum[]) {
+    return compileEjsTmp(ejsTmp.tsEnumModuleTmp, defs);
 }
 
 /**
@@ -34,15 +22,7 @@ export function generateEnumDefsToFile(defs: DataEnum[], subPath = "", genIndex 
         return;
     }
 
-    let enums = defs.map(def => {
-        let enumStr = generateEnumDefine(def)
-        if (!def.ruoyiDict) {
-            let descStr = generateEnumDescConst(def);
-            enumStr += '\n\n' + descStr;
-        }
-        return enumStr;
-    });
-    let content = enums.join('\n\n');
+    let content = generateEnumModuleDefine(defs);
 
     saveToPath(content, defs[0].package, subPath, genIndex);
 }

@@ -1,54 +1,45 @@
 import {DataEnum} from "../src/db/definition/DataEnum";
 import {DataEnumOption} from "../src/db/definition/DataEnumOption";
 import {
-    generateEnumDefine,
-    generateEnumDefsToFile,
-    generateEnumDescConst
+    generateEnumDefsToFile, generateSingleEnumDefine
 } from "../src/db/generator/TSEnumGenerator";
-import {config} from "../src/config/Config";
+import {auditStatusEnumDef} from "./common";
+import {cloneDeep} from "lodash";
 
 describe('TSEnumGenerator', () => {
-    const dataEnum = new DataEnum({
-        name: "AuditStatusConstant",
-        package: `${config.basePackage}.${config.constantPackage}.common`,
-        comment: "审核状态",
-        options: [
-            new DataEnumOption({
-                description: "审核中",
-                sign: "AUDITING",
-                value: 1
-            }),
-            new DataEnumOption({
-                description: "通过",
-                sign: "PASS",
-                value: 2
-            }),
-            new DataEnumOption({
-                description: "拒绝",
-                sign: "REJECT",
-                value: 3
-            }),
-        ],
-        ruoyiDict: "test_audit_status",
-    })
+    const dataEnum = auditStatusEnumDef;
+
+    const notRuoyiEnum = cloneDeep(dataEnum);
+    notRuoyiEnum.ruoyiDict = undefined;
 
     it('generate an enum define', () => {
-        expect(generateEnumDefine(dataEnum)).toBe(`export enum AuditStatusConstant {
+        expect(generateSingleEnumDefine(dataEnum)).toBe(`export enum AuditStatusConstant {
     /** 审核中 */
     AUDITING = 1,
     /** 通过 */
     PASS = 2,
     /** 拒绝 */
     REJECT = 3,
-}`);
+}
+`);
     });
 
-    it('generate an enum desc const', () => {
-        expect(generateEnumDescConst(dataEnum)).toBe(`export const AuditStatusConstantDesc = {
+    it('generate an enum with desc const', () => {
+        expect(generateSingleEnumDefine(notRuoyiEnum)).toBe(`export enum AuditStatusConstant {
+    /** 审核中 */
+    AUDITING = 1,
+    /** 通过 */
+    PASS = 2,
+    /** 拒绝 */
+    REJECT = 3,
+}
+
+export const AuditStatusConstantDesc = {
     [AuditStatusConstant.AUDITING]: '审核中',
     [AuditStatusConstant.PASS]: '通过',
     [AuditStatusConstant.REJECT]: '拒绝',
-} as Record<AuditStatusConstant, string>`);
+} as Record<AuditStatusConstant, string>;
+`);
     });
 
     const enum2 = new DataEnum({
