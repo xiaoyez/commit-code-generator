@@ -1,5 +1,6 @@
-import {forEach} from "lodash";
+import {forEach, join, map} from "lodash";
 import {JavaGeneratorUtils} from "../java/generator/utils/JavaGeneratorUtils";
+import * as console from "console";
 
 export interface EjsTmp {
     filePath: string,
@@ -14,4 +15,19 @@ export const ejsTmp = {
             JavaGeneratorUtils
         }
     },
+    javaInterfaceTmp: {
+        filePath: './src/ejsTmp/backend/InterfaceTemplate.ejs',
+        imports: {
+            forEach,
+            JavaGeneratorUtils
+        }
+    },
+    tableCreateSqlTmp: {
+        filePath: './src/ejsTmp/backend/TableCreateSqlTemplate.ejs',
+        imports: {
+            forEach,
+            map,
+            join,
+        }
+    }
 } satisfies Record<string, EjsTmp>;

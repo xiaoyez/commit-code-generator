@@ -1,0 +1,22 @@
+package <%= packageName%>;
+<%forEach(Array.from(imports), i => {%>
+import <%= i%>;<%});%>
+
+/**
+ * <%= comment%>
+ */<%forEach(annotations, annotation => {%>
+<%=JavaGeneratorUtils.generateAnnotation(annotation)%><%})%>
+public interface <%= typeName%> <%if (baseInterfaces && baseInterfaces.length > 0) {%> extends <%= baseInterfaces.map(baseInterface => JavaGeneratorUtils.generateType(baseInterface)).join(', ') %><%}%>{
+
+<%forEach(methods, method => {%>
+    /**
+     * <%=method.comment%>
+<%forEach(method.parameters, param => {%>     * @param <%=param.name%> <%= param.comment || '' %><%})%>
+     */<%forEach(method.annotations, annotation => {%>
+    <%= JavaGeneratorUtils.generateAnnotation(annotation)%>
+<%})%>    <%=method.modifer || 'public'%> <%=JavaGeneratorUtils.generateType(method.returnType)%> <%=method.name%>(<%forEach(method.parameters, (param, index) => {
+        %><%forEach(param.annotations, annotation => {%><%= JavaGeneratorUtils.generateAnnotation(annotation) + ' '
+%><%})%><%=JavaGeneratorUtils.generateType(param.type)%> <%=param.name%><%if (index < method.parameters.length - 1) {%>, <%}%><%})%>);
+
+<%})%>
+}

@@ -2,6 +2,8 @@ import {DbDefinition} from "../definition/DbDefinition";
 import {TableCreateDefinition} from "../definition/TableCreateDefinition";
 import {DataColumnDefinition} from "../definition/DataColumnDefinition";
 import {JoinType, ViewCreateDefinition} from "../definition/ViewCreateDefinition";
+import {compileEjsTmp} from "../../ejsTmp/EjsUtils";
+import {ejsTmp} from "../../ejsTmp/EjsTmp";
 
 export class DDLSqlGenerator {
 
@@ -27,18 +29,7 @@ export class DDLSqlGenerator {
     }
 
     static generateCreateTableSql<T extends Record<string, DataColumnDefinition>>(table: TableCreateDefinition<T>) {
-        let sql = '';
-        sql += `drop table if exists \`${table.tableName}\`;` + '\n'
-        sql += `CREATE TABLE ${table.tableName} (` + '\n';
-        if (table.columns)
-        {
-            sql += Object.values(table.columns).map(col => {
-                return '\t'+DDLSqlGenerator.generateCreateColumnSql(col);
-            }).join(',\n')||'';
-        }
-        sql += '\n)';
-        sql += `ENGINE=InnoDB DEFAULT CHARSET=${table.charset} '${table.comment? `COMMENT=${table.comment}`:'' }';`
-        return sql;
+        return compileEjsTmp(ejsTmp.tableCreateSqlTmp, table);
     }
 
     static generateCreateColumnSql(col: DataColumnDefinition) {

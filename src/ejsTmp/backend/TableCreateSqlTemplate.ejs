@@ -1,0 +1,27 @@
+drop table if exist `<%=tableName%>`;
+create table `<%=tableName%>` (
+<%forEach(Object.values(columns), (col,index) => {
+%>  `<%=col.name%>` <%=col.typeName%><%if(col.length){
+%>(<%=col.length%><%if(col.precision){
+%>,<%=col.precision%><%
+}%>)<%
+}%><%if (col.defaultValue){
+%> default '<%=col.defaultValue%>'<%
+}%><%if (!col.nullable){
+%> not null<%
+}%><%if (col.unsigned){
+%> unsigned<%
+}%><%if (col.isPrimaryKey){
+%> primary key<%
+}%><%if (col.autoIncrement){
+%> auto_increment<%
+}%><%if (col.comment){
+%> comment '<%=col.comment%><%if (col.isEnum && col.enumType){
+%>(<%forEach(col.enumType.options, (option, index)=> {%><%=option.value%>-<%=option.description%><%if(index < col.enumType.options.length - 1){%>,<%}%><%})%>)<%
+}%><%
+}%>'<%if(index < Object.values(columns).length - 1){
+    %>,
+<%}
+%><%
+})%>
+) engine=InnoDB default charset=<%=charset?charset:'utf8'%>> <%=comment?`comment='${comment}'`:''%>;

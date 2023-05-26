@@ -1,43 +1,16 @@
 import {InterfaceDefinition} from "../definition/InterfaceDefinition";
 import {JavaGeneratorUtils} from "./utils/JavaGeneratorUtils";
 import {MethodDefinition} from "../definition/MethodDefinition";
+import {compileEjsTmp} from "../../ejsTmp/EjsUtils";
+import {ejsTmp} from "../../ejsTmp/EjsTmp";
 
 export class InterfaceGenerator {
     static generate(interfaceDefinition: InterfaceDefinition) {
-        let text = '';
-
-        text += `package ${interfaceDefinition.packageName};\n\n`;
 
         InterfaceGenerator.buildImports(interfaceDefinition);
 
-        interfaceDefinition.imports.forEach(importName => {
-            text += `import ${importName};\n`;
-        });
 
-        text += '\n';
-
-        text += JavaGeneratorUtils.generateTypeComment(interfaceDefinition);
-
-        interfaceDefinition.annotations.forEach(annotation => {
-            text += JavaGeneratorUtils.generateAnnotation(annotation) + '\n';
-        })
-        text += `public interface ${interfaceDefinition.typeName}`;
-        if (interfaceDefinition.baseInterfaces && interfaceDefinition.baseInterfaces.length > 0) {
-            text += ' extends ';
-            text += interfaceDefinition.baseInterfaces.map(baseInterface => {
-                return JavaGeneratorUtils.generateType(baseInterface);
-            }).join(',');
-        }
-
-        text += ' {\n\n';
-
-        interfaceDefinition.methods.forEach(method => {
-            text += InterfaceGenerator.generateMethod(method);
-        });
-
-        text += '}';
-
-        return text;
+        return compileEjsTmp(ejsTmp.javaInterfaceTmp, interfaceDefinition);
     }
 
     private static buildImports(interfaceDefinition: InterfaceDefinition) {
@@ -85,19 +58,4 @@ export class InterfaceGenerator {
         });
     }
 
-    private static generateMethod(method: MethodDefinition) {
-        let text = '';
-
-        text += JavaGeneratorUtils.generateMethodComment(method);
-
-        method.annotations.forEach(annotation => {
-            text += `\t${JavaGeneratorUtils.generateAnnotation(annotation)}\n`;
-        });
-
-        text += `\t ${JavaGeneratorUtils.generateType(method.returnType)} ${method.name}(${method.parameters.map((param) => {
-            return `${param.annotations.map(annotation => JavaGeneratorUtils.generateAnnotation(annotation) + ' ').join()}${JavaGeneratorUtils.generateType(param.type)} ${param.name}`;
-        }).join(',')}) ;\n\n`;
-
-        return text;
-    }
 }
