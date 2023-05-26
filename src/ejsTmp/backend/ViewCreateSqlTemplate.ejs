@@ -1,0 +1,15 @@
+create view <%=name%> as
+select
+<%forEach(items,(item,index)=>{
+    %><%const alias = item.alias || item.table.tableName
+    %><%forEach(item.cols, (col,index) =>{
+        %>  <%=alias%>.<%=col.col === '*' ?col.col:col.col.name%><%=col.alias?` as ${col.alias}`:''%><%=index<item.cols.length - 1?',\n':''%><%
+    })%><%=index<items.length - 1?',\n':''%><%
+})%><%const formTableItems = items.filter(item => item.joinType === JoinType.FROM)%><%const joinTableItem = items.filter(item => item.joinType !== JoinType.FROM)%>
+from <%forEach(formTableItems, (item,index) => {
+    %><%=item.table.tableName%><%=item.alias?` as ${item.alias}`:''%><%=index<formTableItems.length - 1? ',':''%><%
+})%>
+<%forEach(joinTableItem, (item,index) => {
+    %><%=item.joinType%> <%=item.table.tableName%><%=item.alias?` as ${item.alias}`:''%>
+on <%=item.on%><%=index<joinTableItem.length - 1? ',':''%><%
+})%>

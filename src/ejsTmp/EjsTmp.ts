@@ -1,6 +1,7 @@
 import {forEach, join, map} from "lodash";
 import {JavaGeneratorUtils} from "../java/generator/utils/JavaGeneratorUtils";
 import * as console from "console";
+import {JoinType} from "../db/definition/ViewCreateDefinition";
 
 export interface EjsTmp {
     filePath: string,
@@ -26,8 +27,17 @@ export const ejsTmp = {
         filePath: './src/ejsTmp/backend/TableCreateSqlTemplate.ejs',
         imports: {
             forEach,
-            map,
-            join,
         }
+    },
+    viewCreateSqlTmp: {
+        filePath: './src/ejsTmp/backend/ViewCreateSqlTemplate.ejs',
+        imports: {
+            forEach,
+            JoinType,
+        }
+    },
+    dbCreateSqlTmp: {
+        filePath: './src/ejsTmp/backend/DbCreateSqlTemplate.ejs',
+        imports: {}
     }
 } satisfies Record<string, EjsTmp>;
