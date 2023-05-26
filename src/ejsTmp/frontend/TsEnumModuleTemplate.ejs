@@ -1,0 +1,4 @@
+<% list.forEach((def, idx) => {
+%><%= compileEjsTmp(ejsTmp.tsEnumGenTmp, def) %><%=
+    idx === list.length - 1 ? '' : '\n'
+%><% }) %>

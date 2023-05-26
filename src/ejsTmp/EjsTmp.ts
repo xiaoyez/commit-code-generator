@@ -1,11 +1,12 @@
-import {forEach, join, map} from "lodash";
+import {forEach} from "lodash";
 import {JavaGeneratorUtils} from "../java/generator/utils/JavaGeneratorUtils";
-import * as console from "console";
 import {JoinType} from "../db/definition/ViewCreateDefinition";
+import {compileEjsTmp} from "./EjsUtils";
 
 export interface EjsTmp {
-    filePath: string,
-    imports: any
+    filePath: string;
+    imports?: Record<string, any>;
+    variable?: string;
 }
 
 export const ejsTmp = {
@@ -41,10 +42,11 @@ export const ejsTmp = {
         imports: {}
     },
     ddlSqlGeneratorTmp: {
-        filePath: './src/ejsTmp/backend/DDLSqlGeneratorTemplate.ejs',
+        filePath: './src/ejsTmp/backend/DDLSqlTemplate.ejs',
         imports: {
             forEach,
-            JoinType
+            JoinType,
+            compileEjsTmp,
         }
     },
     javaConstantClassTmp: {
@@ -58,5 +60,30 @@ export const ejsTmp = {
         imports: {
             forEach,
         }
+    },
+    tsEnumGenTmp: {
+        filePath: './src/ejsTmp/frontend/TsEnumTemplate.ejs',
+        variable: 'def',
+    },
+    tsEnumModuleTmp: {
+        filePath: './src/ejsTmp/frontend/TsEnumModuleTemplate.ejs',
+        imports: {
+            compileEjsTmp,
+        },
+        variable: 'list',
     }
 } satisfies Record<string, EjsTmp>;
+
+let includeEjsTmp: (keyof typeof ejsTmp)[] = [
+    'ddlSqlGeneratorTmp',
+    'tsEnumModuleTmp',
+];
+
+for (let def of includeEjsTmp) {
+    let tmpInfo: EjsTmp = ejsTmp[def];
+    let imports = tmpInfo.imports ;
+    if (!imports) {
+        imports = tmpInfo.imports = {};
+    }
+    imports['ejsTmp'] = ejsTmp;
+}
