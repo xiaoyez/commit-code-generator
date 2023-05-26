@@ -39,5 +39,12 @@ export const ejsTmp = {
     dbCreateSqlTmp: {
         filePath: './src/ejsTmp/backend/DbCreateSqlTemplate.ejs',
         imports: {}
+    },
+    ddlSqlGeneratorTmp: {
+        filePath: './src/ejsTmp/backend/DDLSqlGeneratorTemplate.ejs',
+        imports: {
+            forEach,
+            JoinType
+        }
     }
 } satisfies Record<string, EjsTmp>;

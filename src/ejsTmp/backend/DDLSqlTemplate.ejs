@@ -1,0 +1,5 @@
+<%=compileEjsTmp(ejsTmp.dbCreateSqlTmp, dbDefinition)%>
+
+<%forEach(dbDefinition.tables, table=>{%><%=compileEjsTmp(ejsTmp.tableCreateSqlTmp, table)%><%})%>
+
+<%forEach(dbDefinition.views, view=>{%><%=compileEjsTmp(ejsTmp.viewCreateSqlTmp, view)%><%})%>

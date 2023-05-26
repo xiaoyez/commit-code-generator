@@ -8,18 +8,7 @@ import {ejsTmp} from "../../ejsTmp/EjsTmp";
 export class DDLSqlGenerator {
 
     static generateSql(dbDefinition: DbDefinition): string {
-        let sql = '';
-        sql += dbDefinition?DDLSqlGenerator.generateCreateDbSql(dbDefinition):'';
-        sql += '\n';
-        sql += dbDefinition.tables?.reduce((sql,table)=>{
-            return sql + DDLSqlGenerator.generateCreateTableSql(table) + '\n';
-        },'')||'';
-
-        sql += dbDefinition.views?.reduce((sql, view) =>{
-            return sql + DDLSqlGenerator.generateCreateViewSql(view) + '\n';
-        }, '')||'';
-
-        return sql;
+        return compileEjsTmp(ejsTmp.ddlSqlGeneratorTmp, dbDefinition);
     }
 
     static generateCreateDbSql(dbDefinition: DbDefinition): string {
