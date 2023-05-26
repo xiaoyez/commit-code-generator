@@ -7,7 +7,7 @@ import {
 import {TableCreateDefinition} from "../../db/definition/TableCreateDefinition";
 import {config} from "../../config/Config";
 import {javaTypeMapper} from "./TypeMapper";
-import {camelCase,upperFirst} from "lodash";
+import {camelCase, upperFirst} from "lodash";
 import {SqlType} from "../../db/definition/SqlType";
 import {TimePattern} from "./TimePattern";
 import {DataColumnDefinition} from "../../db/definition/DataColumnDefinition";
@@ -97,14 +97,13 @@ export class ObjectTypeDefinitionUtils {
     }
 
     static castTableCreateDefinitionToDomainTypeDefinition<T extends Record<string, DataColumnDefinition>>(tableCreateDefinition: TableCreateDefinition<T>): DomainTypeDefinition {
-        const domainTypeDefinition = new DomainTypeDefinition({
+        return new DomainTypeDefinition({
             className: upperFirst(camelCase(tableCreateDefinition.tableName)),
             packageName: config.domainPackage,
-            properties: tableCreateDefinition.columns?Object.values(tableCreateDefinition.columns).map(column => {
+            properties: tableCreateDefinition.columns ? Object.values(tableCreateDefinition.columns).map(column => {
                 return ObjectTypeDefinitionUtils.castDataColumnDefinitionToIDomainPropertyDefinition(column)
-            }):[],
+            }) : [],
             comment: tableCreateDefinition.comment
-        })
-        return domainTypeDefinition;
+        });
     }
 }

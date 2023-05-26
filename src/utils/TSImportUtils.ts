@@ -28,13 +28,15 @@ export function emptyImportLines(): ImportLinesInfo {
     return new Map();
 }
 
-export function addNewImport(info: TSImportInfo, cur: ImportLinesInfo) {
+export function addNewImport(info: TSImportInfo, cur: ImportLinesInfo, isType?: boolean) {
     let imported = cur.get(info.importPath);
     if (!imported) {
         imported = new Map();
         cur.set(info.importPath, imported);
     }
-    let isType = info.importType === ImportType.Type;
+    if (isType === undefined) {
+        isType = info.importType === ImportType.Type;
+    }
     // 防止实现导入被修改为类型导入
     if (isType && imported.has(info.importName)) {
         return;
