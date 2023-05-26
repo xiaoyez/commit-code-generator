@@ -47,7 +47,7 @@ export const dataEnum = new DataEnum({
             value: 3
         }),
     ],
-
+    ruoyiDict: 'ypx_audit_status'
 })
 
 const statusEnumDefinition = new DataColumnDefinition({
@@ -75,10 +75,6 @@ const dbDefinition = new DbDefinition({
 
 });
 
-
-test('test generateCreateColumnSql', () => {
-    console.log(DDLSqlGenerator.generateCreateColumnSql(idDefinition));
-});
 
 test('test generateCreateTableSql', () => {
     console.log(DDLSqlGenerator.generateCreateTableSql(tableUserDefinition));

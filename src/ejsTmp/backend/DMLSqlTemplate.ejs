@@ -1,0 +1,13 @@
+-- <%=comment%>
+delete from sys_dict_type where dict_type = '<%=ruoyiDict%>';
+
+INSERT INTO  sys_dict_type 
+(`dict_name`, `dict_type`, `status`, `create_by`,`create_time`, `update_by`, `update_time`, `remark`)
+ VALUES ('<%=comment%>','<%=ruoyiDict%>','0','admin',now(),'','NULL','NULL');
+
+delete from sys_dict_data where dict_type = '<%=ruoyiDict%>';
+<%forEach(options, (option,index) => {%>
+INSERT INTO `sys_dict_data`
+(`dict_sort`, `dict_label`, `dict_value`, `dict_type`, `css_class`, `list_class`, `is_default`, `status`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`)
+VALUES (<%=index%>,'<%=option.description%>','<%=option.value%>','<%=ruoyiDict%>',NULL,'default','N','0','admin',now(),'','NULL','NULL');
+<%})%>

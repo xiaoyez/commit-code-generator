@@ -52,5 +52,11 @@ export const ejsTmp = {
         imports: {
             forEach,
         }
+    },
+    dmlSqlGeneratorTmp: {
+        filePath: './src/ejsTmp/backend/DMLSqlTemplate.ejs',
+        imports: {
+            forEach,
+        }
     }
 } satisfies Record<string, EjsTmp>;
