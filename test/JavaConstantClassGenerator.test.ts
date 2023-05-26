@@ -21,6 +21,7 @@ const dataEnum = new DataEnum({
             value: 3
         }),
     ],
+    comment: "审核状态"
 
 })
 

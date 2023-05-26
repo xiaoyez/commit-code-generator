@@ -1,0 +1,9 @@
+package <%=package%>;
+
+/** <%=comment%> */
+public class <%=name%> {
+<%forEach(options, option => {%>
+    /** <%=option.description%> */
+    public static final int <%=option.sign%> = <%=option.value%>;
+<%})%>
+}

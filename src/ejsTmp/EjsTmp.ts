@@ -46,5 +46,11 @@ export const ejsTmp = {
             forEach,
             JoinType
         }
+    },
+    javaConstantClassTmp: {
+        filePath: './src/ejsTmp/backend/JavaConstantClassTemplate.ejs',
+        imports: {
+            forEach,
+        }
     }
 } satisfies Record<string, EjsTmp>;
