@@ -82,6 +82,10 @@ export const ejsTmp = {
             fieldTypeString,
         }
     },
+    tsImportLinesTmp: {
+        filePath: './src/ejsTmp/frontend/TsImportLinesTemplate.ejs',
+        variable: 'importDefs',
+    },
     filterTmp: {
         filePath: './src/ejsTmp/frontend/view/FilterTemplate.ejs',
         imports: {
