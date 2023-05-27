@@ -1,26 +1,12 @@
-import {IPropertyDefinition, ObjectTypeDefinition} from "../definition/TypeDefinition";
+import {ObjectTypeDefinition} from "../definition/TypeDefinition";
 import {saveToPath} from "../../utils/TSPathUtils";
-import {tsTypeString} from "../../utils/TypeUtils";
 import {emptyImportLines, generateImportLines, getTypeUsingImports} from "../../utils/TSImportUtils";
+import {compileEjsTmp} from "../../ejsTmp/EjsUtils";
+import {ejsTmp} from "../../ejsTmp/EjsTmp";
 
-export function generateObjectField(def: IPropertyDefinition) {
-    let typeString;
-    if (def.enumType) {
-        typeString = def.enumType.name;
-    }
-    else {
-        typeString = tsTypeString(def.paramType);
-    }
-    let propLine = `    ${def.paramName}: ${typeString};`;
-    if (def.paramDesc) {
-        propLine = `    /** ${def.paramDesc} */\n` + propLine;
-    }
-    return propLine;
-}
 
 export function generateInterfaceDefine(def: ObjectTypeDefinition) {
-    let fieldLines = def.properties.map(prop => generateObjectField(prop));
-    return `export interface ${def.className} {\n${fieldLines.join('\n')}\n}`;
+    return compileEjsTmp(ejsTmp.tsInterfaceGenTmp, def);
 }
 
 export function generateInterfaceDefsToFile(defs: ObjectTypeDefinition[], subPath = "/src", genIndex = false) {

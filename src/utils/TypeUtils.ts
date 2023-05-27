@@ -1,4 +1,4 @@
-import {ObjectTypeDefinition, TypeDefinition} from "../dto/definition/TypeDefinition";
+import {IPropertyDefinition, ObjectTypeDefinition, TypeDefinition} from "../dto/definition/TypeDefinition";
 import {tsTypeMapper} from "../dto/definition/TypeMapper";
 
 export function isOfType<T>(
@@ -37,4 +37,13 @@ export function tsTypeString(def: TypeDefinition) {
         throw new Error('数组不能没有泛型参数');
     }
     return typeName;
+}
+
+export function fieldTypeString(def: IPropertyDefinition) {
+    if (def.enumType) {
+        return def.enumType.name;
+    }
+    else {
+        return tsTypeString(def.paramType);
+    }
 }
