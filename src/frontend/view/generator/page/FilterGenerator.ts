@@ -10,6 +10,8 @@ import {
 } from "../../definition/page/FormDefinition";
 import {ObjectTypeDefinition} from "../../../../dto/definition/TypeDefinition";
 import {generateImportLines, getTypeImportsFrom} from "../../../../utils/TSImportUtils";
+import {compileEjsTmp} from "../../../../ejsTmp/EjsUtils";
+import {ejsTmp} from "../../../../ejsTmp/EjsTmp";
 
 type InputControlTempGen = (modelName: string, def: InputControl) => string;
 
@@ -22,10 +24,7 @@ export class FilterGenerator {
     ]);
 
     static generate(filterDefinition: FilterDefinition) {
-        let text = '';
-        text += FilterGenerator.generateTemplate(filterDefinition.filterFormDefinition);
-        text += FilterGenerator.generateScript(filterDefinition);
-        return text;
+        return compileEjsTmp(ejsTmp.filterTmp, filterDefinition)
     }
 
     private static generateTemplate(filterFormDefinition: FilterFormDefinition) {

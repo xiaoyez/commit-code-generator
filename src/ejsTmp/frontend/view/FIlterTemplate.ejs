@@ -1,0 +1,64 @@
+<%
+  const filterFormDef = def.filterFormDefinition;
+  const modelName = filterFormDef.modelName || 'queryParams'
+  const refName = filterFormDef.refName || 'queryForm'
+  const vShowName = filterFormDef.vshowName || 'showSearch'
+%><template>
+  <el-form class="filter-form" :model="<%=modelName%>" ref="<%=refName%>" :inline="true" v-show="<%=vShowName%>">
+<%forEach(filterFormDef.items,itemDef=>{
+%>    <el-form-item label="<%=itemDef.label%>" prop="<%=itemDef.prop%>"><%const defControl = itemDef.inputControl%>
+      <%if(defControl instanceof TextInputControl){
+      %><el-input v-model="<%=modelName%>.<%=defControl.vModelName%>" placeholder="<%=defControl.placeholder%>"/><%
+      }%><%if (defControl instanceof SelectInputControl){
+        const keyFiled = defControl.key || defControl.value
+        %><el-select v-model="<%=modelName%>.<%=defControl.vModelName%>" placeholder="<%=defControl.placeholder%>" clearable filterable>
+        <el-option v-for="<%=defControl.iterName%> in <%=defControl.listName%>" :key="<%=defControl.iterName%>.<%=keyFiled%>" :label="<%=defControl.iterName%>.<%=defControl.label%>" :value="<%=defControl.iterName%>.<%=defControl.value%>"/>
+        </el-select><%
+      }%><%if (defControl instanceof DateInputControl) {
+        const modelStr = defControl.isRange ? (modelName + '.') : "" + defControl.model
+        const compType = 'date' + (defControl.withTime ? "time" : '') + (defControl.isRange ? "range" : '')
+      %><el-date-picker
+        v-model="<%=modelStr%>"
+        value-format="<%=defControl.format%>"
+        type="<%=compType%>"
+        <%if(defControl.isRange){
+        %>range-separator="<%=defControl.rangeSeparator%>"
+        start-placeholder="<%=defControl.startPlaceholder%>"
+        end-placeholder="<%=defControl.endPlaceholder%>"<%
+        }%><%if(!defControl.isRange){
+      %>placeholder="<%=defControl.startPlaceholder%>"<%
+        }%>
+      /><%
+      }%>
+    </el-form-item><%
+})%>
+    <el-form-item>
+      <el-button type="primary" icon="Search" size="small" @click="handleQuery">搜索</el-button>
+      <el-button icon="Refresh" size="small" @click="resetQuery">重置</el-button>
+    </el-form-item>
+    <div v-if="noActBtn" class="tail-spacing"></div>
+  </el-form>
+</template>
+
+<script setup lang="ts">
+import {ref} from "vue";
+import {ElForm} from "element-plus";
+import {COMMON_KEYS} from "@/constants/common";
+const { INJECT_QUERY_LIST_PARAM } = COMMON_KEYS;
+<%const api = def.api;%>
+<%if(api.params){
+%><%let importInfo = getTypeImportsFrom(api.params)
+%><%=generateImportLines(importInfo)%><%}%>
+const <%=refName%> = ref<InstanceType<typeof ElForm>|null>(null);
+defineProps<{
+    <%=vShowName%>: boolean
+    noActBtn?: boolean
+}>();
+<%if(api.params?.type instanceof ObjectTypeDefinition) {
+%>const emit = defineEmits<{
+    (e:'handleQuery', query: <%=api.params.type.className%>): void,
+}>();
+const ${modelName} = inject<Ref<<%=api.params.type.className%>>>(INJECT_QUERY_LIST_PARAM, () => ref<<%=api.params.type.className%>>({}), true);<%
+}%><%const dateRangeItems = filterFormDef.items.filter(item=> item.inputControl instanceof DateInputControl && item.inputControl.isRange)%>
+
+</script>
