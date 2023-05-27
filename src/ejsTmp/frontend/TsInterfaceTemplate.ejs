@@ -1,0 +1,8 @@
+export interface <%= className %> {
+<% for (let prop of properties) {
+    if (prop.paramDesc) {
+%>    /** <%= prop.paramDesc %> */
+<%  }
+%>    <%= prop.paramName %>: <%= fieldTypeString(prop) %>;
+<% }
+%>}

@@ -2,6 +2,8 @@ import {config} from "../config/Config";
 import {ObjectTypeDefinition, TypeDefinition} from "../dto/definition/TypeDefinition";
 import {convertPackageToPath} from "./TSPathUtils";
 import {DataEnum} from "../db/definition/DataEnum";
+import {compileEjsTmp} from "../ejsTmp/EjsUtils";
+import {ejsTmp} from "../ejsTmp/EjsTmp";
 
 const BasePackage = `${config.basePackage}.${config.dtoPackage}`;
 const CoreModule = `${BasePackage}.common`;
@@ -22,7 +24,9 @@ interface TSImportInfo {
     importType?: ImportType; // default: Object
 }
 
-export type ImportLinesInfo = Map<string, Map<string, ImportType>>;
+type ImportLinesInfo = Map<string, Map<string, ImportType>>;
+
+type ImportLinesRecord = Record<string, { type?: string[], objs?: string[] }>;
 
 export function emptyImportLines(): ImportLinesInfo {
     return new Map();
@@ -110,9 +114,10 @@ export function getTypeUsingImports(def: ObjectTypeDefinition, cur?: ImportLines
     return cur;
 }
 
-export function generateImportLines(imports: ImportLinesInfo) {
-    let text = "";
+export function getImportLinesRecord(imports: ImportLinesInfo) {
+    let res = {} as ImportLinesRecord;
     for (let [module, imported] of imports) {
+        if (imported.size === 0) continue;
         let types = [], objs = [];
         for (let [name, type] of imported) {
             if (type === ImportType.Type) {
@@ -121,12 +126,20 @@ export function generateImportLines(imports: ImportLinesInfo) {
                 objs.push(name);
             }
         }
+        res[module] = {};
         if (objs.length > 0) {
-            text += `import {${[...objs].join(', ')}} from "${module}";\n`;
+            res[module].objs = objs;
         }
         if (types.length > 0) {
-            text += `import type {${[...types].join(', ')}} from "${module}";\n`;
+            res[module].type = types;
         }
     }
-    return text;
+    return res;
+}
+
+export function generateImportLines(imports: ImportLinesInfo|ImportLinesRecord) {
+    if (imports instanceof Map) {
+        imports = getImportLinesRecord(imports);
+    }
+    return compileEjsTmp(ejsTmp.tsImportLinesTmp, imports);
 }

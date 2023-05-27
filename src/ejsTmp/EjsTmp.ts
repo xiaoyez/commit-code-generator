@@ -2,6 +2,7 @@ import {forEach} from "lodash";
 import {JavaGeneratorUtils} from "../java/generator/utils/JavaGeneratorUtils";
 import {JoinType} from "../db/definition/ViewCreateDefinition";
 import {compileEjsTmp} from "./EjsUtils";
+import {fieldTypeString} from "../utils/TypeUtils";
 import {DateInputControl, SelectInputControl, TextInputControl} from "../frontend/view/definition/page/FormDefinition";
 import {generateImportLines, getTypeImportsFrom} from "../utils/TSImportUtils";
 import {ObjectTypeDefinition} from "../dto/definition/TypeDefinition";
@@ -78,6 +79,16 @@ export const ejsTmp = {
             compileEjsTmp,
         },
         variable: 'list',
+    },
+    tsInterfaceGenTmp: {
+        filePath: './src/ejsTmp/frontend/TsInterfaceTemplate.ejs',
+        imports: {
+            fieldTypeString,
+        }
+    },
+    tsImportLinesTmp: {
+        filePath: './src/ejsTmp/frontend/TsImportLinesTemplate.ejs',
+        variable: 'importDefs',
     },
     filterTmp: {
         filePath: './src/ejsTmp/frontend/view/FilterTemplate.ejs',

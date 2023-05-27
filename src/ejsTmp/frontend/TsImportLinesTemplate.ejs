@@ -1,0 +1,9 @@
+<% for (let module in importDefs) {
+     let {type, objs} = importDefs[module];
+     if (objs) {
+%>import {<%=objs.join(', ')%>} from "<%= module %>";
+<%   }
+     if (type) {
+%>import type {<%=type.join(', ')%>} from "<%= module %>";
+<%   }
+} %>
