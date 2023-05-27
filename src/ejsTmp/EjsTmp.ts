@@ -70,28 +70,28 @@ export const ejsTmp = {
         }
     },
     tsEnumGenTmp: {
-        filePath: './src/ejsTmp/frontend/TsEnumTemplate.ejs',
+        filePath: './src/ejsTmp/frontend/EnumTemplate.ejs',
         variable: 'def',
     },
     tsEnumModuleTmp: {
-        filePath: './src/ejsTmp/frontend/TsEnumModuleTemplate.ejs',
+        filePath: './src/ejsTmp/frontend/EnumModuleTemplate.ejs',
         imports: {
             compileEjsTmp,
         },
         variable: 'list',
     },
     tsInterfaceGenTmp: {
-        filePath: './src/ejsTmp/frontend/TsInterfaceTemplate.ejs',
+        filePath: './src/ejsTmp/frontend/InterfaceTemplate.ejs',
         imports: {
             fieldTypeString,
         }
     },
     tsImportLinesTmp: {
-        filePath: './src/ejsTmp/frontend/TsImportLinesTemplate.ejs',
+        filePath: './src/ejsTmp/frontend/ImportLinesTemplate.ejs',
         variable: 'importDefs',
     },
     tsInterfaceModuleTmp: {
-        filePath: './src/ejsTmp/frontend/TsInterfaceModuleTemplate.ejs',
+        filePath: './src/ejsTmp/frontend/InterfaceModuleTemplate.ejs',
         variable: 'data',
         imports: {
             compileEjsTmp,
