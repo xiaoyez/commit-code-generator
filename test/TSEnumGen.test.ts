@@ -20,8 +20,7 @@ describe('TSEnumGenerator', () => {
     PASS = 2,
     /** 拒绝 */
     REJECT = 3,
-}
-`);
+}`);
     });
 
     it('generate an enum with desc const', () => {
@@ -38,8 +37,7 @@ export const AuditStatusConstantDesc = {
     [AuditStatusConstant.AUDITING]: '审核中',
     [AuditStatusConstant.PASS]: '通过',
     [AuditStatusConstant.REJECT]: '拒绝',
-} as Record<AuditStatusConstant, string>;
-`);
+} as Record<AuditStatusConstant, string>;`);
     });
 
     const enum2 = new DataEnum({
