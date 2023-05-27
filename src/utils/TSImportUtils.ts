@@ -143,3 +143,11 @@ export function generateImportLines(imports: ImportLinesInfo|ImportLinesRecord) 
     }
     return compileEjsTmp(ejsTmp.tsImportLinesTmp, imports);
 }
+
+export function getInterfaceModuleImportLines(defs: ObjectTypeDefinition[]) {
+    let imports = emptyImportLines();
+    for (let def of defs) {
+        getTypeUsingImports(def, imports);
+    }
+    return getImportLinesRecord(imports);
+}

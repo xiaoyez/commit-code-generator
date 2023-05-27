@@ -90,6 +90,13 @@ export const ejsTmp = {
         filePath: './src/ejsTmp/frontend/TsImportLinesTemplate.ejs',
         variable: 'importDefs',
     },
+    tsInterfaceModuleTmp: {
+        filePath: './src/ejsTmp/frontend/TsInterfaceModuleTemplate.ejs',
+        variable: 'data',
+        imports: {
+            compileEjsTmp,
+        }
+    },
     filterTmp: {
         filePath: './src/ejsTmp/frontend/view/FilterTemplate.ejs',
         imports: {
@@ -122,6 +129,7 @@ export const ejsTmp = {
 let includeEjsTmp: (keyof typeof ejsTmp)[] = [
     'ddlSqlGeneratorTmp',
     'tsEnumModuleTmp',
+    'tsInterfaceModuleTmp',
 ];
 
 for (let def of includeEjsTmp) {
