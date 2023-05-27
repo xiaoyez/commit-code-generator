@@ -2,7 +2,8 @@ export enum <%= def.name %> {
 <% for (let prop of def.options) {
     if (prop.description) {
 %>    /** <%= prop.description %> */
-<%  } %>    <%= prop.sign %> = <%= prop.value %>,
+<%  }
+%>    <%= prop.sign %> = <%= prop.value %>,
 <% } %>}
 <% if (!def.ruoyiDict) { %>
 export const <%= def.name %>Desc = {
