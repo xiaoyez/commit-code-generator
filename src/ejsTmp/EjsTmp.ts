@@ -5,6 +5,10 @@ import {compileEjsTmp} from "./EjsUtils";
 import {DateInputControl, SelectInputControl, TextInputControl} from "../frontend/view/definition/page/FormDefinition";
 import {generateImportLines, getTypeImportsFrom} from "../utils/TSImportUtils";
 import {ObjectTypeDefinition} from "../dto/definition/TypeDefinition";
+import {ActBtn, ColActBtn, TableColType} from "../frontend/view/definition/page/TableViewDefinition";
+import {ModuleUtils} from "../api/utils/ModuleUtils";
+import {ApiUtils} from "../api/utils/ApiUtils";
+import {tsTypeString} from "../utils/TypeUtils";
 
 export interface EjsTmp {
     filePath: string;
@@ -87,6 +91,20 @@ export const ejsTmp = {
             ObjectTypeDefinition,
         },
         variable: 'def',
+    },
+    tableViewTmp: {
+        filePath: './src/ejsTmp/frontend/view/TableViewTemplate.ejs',
+        imports: {
+            forEach,
+            ActBtn,
+            prefix2Module: ModuleUtils.prefix2Module,
+            ApiUtils,
+            TableColType,
+            ColActBtn,
+            getTypeImportsFrom,
+            generateImportLines,
+            tsTypeString,
+        }
     }
 } satisfies Record<string, EjsTmp>;
 

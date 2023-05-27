@@ -1,0 +1,128 @@
+<%const api = def.tableDef.api;%><template>
+  <%if(def.actBtnArr && def.actBtnArr.length > 0){
+  %><el-row :gutter="10" class="mb8"><%forEach(def.actBtnArr, actBtn => {
+        %>    <el-col :span="1.5">
+    <%if(actBtn === ActBtn.ADD){
+    %>      <el-button type="primary" plain icon="Plus" size="small"
+        @click="handleAdd()" v-has-permi="['<%=config.projectName%>:<%=prefix2Module(api.module?.baseUrlPrefix)%>:add']">新增
+      </el-button><%
+    }%><%if (actBtn === ActBtn.EDIT) {
+        %>      <el-button type="success" plain icon="Edit" size="small" :disabled="notSingle"
+        @click="handleUpdate()" v-has-permi="['<%=config.projectName%>:<%=prefix2Module(api.module?.baseUrlPrefix)%>:edit']">修改
+    </el-button><%
+    }%><%if (actBtn === ActBtn.REMOVE) {
+        %>      <el-button type="danger" plain icon="Delete" size="small" :disabled="notMulti"
+        @click="handleDelete()" v-has-permi="['<%=config.projectName%>:<%=prefix2Module(api.module?.baseUrlPrefix)%>:remove']">修改
+    </el-button><%
+    }%><%if (actBtn === ActBtn.EDIT) {
+        %>      <el-button type="warning" plain icon="Download" size="small"
+        @click="handleExport()" v-has-permi="['<%=config.projectName%>:<%=prefix2Module(api.module?.baseUrlPrefix)%>:export']">修改
+    </el-button><%
+    }%>
+    </el-col><%
+    })%>
+    </el-row>
+  <%}%>
+  <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
+  <%const tableDef = def.tableDef;%>
+  <el-table :data="<%=tableDef.dataName%>" border stripe size="mini" v-loading="loading" @selection-change="handleSelectionChange">
+    <el-table-column type="selection" width="55" align="center"/>
+    <el-table-column label="序号">
+      <template #default="{ $index }: { $index: number }">
+    {{ calcOrder($index) }}
+<%const dataTypeName = ApiUtils.getResultDataTypeName(tableDef.api);
+%>
+</template>
+</el-table-column>
+<%forEach(tableDef.cols, col => {
+    %><el-table-column <%=col.label?`lable="${col.label}"`:''%> <%=col.prop?`prop="${col.prop}"`:''%> <%=col.width?`width="${col.width}"`:''%> <%=col.align?`align="${col.align}"`:''
+    %><%if(col.type === TableColType.TEXT){
+    %>/><%
+    }%><%if(col.type !== TableColType.TEXT) {
+    %>><%if (col.type === TableColType.DICT){
+    %>      <template #default="{ row }: { row: ${dataTypeName} }">
+        <dict-tag :options="getDict('<%=col.dictName%>').value" :value="row.<%=col.prop%>"/>
+        </template><%
+        }%></el-table-column><%
+    }%><%if (col.type === TableColType.IMG){
+    %>      <template #default="{ row }: { row: <%=dataTypeName%> }">
+    <el-image
+v-if="row.<%=col.prop%>}"
+    style="height: 100px"
+:src="fileUrl(row.<%=col.prop%>})"
+    />
+    </template><%
+    }%><%
+})%>
+<%if(tableDef.colActBtnArr.length > 0){
+%>    <el-table-column label="操作" width="100" fixed="right" align="center">
+      <template #default="{ row }: { row: ${dataTypeName} }">
+<%forEach(tableDef.colActBtnArr, colActBtn=>{
+        %><%if(colActBtn === ColActBtn.EDIT) {
+        %>        <el-button size="small" link icon="Edit" @click="handleUpdate(row)"
+          v-has-permi="['<%=config.projectName%>:<%=api.module?.baseUrlPrefix%>:edit']">修改
+        </el-button><%
+        }%><%if(colActBtn === ColActBtn.REMOVE) {
+        %>        <el-button size="small" link icon="Delete" @click="handleDelete(row)"
+          v-has-permi="['<%=config.projectName%>:<%=api.module?.baseUrlPrefix%>:remove']">修改
+        </el-button><%
+        }%><%if(colActBtn === ColActBtn.INFO) {
+        %>        <el-button size="small" link icon="Info" @click="showInfo(row)"
+          v-has-permi="['<%=config.projectName%>:<%=api.module?.baseUrlPrefix%>:info']">修改
+        </el-button><%
+        }%><%
+        })%>
+      </template>
+    </el-table-column><%
+}%>
+  </el-table>
+<%if (tableDef.isPage) {%>
+  <pagination v-show="totalRows > 0" :total="totalRows" v-model:page.sync="paging.pageNum"
+    v-model:limit.sync="paging.pageSize" @pagination="getList"/>
+<%}%>
+
+</template>
+
+<script setup lang='ts'>
+import {cloneDeep} from "lodash-es";
+import {useTableIndex} from '@/utils';
+import {fileUrl} from '@/utils/file';
+import {COMMON_KEYS} from '@/constants/common';
+<%if (tableDef.isPage) {
+%>import type {IPagingParams} from '@/dataType/common';<%
+}%>
+<%let dataTypeDef = ApiUtils.getResultDataType(tableDef.api);
+if (dataTypeDef) {
+    const dataTypeImportInfo = getTypeImportsFrom(dataTypeDef);
+}%><%=generateImportLines(dataTypeImportInfo)%>
+const {INJECT_QUERY_LIST_PARAM} = COMMON_KEYS;
+
+const showSearch = defineModel<boolean>({
+    default: true,
+});
+
+<%
+let dataTypeDef = ApiUtils.getResultDataType(tableDef.api);
+let dataTypeStr = dataTypeDef ? tsTypeString(dataTypeDef) : 'unknown';
+ %>
+const { <%=tableDef.dataName%> = [], totalRows = 0 } = defineProps<{
+    <%=tableDef.dataName%>: <%=dataTypeStr%>[];
+    totalRows: number;
+    loading: boolean
+}>();
+
+const selected = ref<<%=dataTypeStr%>[]>([]);
+const notSingle = computed(() => selected.value.length !== 1);
+const notMulti = computed(() => selected.value.length === 0);
+
+function handleSelectionChange(selection: <%=dataTypeStr%>[]) {
+    selected.value = selection;
+}
+
+const paging = inject<Ref<Required<IPagingParams>>>(INJECT_QUERY_LIST_PARAM, () => ref({
+    pageSize: 10,
+    pageNum: 1,
+}), true);
+
+const calcOrder = useTableIndex(paging as Ref<IPagingParams>);
+</script>

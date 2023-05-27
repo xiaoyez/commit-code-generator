@@ -79,5 +79,10 @@ export class ModuleUtils {
         return paramName;
     }
 
+    static prefix2Module(prefix?: string) {
+        if (!prefix) return '';
+        let res = prefix.replace('\/', '.');
+        return res.startsWith('.') ? res.substring(1) : res;
+    }
 
 }
