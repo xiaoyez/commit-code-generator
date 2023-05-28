@@ -15,6 +15,7 @@ export interface EjsTmp {
     filePath: string;
     imports?: Record<string, any>;
     variable?: string;
+    needOtherTmp?: boolean;
 }
 
 export const ejsTmp = {
@@ -55,7 +56,8 @@ export const ejsTmp = {
             forEach,
             JoinType,
             compileEjsTmp,
-        }
+        },
+        needOtherTmp: true,
     },
     javaConstantClassTmp: {
         filePath: './src/ejsTmp/backend/JavaConstantClassTemplate.ejs',
@@ -79,6 +81,7 @@ export const ejsTmp = {
             compileEjsTmp,
         },
         variable: 'list',
+        needOtherTmp: true,
     },
     tsInterfaceGenTmp: {
         filePath: './src/ejsTmp/frontend/InterfaceTemplate.ejs',
@@ -95,7 +98,8 @@ export const ejsTmp = {
         variable: 'data',
         imports: {
             compileEjsTmp,
-        }
+        },
+        needOtherTmp: true,
     },
     tsApiCallFuncTmp: {
         filePath: './src/ejsTmp/frontend/ApiCallFuncTemplate.ejs',
@@ -108,7 +112,8 @@ export const ejsTmp = {
         variable: 'data',
         imports: {
             compileEjsTmp,
-        }
+        },
+        needOtherTmp: true,
     },
     filterTmp: {
         filePath: './src/ejsTmp/frontend/view/FilterTemplate.ejs',
@@ -139,18 +144,13 @@ export const ejsTmp = {
     }
 } satisfies Record<string, EjsTmp>;
 
-let includeEjsTmp: (keyof typeof ejsTmp)[] = [
-    'ddlSqlGeneratorTmp',
-    'tsEnumModuleTmp',
-    'tsInterfaceModuleTmp',
-    'tsApiModuleTmp',
-];
-
-for (let def of includeEjsTmp) {
-    let tmpInfo: EjsTmp = ejsTmp[def];
-    let imports = tmpInfo.imports ;
-    if (!imports) {
-        imports = tmpInfo.imports = {};
+for (let def in ejsTmp) {
+    let tmpInfo: EjsTmp = ejsTmp[def as keyof typeof ejsTmp];
+    if (tmpInfo.needOtherTmp) {
+        let imports = tmpInfo.imports ;
+        if (!imports) {
+            imports = tmpInfo.imports = {};
+        }
+        imports['ejsTmp'] = ejsTmp;
     }
-    imports['ejsTmp'] = ejsTmp;
 }
