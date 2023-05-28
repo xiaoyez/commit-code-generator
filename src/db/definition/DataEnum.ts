@@ -1,6 +1,9 @@
 import {DataEnumOption, IDataEnumOption} from "./DataEnumOption";
 import {config} from "../../config/Config";
 
+/**
+ * 数据枚举接口
+ */
 interface IDataEnum {
     name: string;
     options: IDataEnumOption[];
@@ -9,6 +12,9 @@ interface IDataEnum {
     comment: string;
 }
 
+/**
+ * 数据枚举类
+ */
 export class DataEnum {
     name!: string;
     options!: DataEnumOption[];
@@ -32,7 +38,7 @@ export class DataEnum {
         return new DataEnum({
             name,
             options,
-            package: `${config.basePackage}.${config.constantPackage}.${config.projectName}`,
+            package: `${config.projectPackage}.${config.constantPackage}.${config.projectName}`,
             comment,
             ruoyiDict,
         });

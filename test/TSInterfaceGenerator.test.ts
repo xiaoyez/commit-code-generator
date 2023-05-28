@@ -11,7 +11,7 @@ describe('TSInterfaceGenerator', () => {
 
     let interfaceDef = new ObjectTypeDefinition({
         className: 'TestResp',
-        packageName: `${config.basePackage}.${config.dtoPackage}.testOther`,
+        packageName: `${config.projectPackage}.${config.dtoPackage}.testOther`,
         properties: [
             {
                 paramName: "fieldA",
@@ -45,7 +45,7 @@ describe('TSInterfaceGenerator', () => {
 }`);
     });
 
-    let testPackage = `${config.basePackage}.${config.dtoPackage}.test`;
+    let testPackage = `${config.projectPackage}.${config.dtoPackage}.test`;
     let moduleDefs = [
         new ObjectTypeDefinition({
             className: "TypeA",

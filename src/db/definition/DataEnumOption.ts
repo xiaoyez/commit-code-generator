@@ -1,3 +1,6 @@
+/**
+ * 枚举类型的选项。
+ */
 export interface IDataEnumOption {
     /**
      * 枚举类型的存储值
@@ -13,6 +16,9 @@ export interface IDataEnumOption {
     description: string;
 }
 
+/**
+ * 枚举类型的选项。
+ */
 export class DataEnumOption implements IDataEnumOption {
     /**
      * 枚举类型的存储值

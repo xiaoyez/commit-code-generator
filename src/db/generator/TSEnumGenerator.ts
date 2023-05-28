@@ -3,10 +3,18 @@ import {saveToPath} from "../../utils/TSPathUtils";
 import {compileEjsTmp} from "../../ejsTmp/EjsUtils";
 import {ejsTmp} from "../../ejsTmp/EjsTmp";
 
+/**
+ * 生成单个Enum定义
+ * @param def
+ */
 export function generateSingleEnumDefine(def: DataEnum) {
     return compileEjsTmp(ejsTmp.tsEnumGenTmp, def);
 }
 
+/**
+ * 生成Enum定义的ts文件的内容
+ * @param defs
+ */
 export function generateEnumModuleDefine(defs: DataEnum[]) {
     return compileEjsTmp(ejsTmp.tsEnumModuleTmp, defs);
 }

@@ -4,7 +4,9 @@ import {DataEnum} from "../../db/definition/DataEnum";
 import {TableCreateDefinition} from "../../db/definition/TableCreateDefinition";
 import {DataColumnDefinition} from "../../db/definition/DataColumnDefinition";
 
-
+/**
+ * 属性定义
+ */
 export interface IPropertyDefinition {
     /**
      * 参数名称。
@@ -45,11 +47,17 @@ export interface IPropertyDefinition {
     referenceColumn?: string| DataColumnDefinition;
 }
 
+/**
+ * 实体类属性定义
+ */
 export interface IDomainPropertyDefinition extends IPropertyDefinition {
     isPrimaryKey: boolean;
     autoIncrement: boolean;
 }
 
+/**
+ * 对象类型定义
+ */
 interface IObjectTypeDefinition {
 
     properties: IPropertyDefinition[];
@@ -61,6 +69,9 @@ interface IObjectTypeDefinition {
     packageName?: string;
 }
 
+/**
+ * 对象类型定义
+ */
 export class ObjectTypeDefinition implements IObjectTypeDefinition {
     properties!: IPropertyDefinition[];
     className!: string;
@@ -76,10 +87,16 @@ export class ObjectTypeDefinition implements IObjectTypeDefinition {
     }
 }
 
+/**
+ * 实体类定义
+ */
 interface IDomainTypeDefinition extends IObjectTypeDefinition {
     properties: IDomainPropertyDefinition[];
 }
 
+/**
+ * 实体类定义
+ */
 export class DomainTypeDefinition extends ObjectTypeDefinition {
     properties!: IDomainPropertyDefinition[];
 
@@ -92,12 +109,18 @@ export class DomainTypeDefinition extends ObjectTypeDefinition {
     }
 }
 
+/**
+ * 通用类型定义
+ */
 export interface ITypeDefinition {
     type: JavaType|ObjectTypeDefinition;
     genericTypes?: ITypeDefinition[];
 
 }
 
+/**
+ * 通用类型定义
+ */
 export class TypeDefinition implements ITypeDefinition {
     type!: JavaType|ObjectTypeDefinition;
     genericTypes?: TypeDefinition[];

@@ -29,12 +29,12 @@ export const userApiModuleDef = new ModuleDefinition({
     baseUrlPrefix: "/member", moduleName: "member", parent: rootModule, isFile: true
 });
 
-let dtoPack = `${config.basePackage}.${config.dtoPackage}`;
+let dtoPack = `${config.projectPackage}.${config.dtoPackage}`;
 let memberDtoPack = `${dtoPack}.member`;
 
 export const memberStatusEnumDef = new DataEnum({
     name: "MemberStatusConstant",
-    package: `${config.basePackage}.${config.constantPackage}.member`,
+    package: `${config.projectPackage}.${config.constantPackage}.member`,
     comment: "会员类型",
     options: [
         new DataEnumOption({

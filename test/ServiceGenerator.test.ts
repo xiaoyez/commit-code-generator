@@ -67,10 +67,6 @@ const addUserApi = new ApiDefinition({
 userController.addApi(listUserApi);
 userController.addApi(addUserApi);
 
-test("test service buildService", () => {
-    console.log(ServiceGenerator.buildService(listUserApi));
-})
-
 test("test service generate", () => {
     ServiceGenerator.generate(userController)
 })

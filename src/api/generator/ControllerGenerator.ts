@@ -16,6 +16,11 @@ import {JavaType} from "../../dto/definition/JavaType";
 import {ClassGenerator} from "../../java/generator/ClassGenerator";
 
 export class ControllerGenerator {
+
+    /**
+     * 生成Controller文件
+     * @param module
+     */
     static generate(module: ModuleDefinition) {
         if(!module.isFile) {
             return;
@@ -30,6 +35,11 @@ export class ControllerGenerator {
         ControllerGenerator.generateParamDTOs(module);
     }
 
+    /**
+     * 将ModuleDefinition转换为ClassDefinition
+     * @param packageName
+     * @param module
+     */
     static castToClassDefinition(packageName: string, module: ModuleDefinition) {
         const controllerClassDefinition = new ClassDefinition(packageName, module.moduleName);
 
@@ -41,11 +51,23 @@ export class ControllerGenerator {
         return controllerClassDefinition;
     }
 
+    /**
+     * 构建方法
+     * @param module
+     * @param controllerClassDefinition
+     * @private
+     */
     private static buildMethods(module: ModuleDefinition, controllerClassDefinition: ClassDefinition) {
         const methods = module.apis?.map(api => ControllerGenerator.buildMethod(api));
         controllerClassDefinition.methods = methods;
     }
 
+    /**
+     * 添加service字段
+     * @param module
+     * @param controllerClassDefinition
+     * @private
+     */
     private static addServiceField(module: ModuleDefinition, controllerClassDefinition: ClassDefinition) {
         const serviceName = lowerFirst(module.moduleName.replace('Controller', '')) + 'Service';
         const serviceFieldDefinition = new FieldDefinition(serviceName, ServiceGenerator.buildServiceInterfaceDefinition(module));
@@ -53,21 +75,22 @@ export class ControllerGenerator {
         controllerClassDefinition.fields.push(serviceFieldDefinition);
     }
 
+    /**
+     * 添加Spring 注解
+     * @param controllerClassDefinition
+     * @param module
+     * @private
+     */
     private static addSpringAnnotations(controllerClassDefinition: ClassDefinition, module: ModuleDefinition) {
         // 添加注解
         controllerClassDefinition.addAnnotation(SpringAnnotationDefinitions.RestController);
         controllerClassDefinition.addAnnotation(SpringAnnotationDefinitions.RequestMapping(ModuleUtils.buildBaseUrlPrefix(module)));
     }
 
-    private static addService(module: ModuleDefinition) {
-
-        let text = '';
-        text += `    @Autowired\n`;
-        text += `    private I${module.moduleName.replace('Controller','')}Service ${lowerFirst(module.moduleName.replace('Controller',''))}Service;\n\n`;
-        return text;
-
-    }
-
+    /**
+     * 根据api构建方法
+     * @param api
+     */
     static buildMethod(api: ApiDefinition) {
         const resultType = api.result?TypeDefinition.create(api.result.type,api.result.genericTypes):TypeDefinition.create(JavaType.void);
         const methodDefinition = new MethodDefinition(api.apiName, resultType);
@@ -84,6 +107,12 @@ export class ControllerGenerator {
         return methodDefinition;
     }
 
+    /**
+     * 构建RequestMapping注解
+     * @param method
+     * @param path
+     * @private
+     */
     private static buildRequestMappingAnnotation(method: RequestMethod,path:string) {
         switch (method) {
             case RequestMethod.GET:
@@ -97,6 +126,13 @@ export class ControllerGenerator {
         }
     }
 
+    /**
+     * 创建java文件并写入内容
+     * @param packageName
+     * @param content
+     * @param moduleName
+     * @private
+     */
     private static writeFile(packageName: string, content:string, moduleName: string) {
         const path = `${config.baseDir}\\${packageName.replace(/\./g, '\\')}`;
         if (!exist(path))
@@ -106,6 +142,11 @@ export class ControllerGenerator {
 
     }
 
+    /**
+     * 生成入参DTO
+     * @param module
+     * @private
+     */
     private static generateParamDTOs(module: ModuleDefinition) {
         module.apis?.forEach(api => {
             if (api.params) {

@@ -1,6 +1,9 @@
 import {JavaType} from "./JavaType";
 import {SqlType} from "../../db/definition/SqlType";
 
+/**
+ * Java类型映射器。用于将SqlType映射为JavaType。
+ */
 export const javaTypeMapper = {
     [SqlType.INT]: JavaType.Integer,
     [SqlType.VARCHAR]: JavaType.String,
@@ -33,6 +36,9 @@ export const javaTypeMapper = {
 
 } as Record<SqlType, JavaType>;
 
+/**
+ * Java类型映射器。用于将JavaType映射为ts的数据类型
+ */
 export const tsTypeMapper = {
     [JavaType.Boolean]: 'boolean',
     [JavaType.Byte]: 'number',

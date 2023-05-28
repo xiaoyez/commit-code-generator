@@ -1,6 +1,9 @@
 import {TableCreateDefinition} from "./TableCreateDefinition";
 import {ViewCreateDefinition} from "./ViewCreateDefinition";
 
+/**
+ * 数据库定义。
+ */
 interface IDbDefinition {
     /**
      * 数据库名称。
@@ -18,6 +21,9 @@ interface IDbDefinition {
     tables: TableCreateDefinition[];
 }
 
+/**
+ * 数据库定义。
+ */
 export class DbDefinition implements IDbDefinition{
 
     dbName!: string;

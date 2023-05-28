@@ -7,33 +7,49 @@ import {ejsTmp} from "../ejsTmp/EjsTmp";
 import {tsObjDefTypeName} from "./TypeUtils";
 import {ModuleDefinition} from "../api/definition/ModuleDefinition";
 
-const BasePackage = `${config.basePackage}.${config.dtoPackage}`;
-const CoreModule = `${BasePackage}.common`;
+// 基包
+const BasePackage = `${config.projectPackage}.${config.dtoPackage}`;
+// 公共模块
+const CommonModule = `${BasePackage}.common`;
 
+// 核心类型
 const CoreTypes = new Set([
     'IRespData',
     'IRespPaging',
 ])
 
+// 导入类型
 enum ImportType {
     Object = 0,
     Type = 1,
 }
 
+// Ts导入信息
 interface TSImportInfo {
     importPath: string;
     importName: string;
     importType?: ImportType; // default: Object
 }
 
+// 导入行数组信息
 type ImportLinesInfo = Map<string, Map<string, ImportType>>;
 
+// 导入行记录
 type ImportLinesRecord = Record<string, { type?: string[], objs?: string[] }>;
 
+/**
+ * 创建空的导入行信息
+ */
 export function emptyImportLines(): ImportLinesInfo {
     return new Map();
 }
 
+/**
+ * 添加导入信息
+ * @param info
+ * @param cur
+ * @param isType
+ */
 export function addNewImport(info: TSImportInfo, cur: ImportLinesInfo, isType?: boolean) {
     let imported = cur.get(info.importPath);
     if (!imported) {
@@ -50,13 +66,21 @@ export function addNewImport(info: TSImportInfo, cur: ImportLinesInfo, isType?: 
     imported.set(info.importName, isType ? ImportType.Type : ImportType.Object);
 }
 
+/**
+ * 获取类型导入信息
+ * @param def
+ */
 function getTypeImportInfo(def: ObjectTypeDefinition): TSImportInfo {
     let importName = tsObjDefTypeName(def);
-    let packageName = CoreTypes.has(importName) ? CoreModule : def.packageName;
+    let packageName = CoreTypes.has(importName) ? CommonModule : def.packageName;
     let importPath = convertPackageToPath(packageName);
     return {importPath, importName, importType: ImportType.Type}
 }
 
+/**
+ * 获取枚举导入信息
+ * @param def
+ */
 export function getEnumImportInfo(def: DataEnum): TSImportInfo {
     return {
         importPath: convertPackageToPath(def.package),
@@ -65,6 +89,10 @@ export function getEnumImportInfo(def: DataEnum): TSImportInfo {
     };
 }
 
+/**
+ * 获取枚举描述导入信息
+ * @param def
+ */
 export function getEnumDescImportInfo(def: DataEnum): TSImportInfo {
     return {
         importPath: convertPackageToPath(def.package),
@@ -72,6 +100,7 @@ export function getEnumDescImportInfo(def: DataEnum): TSImportInfo {
         importType: ImportType.Object,
     };
 }
+
 
 export function getTypeImportsFrom(def: TypeDefinition, cur?: ImportLinesInfo) {
     if (!cur) {

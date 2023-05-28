@@ -1,3 +1,6 @@
+/**
+ * JavaType
+ */
 export enum JavaType {
     // 包装类型
     Boolean= 'Boolean',

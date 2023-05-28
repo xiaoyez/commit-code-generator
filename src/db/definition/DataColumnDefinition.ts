@@ -2,6 +2,9 @@ import {SqlType} from "./SqlType";
 import {DataEnum} from "./DataEnum";
 import {TableCreateDefinition} from "./TableCreateDefinition";
 
+/**
+ * 数据库表的列定义。
+ */
 export interface IDataColumnDefinition extends IDataColBase {
     /**
      * 列的数据类型。
@@ -47,6 +50,9 @@ export interface IDataColumnDefinition extends IDataColBase {
     referenceColumn?: string| DataColumnDefinition;
 }
 
+/**
+ * 数据库表的列基础定义。
+ */
 interface IDataColBase {
     /**
      * 列的名称。
@@ -70,14 +76,22 @@ interface IDataColBase {
     defaultValue?: string
 }
 
+// 整型SqlType
 type IntType = SqlType.TINYINT | SqlType.SMALLINT | SqlType.MEDIUMINT | SqlType.INT | SqlType.INTEGER| SqlType.BIGINT;
+// 浮点型SqlType
 type FloatType = SqlType.FLOAT| SqlType.DOUBLE;
+// 定点型SqlType
 type FixedType = SqlType.DECIMAL| SqlType.NUMERIC;
+// 字符串型SqlType
 type StringType = SqlType.CHAR| SqlType.VARCHAR;
+// 特定SqlType
 type SpecialType = IntType|FloatType|FixedType|StringType;
-
+// 其他SqlType
 type OtherSqlType = Exclude<SqlType,SpecialType>
 
+/**
+ * 整型数据列定义。
+ */
 interface IDataIntBase extends IDataColBase {
     /**
      * 列的数据类型。
@@ -98,6 +112,9 @@ interface IDataIntBase extends IDataColBase {
     isEnum: boolean;
 }
 
+/**
+ * 整型数据列定义。
+ */
 interface IDataIntCol extends IDataIntBase {
     /**
      * 字段是否是枚举类型。\
@@ -111,6 +128,9 @@ interface IDataIntCol extends IDataIntBase {
     autoIncrement?: boolean;
 }
 
+/**
+ * 整型数据枚举列定义。
+ */
 interface IDataIntEnumCol extends IDataIntBase {
     /**
      * 字段是否是枚举类型。\
@@ -124,6 +144,9 @@ interface IDataIntEnumCol extends IDataIntBase {
     enumType?: DataEnum;
 }
 
+/**
+ * 浮点型数据列定义。
+ */
 interface IDataRealCol extends IDataColBase {
     /**
      * 列的数据类型。
@@ -139,6 +162,9 @@ interface IDataRealCol extends IDataColBase {
     precision?: number
 }
 
+/**
+ * 字符串型数据列定义。
+ */
 interface IDataStringCol extends IDataColBase {
     /**
      * 列的数据类型。
@@ -150,6 +176,9 @@ interface IDataStringCol extends IDataColBase {
     length?: number
 }
 
+/**
+ * 其他数据列定义。
+ */
 interface IDataOtherCol extends IDataColBase {
     /**
      * 列的数据类型。
@@ -157,9 +186,13 @@ interface IDataOtherCol extends IDataColBase {
     typeName: OtherSqlType
 }
 
+// 数据列类型
 export type IDataColumnType = IDataIntCol | IDataIntEnumCol | IDataRealCol | IDataStringCol | IDataOtherCol;
 
 
+/**
+ * 数据库表的列定义。
+ */
 export class DataColumnDefinition implements IDataColumnDefinition {
     name!: string;
     typeName!: SqlType;

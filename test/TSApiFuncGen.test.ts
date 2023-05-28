@@ -25,7 +25,7 @@ describe('api call script', () => {
         baseUrlPrefix: "/user", moduleName: "user", parent: userModule, isFile: true
     });
 
-    let dtoPack = `${config.basePackage}.${config.dtoPackage}`;
+    let dtoPack = `${config.projectPackage}.${config.dtoPackage}`;
     let userDtoPack = `${dtoPack}.user`;
 
     let UserDTOType = ObjectTypeDefinitionUtils.castTableCreateDefinitionToObjectTypeDefinition(tableUserDefinition);

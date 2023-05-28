@@ -1,3 +1,6 @@
+/**
+ * SqlType
+ */
 export enum SqlType {
     // Mysql的所有数据类型
     BIT = 'BIT',

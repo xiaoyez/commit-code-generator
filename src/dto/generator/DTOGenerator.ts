@@ -17,6 +17,10 @@ import {JsonAnnotationDefinitions} from "../../java/definition/common/JsonAnnota
 import {ClassGenerator} from "../../java/generator/ClassGenerator";
 
 export class DTOGenerator {
+    /**
+     * 生成DTO类。
+     * @param definition
+     */
     static generate(definition: ObjectTypeDefinition) {
 
         const dtoClassDefinition = DTOGenerator.castToClassDefinition(definition);
@@ -25,6 +29,10 @@ export class DTOGenerator {
         DTOGenerator.generateJavaFile(definition, ClassGenerator.generate(dtoClassDefinition));
     }
 
+    /**
+     * 将ObjectTypeDefinition转换为ClassDefinition。
+     * @param definition
+     */
     static castToClassDefinition(definition: ObjectTypeDefinition) {
         const packageName = DTOGenerator.generatePackage(definition);
 
@@ -40,6 +48,12 @@ export class DTOGenerator {
         return dtoClassDefinition;
     }
 
+    /**
+     * 生成java文件
+     * @param definition
+     * @param text
+     * @private
+     */
     private static generateJavaFile(definition: ObjectTypeDefinition, text: string) {
         const filePath = config.baseDir + `\\${getJavaFilePath(getDomainPackage(definition.packageName),definition.className)}`;
         const fileDir = getParent(filePath);
@@ -48,6 +62,11 @@ export class DTOGenerator {
         writeStringToFile(filePath,text)
     }
 
+    /**
+     * 添加lombok注解
+     * @param definition
+     * @private
+     */
     private static addLombokAnnotation(definition: ClassDefinition) {
         definition.addAnnotation(LombokAnnotationDefinitions.DATA);
         definition.addAnnotation(LombokAnnotationDefinitions.NO_ARGS_CONSTRUCTOR);
@@ -55,6 +74,11 @@ export class DTOGenerator {
         definition.addAnnotation(LombokAnnotationDefinitions.BUILDER);
     }
 
+    /**
+     * 将属性定义转换为字段定义。
+     * @param prop
+     * @private
+     */
     private static generateField(prop: IPropertyDefinition) {
 
         const fieldDefinition = new FieldDefinition(prop.paramName,prop.paramType,prop.paramDesc);
@@ -77,6 +101,11 @@ export class DTOGenerator {
 
     }
 
+    /**
+     * 生成包名。
+     * @param definition
+     * @private
+     */
     private static generatePackage(definition: ObjectTypeDefinition) {
         return getDomainPackage(definition.packageName);
     }

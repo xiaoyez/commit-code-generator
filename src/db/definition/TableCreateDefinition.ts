@@ -29,6 +29,9 @@ interface ITbTableCreateDefinition<T extends Record<string, DataColumnDefinition
 
 }
 
+/**
+ * 表示用于创建数据库表的表定义。
+ */
 export class TableCreateDefinition<T extends Record<string, DataColumnDefinition> = any> implements ITbTableCreateDefinition<T> {
     tableName!: string;
     comment!: string;

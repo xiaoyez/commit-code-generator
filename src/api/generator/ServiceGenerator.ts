@@ -14,6 +14,10 @@ import {ParameterDefinition} from "../../java/definition/ParameterDefinition";
 
 export class ServiceGenerator {
 
+    /**
+     * 生成Service文件
+     * @param module
+     */
     static generate(module: ModuleDefinition) {
         if (!module.isFile) {
             return;
@@ -24,6 +28,10 @@ export class ServiceGenerator {
         ServiceGenerator.writeFile(packageName,InterfaceGenerator.generate(serviceInterfaceDefinition),module.moduleName);
     }
 
+    /**
+     * 构建service的InterfaceDefinition
+     * @param module
+     */
     static buildServiceInterfaceDefinition(module: ModuleDefinition) {
         const packageName = ModuleUtils.buildPackageName(module) + '.service';
 
@@ -35,17 +43,20 @@ export class ServiceGenerator {
         return serviceInterfaceAnnotation;
     }
 
+    /**
+     * 获取Service名称
+     * @param moduleName
+     * @private
+     */
     private static getServiceName(moduleName: string) {
         return `I${moduleName.replace('Controller', '')}Service`;
     }
 
-    static buildService(api: ApiDefinition) {
-        let text = '';
-        const resultType = ServiceGenerator.buildResultType(api);
-        text += `    ${resultType} ${api.apiName}(${ModuleUtils.buildParams(api.params)});`;
-        return text;
-    }
-
+    /**
+     * 构建返回值类型
+     * @param api
+     * @private
+     */
     private static buildResultType(api: ApiDefinition) {
         if (api.result && (api.result instanceof AjaxResultTypeDefinition || api.result instanceof TableDataInfoTypeDefinition)) {
             if (api.result.genericTypes && api.result.genericTypes.length > 0) {
@@ -59,6 +70,13 @@ export class ServiceGenerator {
         return TypeDefinition.create(JavaType.int);
     }
 
+    /**
+     * 创建java文件并写入内容
+     * @param packageName
+     * @param content
+     * @param moduleName
+     * @private
+     */
     private static writeFile(packageName: string, content: string, moduleName: string) {
         const path = `${config.baseDir}\\${packageName.replace(/\./g, '\\')}`;
         if (!exist(path))
@@ -67,6 +85,11 @@ export class ServiceGenerator {
         writeStringToFile(file, content);
     }
 
+    /**
+     * 构建方法
+     * @param api
+     * @private
+     */
     private static buildMethod(api: ApiDefinition) {
         const methodDefinition = new MethodDefinition(api.apiName,ServiceGenerator.buildResultType(api),api.comment);
         if (api.params)

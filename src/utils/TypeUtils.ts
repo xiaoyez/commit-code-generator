@@ -1,15 +1,25 @@
 import {IPropertyDefinition, ObjectTypeDefinition, TypeDefinition} from "../dto/definition/TypeDefinition";
 import {tsTypeMapper} from "../dto/definition/TypeMapper";
 
+// 前端类型名
 const FrontTypeName: Record<string, string> = {
     ['AjaxResult']: 'IRespData',
     ['TableDataInfo']: 'IRespPaging',
 }
 
+/**
+ * 获取对象定义的类型名
+ * @param def
+ */
 export function tsObjDefTypeName(def: ObjectTypeDefinition) {
     return FrontTypeName[def.className] || def.className;
 }
 
+/**
+ * 判断对象是否是某个类型
+ * @param target
+ * @param prop
+ */
 export function isOfType<T>(
     target: unknown,
     prop: keyof T
@@ -17,6 +27,10 @@ export function isOfType<T>(
     return (target as T)[prop] !== undefined;
 }
 
+/**
+ * 生产ts类型字符串
+ * @param def
+ */
 export function tsTypeString(def: TypeDefinition) {
     let typeName: string;
     if (def.type instanceof ObjectTypeDefinition) {
@@ -48,6 +62,10 @@ export function tsTypeString(def: TypeDefinition) {
     return typeName;
 }
 
+/**
+ * 获取属性类型字符串
+ * @param def
+ */
 export function fieldTypeString(def: IPropertyDefinition) {
     if (def.enumType) {
         return def.enumType.name;

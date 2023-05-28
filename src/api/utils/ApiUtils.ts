@@ -3,6 +3,10 @@ import {ApiDefinition} from "../definition/ApiDefinition";
 import {JavaType} from "../../dto/definition/JavaType";
 
 export class ApiUtils {
+    /**
+     * 获取api的返参类型
+     * @param api
+     */
     static getResultDataType(api: ApiDefinition) {
         let dataType = null;
         if (api.result?.genericTypes)
@@ -15,6 +19,10 @@ export class ApiUtils {
         return dataType;
     }
 
+    /**
+     * 获取api的返参类型字符串
+     * @param api
+     */
     static getResultDataTypeName(api: ApiDefinition) {
         let dataType = ApiUtils.getResultDataType(api);
         let dataTypeName = '';

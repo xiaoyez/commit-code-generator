@@ -3,6 +3,7 @@ import {TypeDefinition} from "../../dto/definition/TypeDefinition";
 import {RequestMethod} from "./RequestMethod";
 
 /**
+ * Api定义
  * R 为出参类型
  */
 interface IApiDefinition {

@@ -1,13 +1,23 @@
 import {config} from "../config/Config";
 import {exist, mkdirs, writeStringToFile} from "./FileUtils";
 
+/**
+ * 转换包名为路径
+ * @param packageName
+ */
 export function convertPackageToPath(packageName: string) {
-    let fePath = packageName.replace(config.basePackage, "@");
+    let fePath = packageName.replace(config.projectPackage, "@");
     return fePath.replace(/\./g, '/');
 }
 
+/**
+ * 转换包名为保存路径
+ * @param packageName
+ * @param subPath
+ * @param genIndex
+ */
 export function convertPackageToSavePath(packageName: string, subPath = "", genIndex = false) {
-    let fePath = packageName.replace(config.basePackage, "");
+    let fePath = packageName.replace(config.projectPackage, "");
     if (!fePath.startsWith('.')) {
         fePath = '.' + fePath;
     }
@@ -35,6 +45,13 @@ export function convertPackageToSavePath(packageName: string, subPath = "", genI
     }
 }
 
+/**
+ * 保存到路径(在对应路径下创建文件并写入内容)
+ * @param content
+ * @param packageName
+ * @param subPath
+ * @param genIndex
+ */
 export function saveToPath(content: string, packageName: string, subPath = "", genIndex = false) {
     let {dirPath, fileName} = convertPackageToSavePath(packageName, subPath, genIndex);
     let filePath = `${dirPath}/${fileName}`;

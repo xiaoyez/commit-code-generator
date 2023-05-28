@@ -7,9 +7,14 @@ import {DTOGenerator} from "./DTOGenerator";
 import {InterfaceGenerator} from "../../java/generator/InterfaceGenerator";
 
 export class MapperGenerator {
+
+    /**
+     * 生成Mapper接口。
+     * @param domain
+     */
     static generate(domain: DomainTypeDefinition) {
 
-        const mapperDefinition = new InterfaceDefinition(`${config.basePackage}.${config.mapperPackage}`, `${domain.className}Mapper`);
+        const mapperDefinition = new InterfaceDefinition(`${config.projectPackage}.${config.mapperPackage}`, `${domain.className}Mapper`);
         mapperDefinition.comment = domain.comment + 'Mapper接口';
 
         const domainClassDefinition = DTOGenerator.castToClassDefinition(domain);
@@ -21,8 +26,14 @@ export class MapperGenerator {
         MapperGenerator.writeFile(domain, InterfaceGenerator.generate(mapperDefinition));
     }
 
+    /**
+     * 生成Mapper接口文件
+     * @param domain
+     * @param content
+     * @private
+     */
     private static writeFile(domain: DomainTypeDefinition, content: string) {
-        const path = `${config.baseDir}\\${config.basePackage.replace(/\./g, '\\')}\\${config.mapperPackage}`;
+        const path = `${config.baseDir}\\${config.projectPackage.replace(/\./g, '\\')}\\${config.mapperPackage}`;
         const fileName = `${domain.className}Mapper.java`;
         const filePath = `${path}\\${fileName}`;
         if (!exist(path)) {

@@ -42,6 +42,10 @@ export class ObjectTypeDefinitionUtils {
         return domainTypeDefinition;
     }
 
+    /**
+     * 根据ViewCreateDefinition创建IDomainPropertyDefinition数组。
+     * @param viewCreateDefinition
+     */
     static createIDomainPropertyDefinitionsByViewCreateDefinition(viewCreateDefinition: ViewCreateDefinition): IDomainPropertyDefinition[] {
         const domainPropertyDefinitions: IDomainPropertyDefinition[] = [];
         viewCreateDefinition.items.forEach(item => {
@@ -66,10 +70,18 @@ export class ObjectTypeDefinitionUtils {
         return domainPropertyDefinitions
     }
 
+    /**
+     * 将表名转换为类名。
+     * @param tableName
+     */
     static castTableNameToClassName(tableName: string): string {
         return upperFirst(camelCase(tableName));
     }
 
+    /**
+     * 将列定义转换为类属性定义。
+     * @param column
+     */
     static castDataColumnDefinitionToIPropertyDefinition(column: DataColumnDefinition): IPropertyDefinition {
         return {
             paramName: camelCase(column.name),
@@ -85,6 +97,10 @@ export class ObjectTypeDefinitionUtils {
         };
     }
 
+    /**
+     * 将列定义转换为实体类属性定义。
+     * @param column
+     */
     static castDataColumnDefinitionToIDomainPropertyDefinition(column: DataColumnDefinition): IDomainPropertyDefinition {
         const domainPropertyDefinition = ObjectTypeDefinitionUtils.castDataColumnDefinitionToIPropertyDefinition(column) as IDomainPropertyDefinition;
         if (column.isPrimaryKey) {
@@ -96,6 +112,10 @@ export class ObjectTypeDefinitionUtils {
         return domainPropertyDefinition;
     }
 
+    /**
+     * 将表创建定义转换为实体类定义。
+     * @param tableCreateDefinition
+     */
     static castTableCreateDefinitionToDomainTypeDefinition<T extends Record<string, DataColumnDefinition>>(tableCreateDefinition: TableCreateDefinition<T>): DomainTypeDefinition {
         return new DomainTypeDefinition({
             className: upperFirst(camelCase(tableCreateDefinition.tableName)),
