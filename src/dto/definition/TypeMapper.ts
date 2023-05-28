@@ -37,7 +37,7 @@ export const javaTypeMapper = {
 } as Record<SqlType, JavaType>;
 
 /**
- * Java类型映射器。用于将JavaType映射为ts的数据类型
+ * ts类型映射器。用于将JavaType映射为ts的数据类型
  */
 export const tsTypeMapper = {
     [JavaType.Boolean]: 'boolean',
