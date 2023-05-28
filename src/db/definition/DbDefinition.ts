@@ -19,6 +19,11 @@ interface IDbDefinition {
      * 数据库表定义数组。
      */
     tables: TableCreateDefinition[];
+
+    /**
+     * 数据库视图定义数组。
+     */
+    views: ViewCreateDefinition[];
 }
 
 /**
