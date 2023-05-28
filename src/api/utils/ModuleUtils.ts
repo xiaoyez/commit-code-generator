@@ -2,6 +2,7 @@ import {ModuleDefinition} from "../definition/ModuleDefinition";
 import {ObjectTypeDefinition, TypeDefinition} from "../../dto/definition/TypeDefinition";
 import {lowerFirst} from "lodash";
 import {ParameterDefinition} from "../../java/definition/ParameterDefinition";
+import {getApiCallModuleImportLines} from "../../utils/TSImportUtils";
 
 export class ModuleUtils {
     static buildPackageName(module: ModuleDefinition) {
@@ -85,4 +86,10 @@ export class ModuleUtils {
         return res.startsWith('.') ? res.substring(1) : res;
     }
 
+    static tsApiModuleViewModel(modDef: ModuleDefinition) {
+        let importLines = getApiCallModuleImportLines(modDef);
+        let { apis } = modDef;
+        let urlPrefix = ModuleUtils.buildBaseUrlPrefix(modDef);
+        return { importLines, apis, urlPrefix };
+    }
 }

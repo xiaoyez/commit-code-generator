@@ -4,14 +4,16 @@ import {convertPackageToPath} from "./TSPathUtils";
 import {DataEnum} from "../db/definition/DataEnum";
 import {compileEjsTmp} from "../ejsTmp/EjsUtils";
 import {ejsTmp} from "../ejsTmp/EjsTmp";
+import {tsObjDefTypeName} from "./TypeUtils";
+import {ModuleDefinition} from "../api/definition/ModuleDefinition";
 
 const BasePackage = `${config.basePackage}.${config.dtoPackage}`;
 const CoreModule = `${BasePackage}.common`;
 
-const FrontType: Record<string, string> = {
-    ['AjaxResult']: 'IRespData',
-    ['TableDataInfo']: 'IRespPaging',
-}
+const CoreTypes = new Set([
+    'IRespData',
+    'IRespPaging',
+])
 
 enum ImportType {
     Object = 0,
@@ -49,19 +51,10 @@ export function addNewImport(info: TSImportInfo, cur: ImportLinesInfo, isType?: 
 }
 
 function getTypeImportInfo(def: ObjectTypeDefinition): TSImportInfo {
-    if (FrontType[def.className]) {
-        return {
-            importPath: convertPackageToPath(CoreModule),
-            importName: FrontType[def.className],
-            importType: ImportType.Type,
-        }
-    }
-
-    return {
-        importPath: convertPackageToPath(def.packageName),
-        importName: def.className,
-        importType: ImportType.Type,
-    }
+    let importName = tsObjDefTypeName(def);
+    let packageName = CoreTypes.has(importName) ? CoreModule : def.packageName;
+    let importPath = convertPackageToPath(packageName);
+    return {importPath, importName, importType: ImportType.Type}
 }
 
 export function getEnumImportInfo(def: DataEnum): TSImportInfo {
@@ -149,5 +142,19 @@ export function getInterfaceModuleImportLines(defs: ObjectTypeDefinition[]) {
     for (let def of defs) {
         getTypeUsingImports(def, imports);
     }
-    return getImportLinesRecord(imports);
+    return imports.size ? getImportLinesRecord(imports) : void 0;
+}
+
+export function getApiCallModuleImportLines({apis}: ModuleDefinition) {
+    let imports = apis.reduce((importMap, apiDef) => {
+        if (apiDef.params) {
+            importMap = getTypeImportsFrom(apiDef.params, importMap);
+        }
+
+        if (apiDef.result) {
+            importMap = getTypeImportsFrom(apiDef.result, importMap);
+        }
+        return importMap;
+    }, emptyImportLines());
+    return imports.size ? getImportLinesRecord(imports) : void 0;
 }

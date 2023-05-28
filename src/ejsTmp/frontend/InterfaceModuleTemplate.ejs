@@ -1,7 +1,5 @@
 <% if (data.importLines) {
-%><%= compileEjsTmp(ejsTmp.tsImportLinesTmp, data.importLines) %>
-<%} %>
-<% data.defs.forEach((def, idx) =>{
-%><%= compileEjsTmp(ejsTmp.tsInterfaceGenTmp, def) %><%=
-    idx === data.defs.length - 1 ? '' : '\n'
-%><% }) %>
+%><%= compileEjsTmp(ejsTmp.tsImportLinesTmp, data.importLines) %><%
+} %><% data.defs.forEach((def, idx) => { %>
+<%= compileEjsTmp(ejsTmp.tsInterfaceGenTmp, def) %>
+<% }) %>

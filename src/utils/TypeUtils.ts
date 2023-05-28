@@ -1,6 +1,15 @@
 import {IPropertyDefinition, ObjectTypeDefinition, TypeDefinition} from "../dto/definition/TypeDefinition";
 import {tsTypeMapper} from "../dto/definition/TypeMapper";
 
+const FrontTypeName: Record<string, string> = {
+    ['AjaxResult']: 'IRespData',
+    ['TableDataInfo']: 'IRespPaging',
+}
+
+export function tsObjDefTypeName(def: ObjectTypeDefinition) {
+    return FrontTypeName[def.className] || def.className;
+}
+
 export function isOfType<T>(
     target: unknown,
     prop: keyof T
@@ -11,7 +20,7 @@ export function isOfType<T>(
 export function tsTypeString(def: TypeDefinition) {
     let typeName: string;
     if (def.type instanceof ObjectTypeDefinition) {
-        typeName = def.type.className;
+        typeName = tsObjDefTypeName(def.type);
     }
     else {
         typeName = tsTypeMapper[def.type];

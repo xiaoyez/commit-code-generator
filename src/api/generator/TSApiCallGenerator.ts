@@ -1,48 +1,24 @@
 import {ApiDefinition} from "../definition/ApiDefinition";
-import {tsTypeString} from "../../utils/TypeUtils";
 import {ModuleDefinition} from "../definition/ModuleDefinition";
 import {addNewImport, emptyImportLines, generateImportLines, getTypeImportsFrom} from "../../utils/TSImportUtils";
 import {ModuleUtils} from "../utils/ModuleUtils";
 import {saveToPath} from "../../utils/TSPathUtils";
+import {compileEjsTmp} from "../../ejsTmp/EjsUtils";
+import {ejsTmp} from "../../ejsTmp/EjsTmp";
 
 export function generateTsApiFunc(apiDef: ApiDefinition, baseUrl: string) {
-    let paramStr = "";
-    let reqInfo = [
-        ['url', `"${baseUrl + apiDef.url}"`],
-        ['method', `"${apiDef.method}"`],
-    ];
-    if (apiDef.params) {
-        paramStr = `params:${tsTypeString(apiDef.params)}`;
-        let paramKey = apiDef.method === 'get' ? 'params' : 'data';
-        reqInfo.push([paramKey, 'params']);
-    }
-    let resultType = apiDef.result ? tsTypeString(apiDef.result) : 'void';
-    return `export function ${apiDef.apiName}(${paramStr}): Promise<${resultType}> {
-    return request({\n${
-        reqInfo.map(([key, value]) => `        ${key}: ${value},`).join('\n')
-    }
+    return compileEjsTmp(ejsTmp.tsApiCallFuncTmp, {
+        api: apiDef, baseUrl,
     });
-}`
+}
+
+export function generateTsApiModule(modDef: ModuleDefinition) {
+    return compileEjsTmp(ejsTmp.tsApiModuleTmp, ModuleUtils.tsApiModuleViewModel(modDef));
 }
 
 export function generateTsApiFileModule(modDef: ModuleDefinition, subPath = "", genIndex = false) {
-    let imports = modDef.apis.reduce((importMap, apiDef) => {
-        if (apiDef.params) {
-            importMap = getTypeImportsFrom(apiDef.params, importMap);
-        }
+    let content = generateTsApiModule(modDef);
 
-        if (apiDef.result) {
-            importMap = getTypeImportsFrom(apiDef.result, importMap);
-        }
-        return importMap;
-    }, emptyImportLines());
-    addNewImport({ importName: "request", importPath: "@/utils/request" }, imports);
-
-    let prefix = ModuleUtils.buildBaseUrlPrefix(modDef);
-    let apiFuncs = modDef.apis.map(apiDef => generateTsApiFunc(apiDef, prefix));
-
-    let content = generateImportLines(imports) + '\n' + apiFuncs.join('\n\n') + '\n';
     let packageName = ModuleUtils.buildPackageName(modDef);
-
     saveToPath(content, packageName, subPath, genIndex);
 }

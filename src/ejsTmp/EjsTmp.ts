@@ -97,6 +97,19 @@ export const ejsTmp = {
             compileEjsTmp,
         }
     },
+    tsApiCallFuncTmp: {
+        filePath: './src/ejsTmp/frontend/ApiCallFuncTemplate.ejs',
+        imports: {
+            tsTypeString,
+        }
+    },
+    tsApiModuleTmp: {
+        filePath: './src/ejsTmp/frontend/ApiCallModuleTemplate.ejs',
+        variable: 'data',
+        imports: {
+            compileEjsTmp,
+        }
+    },
     filterTmp: {
         filePath: './src/ejsTmp/frontend/view/FilterTemplate.ejs',
         imports: {
@@ -130,6 +143,7 @@ let includeEjsTmp: (keyof typeof ejsTmp)[] = [
     'ddlSqlGeneratorTmp',
     'tsEnumModuleTmp',
     'tsInterfaceModuleTmp',
+    'tsApiModuleTmp',
 ];
 
 for (let def of includeEjsTmp) {

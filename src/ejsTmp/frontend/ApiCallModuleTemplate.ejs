@@ -1,0 +1,8 @@
+import {request} from "@/utils/request";
+<% if (data.importLines) {
+%><%= compileEjsTmp(ejsTmp.tsImportLinesTmp, data.importLines) %><%} %><%
+data.apis.forEach((def, idx) => { %>
+<%= compileEjsTmp(ejsTmp.tsApiCallFuncTmp, {
+    api: def, baseUrl: data.urlPrefix
+}) %>
+<% }) %>
