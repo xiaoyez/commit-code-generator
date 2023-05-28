@@ -105,15 +105,7 @@ export class ModuleUtils {
         return paramName;
     }
 
-    /**
-     * 前缀转模块名
-     * @param prefix
-     */
-    static prefix2Module(prefix?: string) {
-        if (!prefix) return '';
-        let res = prefix.replace('\/', '.');
-        return res.startsWith('.') ? res.substring(1) : res;
-    }
+
 
     /**
      * 生成tsApiModule的ViewModel
@@ -125,4 +117,14 @@ export class ModuleUtils {
         let urlPrefix = ModuleUtils.buildBaseUrlPrefix(modDef);
         return { importLines, apis, urlPrefix };
     }
+}
+
+/**
+ * 前缀转模块名
+ * @param prefix
+ */
+export function prefix2Module(prefix?: string) {
+    if (!prefix) return '';
+    let res = prefix.replace('\/', '.');
+    return res.startsWith('.') ? res.substring(1) : res;
 }

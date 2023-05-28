@@ -7,7 +7,7 @@ import {DateInputControl, SelectInputControl, TextInputControl} from "../fronten
 import {generateImportLines, getTypeImportsFrom} from "../utils/TSImportUtils";
 import {ObjectTypeDefinition} from "../dto/definition/TypeDefinition";
 import {ActBtn, ColActBtn, TableColType} from "../frontend/view/definition/page/TableViewDefinition";
-import {ModuleUtils} from "../api/utils/ModuleUtils";
+import {ModuleUtils, prefix2Module} from "../api/utils/ModuleUtils";
 import {ApiUtils} from "../api/utils/ApiUtils";
 import {tsTypeString} from "../utils/TypeUtils";
 
@@ -133,7 +133,7 @@ export const ejsTmp = {
         imports: {
             forEach,
             ActBtn,
-            prefix2Module: ModuleUtils.prefix2Module,
+            prefix2Module,
             ApiUtils,
             TableColType,
             ColActBtn,
