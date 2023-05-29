@@ -55,7 +55,6 @@ export const ejsTmp = {
         imports: {
             forEach,
             JoinType,
-            compileEjsTmp,
         },
         needOtherTmp: true,
     },
@@ -77,9 +76,6 @@ export const ejsTmp = {
     },
     tsEnumModuleTmp: {
         filePath: './src/ejsTmp/frontend/EnumModuleTemplate.ejs',
-        imports: {
-            compileEjsTmp,
-        },
         variable: 'list',
         needOtherTmp: true,
     },
@@ -96,9 +92,6 @@ export const ejsTmp = {
     tsInterfaceModuleTmp: {
         filePath: './src/ejsTmp/frontend/InterfaceModuleTemplate.ejs',
         variable: 'data',
-        imports: {
-            compileEjsTmp,
-        },
         needOtherTmp: true,
     },
     tsApiCallFuncTmp: {
@@ -110,23 +103,27 @@ export const ejsTmp = {
     tsApiModuleTmp: {
         filePath: './src/ejsTmp/frontend/ApiCallModuleTemplate.ejs',
         variable: 'data',
-        imports: {
-            compileEjsTmp,
-        },
         needOtherTmp: true,
     },
     filterTmp: {
         filePath: './src/ejsTmp/frontend/view/FilterTemplate.ejs',
         imports: {
             forEach,
-            TextInputControl,
-            SelectInputControl,
-            DateInputControl,
             getTypeImportsFrom,
             generateImportLines,
             ObjectTypeDefinition,
         },
-        variable: 'def',
+        needOtherTmp: true,
+    },
+    filterTextControlTmp: {
+        filePath: './src/ejsTmp/frontend/view/filterControl/textInputTemplate.ejs',
+    },
+    filterSelectControlTmp: {
+        filePath: './src/ejsTmp/frontend/view/filterControl/selectInputTemplate.ejs',
+    },
+    filterDateControlTmp: {
+        filePath: './src/ejsTmp/frontend/view/filterControl/datePickerTemplate.ejs',
+        variable: 'info',
     },
     tableViewTmp: {
         filePath: './src/ejsTmp/frontend/view/TableViewTemplate.ejs',
@@ -162,5 +159,6 @@ for (let def in ejsTmp) {
             imports = tmpInfo.imports = {};
         }
         imports['ejsTmp'] = ejsTmp;
+        imports['compileEjsTmp'] = compileEjsTmp;
     }
 }

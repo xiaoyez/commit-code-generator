@@ -63,10 +63,10 @@ export class DateInputControl extends InputControl {
     // 同时也是value-format
     format?: string;
     rangeSeparator?: string;
-    model?: string;
+    model: string;
 
 
-    constructor(isRange: boolean, withTime: boolean, startPlaceholder?: string, endPlaceholder?: string, format?: string, rangeSeparator?: string, model?: string) {
+    constructor(isRange: boolean, withTime: boolean, model: string, startPlaceholder?: string, endPlaceholder?: string, format?: string, rangeSeparator?: string) {
         super();
         this.isRange = isRange;
         this.withTime = withTime;
