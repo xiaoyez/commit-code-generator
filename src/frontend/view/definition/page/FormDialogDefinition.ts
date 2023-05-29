@@ -10,6 +10,9 @@ import {FormDefinition, FormItemDefinition} from "./FormDefinition";
  * DataColumnDefinition
  */
 
+/**
+ * 表单弹窗定义
+ */
 export interface FormDialogDefinition {
     // 新增数据的api
     addApi: ApiDefinition;
@@ -23,9 +26,32 @@ export interface FormDialogDefinition {
 
 }
 
+/*
+就修改而言:
+弹窗首先要接收infoApi的返参，页面上并不显示infoApi返参的所有字段
+然后根据editApi的入参，这个入参的所有字段是都要的
+ */
+
+/**
+ * 弹窗表单项定义
+ */
+export interface DataFormItemDefinition extends FormItemDefinition {
+    displayType: DisplayType;
+    disabledInEdit?: boolean;
+    rule: Rule;
+}
+
+/**
+ * 弹窗表单定义
+ */
 export interface DataFormDefinition extends FormDefinition {
-    rules: Record<string, Rule>;
-    fields: Record<string, DisplayType>
+    items: DataFormItemDefinition[];
+}
+
+export interface DataFormFieldDefinition {
+    displayType: DisplayType;
+    rule: Rule;
+    disabledInEdit?: boolean;
 }
 
 export enum DisplayType {

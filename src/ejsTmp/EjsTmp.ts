@@ -141,6 +141,16 @@ export const ejsTmp = {
             generateImportLines,
             tsTypeString,
         }
+    },
+    formDialogTmp: {
+        filePath: './src/ejsTmp/frontend/view/FormDialogTemplate.ejs',
+        imports: {
+            forEach,
+            ModuleUtils,
+            ApiUtils,
+            getTypeImportsFrom,
+            generateImportLines,
+        }
     }
 } satisfies Record<string, EjsTmp>;
 

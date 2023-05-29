@@ -1,0 +1,139 @@
+<template>
+  <el-dialog :title="title" v-model="open" width="907px" append-to-body>
+    <el-form ref="formRef" :model="form" :rules="rules" label-width="100px" :inline="true">
+        <%forEach(formDefinition.items,itemDef=>{
+        %>    <el-form-item label="<%=itemDef.label%>" prop="<%=itemDef.prop%>"><%const defControl = itemDef.inputControl%>
+        <%if(defControl instanceof TextInputControl){
+        %><el-input v-model="<%=modelName%>.<%=defControl.vModelName%>" placeholder="<%=defControl.placeholder%>" :disabled="<%=itemDef.disabledInEdit?'formType !== FORM_TYPE.ADD':'formType === FORM_TYPE.INFO'%>"/><%
+}%><%if (defControl instanceof SelectInputControl){
+    const keyFiled = defControl.key || defControl.value
+%><el-select v-model="<%=modelName%>.<%=defControl.vModelName%>" placeholder="<%=defControl.placeholder%>" clearable filterable :disabled="<%=itemDef.disabledInEdit?'formType !== FORM_TYPE.ADD':'formType === FORM_TYPE.INFO'%>">
+<el-option v-for="<%=defControl.iterName%> in <%=defControl.listName%>" :key="<%=defControl.iterName%>.<%=keyFiled%>" :label="<%=defControl.iterName%>.<%=defControl.label%>" :value="<%=defControl.iterName%>.<%=defControl.value%>"/>
+    </el-select><%
+    }%><%if (defControl instanceof DateInputControl) {
+        const modelStr = defControl.isRange ? (modelName + '.') : "" + defControl.model
+        const compType = 'date' + (defControl.withTime ? "time" : '')
+    %><el-date-picker
+    v-model="<%=modelStr%>"
+    value-format="<%=defControl.format%>"
+    type="<%=compType%>"
+    placeholder="<%=defControl.startPlaceholder%>"
+    :disabled="<%=itemDef.disabledInEdit?'formType !== FORM_TYPE.ADD':'formType === FORM_TYPE.INFO'%>"
+%>
+    /><%
+        }%>
+    </el-form-item><%
+        })%>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button type="primary" @click="submit">确 定</el-button>
+      <el-button @click="cancel">取 消</el-button>
+    </div>
+  </el-dialog>
+</template>
+
+<script setup lang="ts">
+<%
+const resultTypeName = ApiUtils.getResultDataTypeName(infoApi);
+%>
+import {ref} from "vue"
+import {ElForm, type FormItemRule} from "element-plus"
+<%const path = ModuleUtils.buildBaseUrlPrefix(addApi.module)%>
+import {<%addApi.apiName%>,<%editApi.apiName%>,<%infoApi.apiName%>} from "@/api<%=path%>";
+import {useGlobalProperties} from "@/utils/component";
+import {FORM_TYPE} from "@/constants/common";
+import {RegexLib} from "@/utils/dataValidate";
+<%let importInfo = getTypeImportsFrom(api.result)
+%><%=generateImportLines(importInfo)%><%}%>
+
+
+const title = ref("");
+const open = ref(false);
+const formType = ref<FORM_TYPE>(FORM_TYPE.ADD);
+const formRef = ref<InstanceType<typeof ElForm> | null>(null);
+
+const emit = defineEmits<{
+    submitted: [];
+}>();
+
+const form = ref<Partial<<%=resultTypeName%>>>({});
+const rules = ref({<%forEach(formDefinition.items, item => { %><%
+    const {rule} = item;
+ %>    <%=item.prop%>: [
+        {required: <%=rule.required?'true':'false'%>, message:'<%=rule.message%>', trigger: '<%=rule.trigger%>',<%if(rule.pattern){%>
+        {pattern: rule.pattern}, message:'<%=rule.message%>', trigger: '<%=rule.trigger%>' <%}%>
+    ],
+    <%})%>
+} satisfies Partial<Record<keyof <%=resultTypeName%>>, FormItemRule[]>>);
+
+const proxy = useGlobalProperties();
+
+function onSubmitted() {
+    emit('submitted');
+}
+
+/** 取消按钮 */
+function cancel() {
+    open.value = false;
+    reset();
+}
+
+/** 表单重置 */
+function reset() {
+    form.value = {};
+    formRef.value?.resetFields();
+}
+
+function openEditDialog(row: IMemberDTO) {
+    reset();
+    form.value = row;
+    title.value = "<%=editApi.comment%>";
+    getMember(row.id).then(response => {
+        form.value = response.data;
+        open.value = true;
+        formType.value = FORM_TYPE.EDIT;
+    });
+}
+
+function openAddDialog() {
+    reset();
+    title.value = "<%=addApi.comment%>";
+    open.value = true;
+    formType.value = FORM_TYPE.ADD;
+}
+
+function openInfoDialog(row: IMemberDTO) {
+    reset();
+    title.value = "<%=infoApi.comment.replace('获取','').replace('详情','')%>";
+    form.value = row;
+    open.value = true;
+    formType.value = FORM_TYPE.INFO;
+}
+
+/** 提交按钮 */
+function submit() {
+    formRef.value?.validate(valid => {
+        if (valid) {
+            if (formType.value === FORM_TYPE.EDIT) {
+                <%editApi.apiName%>(form.value).then(response => {
+                    proxy.$modal.msgSuccess("修改成功");
+                    open.value = false;
+                    onSubmitted();
+                });
+            } else if (formType.value === FORM_TYPE.ADD) {
+                <%addApi.apiName%>(form.value).then(response => {
+                    proxy.$modal.msgSuccess("新增成功");
+                    open.value = false;
+                    onSubmitted();
+                });
+            }
+        }
+    })
+}
+
+defineExpose({
+    openEditDialog,
+    openAddDialog,
+    openInfoDialog,
+});
+</script>

@@ -2,7 +2,7 @@ import {
     DomainTypeDefinition,
     IDomainPropertyDefinition,
     IPropertyDefinition,
-    ObjectTypeDefinition
+    ObjectTypeDefinition, TypeDefinition
 } from "../../../../dto/definition/TypeDefinition";
 import {JavaType} from "../../../../dto/definition/JavaType";
 import {
@@ -19,6 +19,9 @@ import {TableColDefinition, TableColType, TableDefinition} from "./TableViewDefi
 import {ApiDefinition} from "../../../../api/definition/ApiDefinition";
 import {TableDataInfoTypeDefinition} from "../../../../api/definition/TableDataInfoTypeDefinition";
 import {FilterFormDefinition} from "./FilterDefinition";
+import {contains} from "../../../../utils/ArrayUtils";
+import {DataFormDefinition, DataFormFieldDefinition, DataFormItemDefinition, Rule} from "./FormDialogDefinition";
+import {ApiUtils} from "../../../../api/utils/ApiUtils";
 
 export class ViewUtils {
 
@@ -28,12 +31,12 @@ export class ViewUtils {
         }
         const apiParamType = apiDefinition.params?.type;
         if(apiParamType && apiParamType instanceof ObjectTypeDefinition) {
-            filterFormDefinition.items = apiParamType.properties.map(property=>ViewUtils.castPropertyDefinitionToFilterFormItemDefinition(property))
+            filterFormDefinition.items = apiParamType.properties.map(property=>ViewUtils.castPropertyDefinitionToFormItemDefinition(property))
         }
         return filterFormDefinition
     }
 
-    static castPropertyDefinitionToFilterFormItemDefinition(propertyDefinition: IPropertyDefinition): FormItemDefinition {
+    static castPropertyDefinitionToFormItemDefinition(propertyDefinition: IPropertyDefinition): FormItemDefinition {
         if (propertyDefinition.paramType.type === JavaType.String)
         {
             return {
@@ -116,5 +119,24 @@ export class ViewUtils {
             // 若该字段是图片，需手动将type设为图片
             type: property.enumType?TableColType.DICT:TableColType.TEXT
         };
+    }
+
+    static castApiDefinitionToDataFormDefinition(apiDefinition: ApiDefinition, fields: Record<string, DataFormFieldDefinition>): DataFormDefinition {
+        const resultType = ApiUtils.getResultDataType(apiDefinition) as TypeDefinition;
+        const fieldNames = Object.keys(fields);
+        const props = (resultType.type as ObjectTypeDefinition).properties.filter(prop => contains(fieldNames, prop.paramName));
+        const items = props.map(prop => ViewUtils.castIPropertyDefinitionToDataFormItemDefinition(prop, fields[prop.paramName]));
+        return {
+            items
+        }
+    }
+
+    private static castIPropertyDefinitionToDataFormItemDefinition(prop: IPropertyDefinition, fieldDefinition: DataFormFieldDefinition): DataFormItemDefinition {
+        let item = ViewUtils.castPropertyDefinitionToFormItemDefinition(prop) as DataFormItemDefinition;
+        item = {
+            ...item,
+            ...fieldDefinition
+        } as DataFormItemDefinition;
+        return item;
     }
 }
