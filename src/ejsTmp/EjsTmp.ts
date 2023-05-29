@@ -118,6 +118,16 @@ export const ejsTmp = {
         },
         variable: 'def',
     },
+    filterTextControlTmp: {
+        filePath: './src/ejsTmp/frontend/view/filterControl/textInputTemplate.ejs',
+    },
+    filterSelectControlTmp: {
+        filePath: './src/ejsTmp/frontend/view/filterControl/selectInputTemplate.ejs',
+    },
+    filterDateControlTmp: {
+        filePath: './src/ejsTmp/frontend/view/filterControl/datePickerTemplate.ejs',
+        variable: 'info',
+    },
     tableViewTmp: {
         filePath: './src/ejsTmp/frontend/view/TableViewTemplate.ejs',
         imports: {
