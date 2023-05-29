@@ -4,7 +4,6 @@ import {JoinType} from "../db/definition/ViewCreateDefinition";
 import {compileEjsTmp} from "./EjsUtils";
 import {fieldTypeString} from "../utils/TypeUtils";
 import {generateImportLines, getTypeImportsFrom} from "../utils/TSImportUtils";
-import {ObjectTypeDefinition} from "../dto/definition/TypeDefinition";
 import {ActBtn, ColActBtn, TableColType} from "../frontend/view/definition/page/TableViewDefinition";
 import {ModuleUtils, prefix2Module} from "../api/utils/ModuleUtils";
 import {ApiUtils} from "../api/utils/ApiUtils";
@@ -108,9 +107,6 @@ export const ejsTmp = {
         filePath: './src/ejsTmp/frontend/view/FilterTemplate.ejs',
         imports: {
             forEach,
-            getTypeImportsFrom,
-            generateImportLines,
-            ObjectTypeDefinition,
         },
         needOtherTmp: true,
     },
