@@ -116,13 +116,13 @@ export const ejsTmp = {
         needOtherTmp: true,
     },
     filterTextControlTmp: {
-        filePath: './src/ejsTmp/frontend/view/filterControl/textInputTemplate.ejs',
+        filePath: './src/ejsTmp/frontend/view/inputControl/textInputTemplate.ejs',
     },
     filterSelectControlTmp: {
-        filePath: './src/ejsTmp/frontend/view/filterControl/selectInputTemplate.ejs',
+        filePath: './src/ejsTmp/frontend/view/inputControl/selectInputTemplate.ejs',
     },
     filterDateControlTmp: {
-        filePath: './src/ejsTmp/frontend/view/filterControl/datePickerTemplate.ejs',
+        filePath: './src/ejsTmp/frontend/view/inputControl/datePickerTemplate.ejs',
         variable: 'info',
     },
     tableViewTmp: {

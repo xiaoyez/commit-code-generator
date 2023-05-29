@@ -1,7 +1,7 @@
 import {FilterDefinition} from "../../definition/page/FilterDefinition";
 import {compileEjsTmp} from "../../../../ejsTmp/EjsUtils";
 import {ejsTmp} from "../../../../ejsTmp/EjsTmp";
-import {filterCompViewModel} from "../../../../utils/VueComponentUtils";
+import {filterCompViewModel} from "../../../../utils/FilterComponentUtils";
 
 export class FilterGenerator {
 
