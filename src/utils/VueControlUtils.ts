@@ -1,20 +1,17 @@
-import {FilterDefinition} from "../frontend/view/definition/page/FilterDefinition";
-import {
-    InputControl,
-    TextInputControl,
-    SelectInputControl,
-    DateInputControl, DictSelectInputControl
-} from "../frontend/view/definition/page/FormDefinition";
 import {ejsTmp} from "../ejsTmp/EjsTmp";
-import {getImportLinesRecord, getTypeImportsFrom} from "./TSImportUtils";
-import {tsTypeString} from "./TypeUtils";
+import {
+    DateInputControl, DictSelectInputControl,
+    InputControl,
+    SelectInputControl,
+    TextInputControl
+} from "../frontend/view/definition/page/FormDefinition";
 
 interface FilterControlVM {
     modelPath: string;
     tmpName: keyof typeof ejsTmp;
 }
 
-interface FilterTextVM extends FilterControlVM {
+export interface FilterTextVM extends FilterControlVM {
     placeholder: TextInputControl['placeholder'];
     tmpName: 'filterTextControlTmp';
 }
@@ -25,7 +22,7 @@ function filterTextInputViewModel(modelName: string, itemDef: TextInputControl):
     return {placeholder, modelPath, tmpName: 'filterTextControlTmp'};
 }
 
-interface FilterSelectVM extends FilterControlVM {
+export interface FilterSelectVM extends FilterControlVM {
     placeholder: SelectInputControl['placeholder'];
     listName: SelectInputControl['listName'];
     iterName: SelectInputControl['iterName'];
@@ -58,19 +55,19 @@ interface FilterTimeVMBase extends FilterControlVM {
     compType: string;
 }
 
-interface FilterTimeVM extends FilterTimeVMBase {
+export interface FilterTimeVM extends FilterTimeVMBase {
     isRange: false;
     placeholder: DateInputControl['startPlaceholder'];
 }
 
-interface FilterTimeRangeVM extends FilterTimeVMBase {
+export interface FilterTimeRangeVM extends FilterTimeVMBase {
     isRange: true;
     rangeSeparator: DateInputControl['rangeSeparator'];
     startPlaceholder: DateInputControl['startPlaceholder'];
     endPlaceholder: DateInputControl['endPlaceholder'];
 }
 
-type FilterDatePickerVM = FilterTimeVM | FilterTimeRangeVM;
+export type FilterDatePickerVM = FilterTimeVM | FilterTimeRangeVM;
 
 function filterDatePickerViewModel(modelName: string, itemDef: DateInputControl): FilterDatePickerVM {
     const {
@@ -117,7 +114,7 @@ function filterDatePickerViewModel(modelName: string, itemDef: DateInputControl)
     }
 }
 
-type FilterInputVM = FilterTextVM | FilterSelectVM | FilterDatePickerVM;
+export type FilterInputVM = FilterTextVM | FilterSelectVM | FilterDatePickerVM;
 
 type InputVMFn = (modelName: string, itemDef: InputControl) => FilterInputVM;
 
@@ -129,47 +126,9 @@ const filterControlVMMap = new Map<InputControl, InputVMFn>([
 ])
 
 
-function filterInputViewModel(modelName: string, itemDef: InputControl) {
+export function filterInputViewModel(modelName: string, itemDef: InputControl) {
     let proto = Object.getPrototypeOf(itemDef);
     let vmFn = filterControlVMMap.get(proto)
         || filterTextInputViewModel as InputVMFn;
     return vmFn(modelName, itemDef);
-}
-
-export function filterCompViewModel(filterDefinition: FilterDefinition) {
-    const {
-        filterFormDefinition: filterFormDef,
-        api,
-    } = filterDefinition;
-
-    const modelName = filterFormDef.modelName || 'queryParams'
-    const refName = filterFormDef.refName || 'queryForm'
-    const vShowName = filterFormDef.vShowName || 'showSearch';
-
-    let items = filterFormDef.items
-        .map(({label, prop, inputControl}) => ({
-            label, prop, info: filterInputViewModel(modelName, inputControl)
-        }));
-
-    function isRange(info: FilterInputVM): info is FilterTimeRangeVM {
-        return info.tmpName === 'filterDateControlTmp' && info.isRange;
-    }
-
-    let dateRanges = items
-        .map(({info}) => info)
-        .filter(isRange);
-
-    let importLines = getImportLinesRecord(getTypeImportsFrom(api.params!));
-    let queryTypeName = tsTypeString(api.params!);
-
-    return {
-        items,
-        api,
-        modelName,
-        refName,
-        vShowName,
-        dateRanges,
-        importLines,
-        queryTypeName,
-    }
 }
