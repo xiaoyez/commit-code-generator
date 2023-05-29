@@ -1,10 +1,10 @@
 <template>
-  <el-form class="filter-form" :model="<%=modelName%>" ref="<%=refName%>" :inline="true" v-show="<%=vShowName%>">
-<%forEach(items,itemDef=>{
-%>    <el-form-item label="<%=itemDef.label%>" prop="<%=itemDef.prop%>"><%const defControl = itemDef.inputControl%>
+  <el-form class="filter-form" :model="<%= modelName %>" ref="<%= refName %>" :inline="true" v-show="<%= vShowName %>">
+<%  forEach(items, itemDef => {
+%>    <el-form-item label="<%= itemDef.label %>" prop="<%= itemDef.prop %>">
       <%= compileEjsTmp(ejsTmp[itemDef.info.tmpName], itemDef.info) %>
     </el-form-item><%
-})%>
+    }) %>
     <el-form-item>
       <el-button type="primary" icon="Search" size="small" @click="handleQuery">搜索</el-button>
       <el-button icon="Refresh" size="small" @click="resetQuery">重置</el-button>
@@ -17,21 +17,45 @@
 import {ref} from "vue";
 import {ElForm} from "element-plus";
 import {COMMON_KEYS} from "@/constants/common";
-const { INJECT_QUERY_LIST_PARAM } = COMMON_KEYS;
+<%= compileEjsTmp(ejsTmp.tsImportLinesTmp, importLines) %>
+const {INJECT_QUERY_LIST_PARAM} = COMMON_KEYS;
 
-<%if(api.params){
-%><%let importInfo = getTypeImportsFrom(api.params)
-%><%=generateImportLines(importInfo)%><%}%>
-const <%=refName%> = ref<InstanceType<typeof ElForm>|null>(null);
+const <%= refName %> = ref<InstanceType<typeof ElForm>|null>(null);
+
 defineProps<{
-    <%=vShowName%>: boolean
+    <%= vShowName %>: boolean
     noActBtn?: boolean
 }>();
-<%if(api.params?.type instanceof ObjectTypeDefinition) {
-%>const emit = defineEmits<{
-    (e:'handleQuery', query: <%=api.params.type.className%>): void,
+
+const emit = defineEmits<{
+    (e:'handleQuery', query: <%= queryTypeName %>): void,
 }>();
-const ${modelName} = inject<Ref<<%=api.params.type.className%>>>(INJECT_QUERY_LIST_PARAM, () => ref<<%=api.params.type.className%>>({}), true);<%
-}%>
+
+<% // 以后可能要考虑default value需要给一些字段默认值的情况，现在默认所有字段都是可选
+%>const ${modelName} = inject<Ref<<%= queryTypeName %>>>(INJECT_QUERY_LIST_PARAM, () => ref({}), true);<%
+if (dateRanges.length) { %>
+<% forEach(dateRanges, range => { %>
+const <%= range.modelPath %> = ref<[string, string]>([]);
+
+watch(<%= range.modelPath %>, ([start, end]) => {
+    if (start && end) {
+        <%= modelName %>.<%= range.modelPath %>Start = start;
+        <%= modelName %>.<%= range.modelPath %>End = end;
+    }
+    else {
+        <%= modelName %>.<%= range.modelPath %>Start = void 0;
+        <%= modelName %>.<%= range.modelPath %>End = void 0;
+    }
+});<%})
+} %>
+
+function handleQuery() {
+    emit('handleQuery', <%= modelName %>.value);
+}
+
+function resetQuery() {
+    <%= refName %>.value?.resetFields();
+    handleQuery();
+}
 
 </script>

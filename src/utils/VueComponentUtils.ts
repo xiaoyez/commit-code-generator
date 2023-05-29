@@ -6,6 +6,8 @@ import {
     DateInputControl, DictSelectInputControl
 } from "../frontend/view/definition/page/FormDefinition";
 import {ejsTmp} from "../ejsTmp/EjsTmp";
+import {getImportLinesRecord, getTypeImportsFrom} from "./TSImportUtils";
+import {tsTypeString} from "./TypeUtils";
 
 interface FilterControlVM {
     modelPath: string;
@@ -157,13 +159,17 @@ export function filterCompViewModel(filterDefinition: FilterDefinition) {
         .map(({info}) => info)
         .filter(isRange);
 
+    let importLines = getImportLinesRecord(getTypeImportsFrom(api.params!));
+    let queryTypeName = tsTypeString(api.params!);
+
     return {
-        filterFormDef,
         items,
         api,
         modelName,
         refName,
         vShowName,
         dateRanges,
+        importLines,
+        queryTypeName,
     }
 }
