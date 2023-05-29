@@ -1,21 +1,21 @@
-      <el-date-picker
-        v-model="<%= info.modelPath %>"<%
-      if (info.format) { %>
-        value-format="<%= info.format %>"<%
-      } %>
-        type="<%= info.compType %>"<%
-      if (info.isRange) {
-        if (info.rangeSeparator) { %>
-        range-separator="<%= info.rangeSeparator %>"<%
-        }
-        if (info.startPlaceholder) { %>
-        start-placeholder="<%= info.startPlaceholder %>"<%
-        }
-        if (info.endPlaceholder) { %>
-        end-placeholder="<%= info.endPlaceholder %>"<%
-        }
-      }
-      else if (info.placeholder) { %>
-        placeholder="<%= info.placeholder %>"<%
-      } %>
-      />
+<el-date-picker
+  v-model="<%= info.modelPath %>"<%
+if (info.format) { %>
+  value-format="<%= info.format %>"<%
+} %>
+  type="<%= info.compType %>"<%
+if (info.isRange) {
+  if (info.rangeSeparator) { %>
+  range-separator="<%= info.rangeSeparator %>"<%
+  }
+  if (info.startPlaceholder) { %>
+  start-placeholder="<%= info.startPlaceholder %>"<%
+  }
+  if (info.endPlaceholder) { %>
+  end-placeholder="<%= info.endPlaceholder %>"<%
+  }
+}
+else if (info.placeholder) { %>
+  placeholder="<%= info.placeholder %>"<%
+} %>
+/>

@@ -1,10 +1,10 @@
-      <el-select v-model="<%=
-        modelPath %>" placeholder="<%= placeholder
-      %>" clearable filterable>
-        <el-option v-for="<%=
-          iterName %> in <%= listName
-          %>" :key="<%= iterName %>.<%= keyFiled
-          %>" :label="<%= iterName %>.<%= label
-          %>" :value="<%= iterName %>.<%= value
-        %>"/>
-      </el-select>
+<el-select v-model="<%=
+  modelPath %>" placeholder="<%= placeholder
+%>" clearable filterable>
+  <el-option v-for="<%=
+    iterName %> in <%= listName
+    %>" :key="<%= iterName %>.<%= keyFiled
+    %>" :label="<%= iterName %>.<%= label
+    %>" :value="<%= iterName %>.<%= value
+  %>"/>
+</el-select>

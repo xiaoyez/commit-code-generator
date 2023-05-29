@@ -2,7 +2,7 @@
   <el-form class="filter-form" :model="<%= modelName %>" ref="<%= refName %>" :inline="true" v-show="<%= vShowName %>"><%
   forEach(items, itemDef => { %>
     <el-form-item label="<%= itemDef.label %>" prop="<%= itemDef.prop %>">
-<%= compileEjsTmp(ejsTmp[itemDef.info.tmpName], itemDef.info) %>
+<%= compileEjsTmp(ejsTmp[itemDef.info.tmpName], itemDef.info, { indent: 6 }) %>
     </el-form-item><%
   }) %>
     <el-form-item>
