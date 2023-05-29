@@ -109,14 +109,11 @@ export const ejsTmp = {
         filePath: './src/ejsTmp/frontend/view/FilterTemplate.ejs',
         imports: {
             forEach,
-            TextInputControl,
-            SelectInputControl,
-            DateInputControl,
             getTypeImportsFrom,
             generateImportLines,
             ObjectTypeDefinition,
         },
-        variable: 'def',
+        needOtherTmp: true,
     },
     filterTextControlTmp: {
         filePath: './src/ejsTmp/frontend/view/filterControl/textInputTemplate.ejs',
