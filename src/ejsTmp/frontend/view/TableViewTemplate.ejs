@@ -34,7 +34,7 @@ if (actBtnList.length) { %>
     %>/><%
     } else {
     %>>
-      <template #default="{ row }: { row: <%= dataTypeName %> }"><%
+      <template #default="{ row }: { row: <%- dataTypeName %> }"><%
       if (col.type === TableColType.DICT) {
         // 考虑根据dictName在Script段定义响应式变量
         %>
@@ -51,13 +51,13 @@ if (actBtnList.length) { %>
   })%><%
   if (colActBtnList.length) { %>
     <el-table-column label="操作" width="100" fixed="right" align="center">
-      <template #default="{ row }: { row: ${dataTypeName} }"><%
+      <template #default="{ row }: { row: <%- dataTypeName %> }"><%
       forEach(colActBtnList, actBtn => { %>
         <el-button size="small" link icon="<%= actBtn.icon %>" @click="<%= actBtn.click %>"<%
         if (actBtn.actPermi) { %>
                    v-has-permi="['<%= permiPrefix %>:<%= actBtn.actPermi %>']"<%
         } %>><%= actBtn.text %>
-        </el-button>
+        </el-button><%
       })%>
       </template>
     </el-table-column><%
@@ -73,35 +73,28 @@ if (tableDef.isPage) { %>
 import {cloneDeep} from "lodash-es";
 import {useTableIndex} from '@/utils';
 import {fileUrl} from '@/utils/file';
-import {COMMON_KEYS} from '@/constants/common';
-<%if (tableDef.isPage) {
-%>import type {IPagingParams} from '@/dataType/common';<%
-}%>
-<%let dataTypeDef = ApiUtils.getResultDataType(api);
-if (dataTypeDef) {
-    const dataTypeImportInfo = getTypeImportsFrom(dataTypeDef);
-}%><%=generateImportLines(dataTypeImportInfo)%>
+import {COMMON_KEYS} from '@/constants/common';<%
+if (tableDef.isPage) { %>
+import type {IPagingParams} from '@/dataType/common';<%
+} %>
+<%= compileEjsTmp(ejsTmp.tsImportLinesTmp, importDataType) %>
 const {INJECT_QUERY_LIST_PARAM} = COMMON_KEYS;
 
 const showSearch = defineModel<boolean>({
     default: true,
 });
 
-<%
-let dataTypeDef = ApiUtils.getResultDataType(api);
-let dataTypeStr = dataTypeDef ? tsTypeString(dataTypeDef) : 'unknown';
- %>
-const { <%=dataName%> = [], totalRows = 0 } = defineProps<{
-    <%=dataName%>: <%=dataTypeStr%>[];
+const { <%= dataName %> = [], totalRows = 0 } = defineProps<{
+    <%= dataName %>: <%- dataTypeName %>[];
     totalRows: number;
     loading: boolean
 }>();
 
-const selected = ref<<%=dataTypeStr%>[]>([]);
+const selected = ref<<%- dataTypeName %>[]>([]);
 const notSingle = computed(() => selected.value.length !== 1);
 const notMulti = computed(() => selected.value.length === 0);
 
-function handleSelectionChange(selection: <%=dataTypeStr%>[]) {
+function handleSelectionChange(selection: <%- dataTypeName %>[]) {
     selected.value = selection;
 }
 
@@ -111,4 +104,38 @@ const paging = inject<Ref<Required<IPagingParams>>>(INJECT_QUERY_LIST_PARAM, () 
 }), true);
 
 const calcOrder = useTableIndex(paging as Ref<IPagingParams>);
+
+const emit = defineEmits<{<%
+  forEach(eventList, event => { %>
+    <%- event.event %>: [<%- event.emit %>];<%
+  }) %>
+}>();
+<% forEach(eventList, event => { %>
+function <%- event.funcName %>(<%
+    if (event.curRow) {
+    %>row?: <%- dataTypeName %><%
+    } %>) {<%
+    if (event.data === 'multi') { %>
+    let rows = <%
+      if (event.curRow) {
+        %>row ? [row] : <%
+      } %>selected.value;<%
+    } %>
+    emit('<%- event.event %>'<%
+    if (event.data !== 'void') {%>, <%
+      if (event.data === 'single') {
+        %>cloneDeep(toRaw(<%
+        if (event.curRow) {
+          %>row || <%
+        } %>selected.value[0]))<%
+      }
+      else if (event.data === 'multi') {
+        %>cloneDeep(toRaw(rows))<%
+      }
+      else {
+        %><%- event.data %><%
+      }
+    }%>);
+}
+<% }) %>
 </script>

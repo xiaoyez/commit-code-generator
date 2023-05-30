@@ -1,6 +1,5 @@
 import {ApiDefinition} from "../definition/ApiDefinition";
 import {ModuleDefinition} from "../definition/ModuleDefinition";
-import {addNewImport, emptyImportLines, generateImportLines, getTypeImportsFrom} from "../../utils/TSImportUtils";
 import {ModuleUtils} from "../utils/ModuleUtils";
 import {saveToPath} from "../../utils/TSPathUtils";
 import {compileEjsTmp} from "../../ejsTmp/EjsUtils";

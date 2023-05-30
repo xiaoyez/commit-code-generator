@@ -1,6 +1,7 @@
 import {ApiDefinition} from "../definition/ApiDefinition";
 import {JavaType} from "../../dto/definition/JavaType";
 import {tsTypeString} from "../../utils/TypeUtils";
+import {getImportLinesRecord, getTypeImportsFrom} from "../../utils/TSImportUtils";
 
 export class ApiUtils {
     /**
@@ -29,7 +30,18 @@ export class ApiUtils {
             return tsTypeString(dataType);
         }
         else {
-            return "";
+            return "unknown";
+        }
+    }
+
+    static getResultDataTypeImportRecord(api: ApiDefinition) {
+        let dataType = ApiUtils.getResultDataType(api);
+        if (dataType) {
+            let importMap = getTypeImportsFrom(dataType);
+            return getImportLinesRecord(importMap)
+        }
+        else {
+            return null;
         }
     }
 }

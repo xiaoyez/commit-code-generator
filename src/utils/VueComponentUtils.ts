@@ -51,6 +51,7 @@ export function filterCompViewModel(filterDefinition: FilterDefinition) {
 }
 
 interface ActBtnInfo {
+    emit: string;
     elType: string;
     icon: string;
     click: string;
@@ -61,6 +62,7 @@ interface ActBtnInfo {
 
 const tableActBtnConf = {
     [ActBtn.ADD]: {
+        emit: 'onClickAdd',
         elType: 'primary',
         icon: 'Plus',
         click: 'handleAdd()',
@@ -68,6 +70,7 @@ const tableActBtnConf = {
         text: '新增',
     },
     [ActBtn.EDIT]: {
+        emit: 'onClickUpdate',
         elType: 'success',
         icon: 'Edit',
         click: 'handleUpdate()',
@@ -76,6 +79,7 @@ const tableActBtnConf = {
         disabled: 'notSingle',
     },
     [ActBtn.REMOVE]: {
+        emit: 'onClickDelete',
         elType: 'danger',
         icon: 'Delete',
         click: 'handleDelete()',
@@ -84,6 +88,7 @@ const tableActBtnConf = {
         disabled: 'notMulti',
     },
     [ActBtn.EXPORT]: {
+        emit: 'onClickExport',
         elType: 'warning',
         icon: 'Download',
         click: 'handleExport()',
@@ -93,6 +98,7 @@ const tableActBtnConf = {
 } as Record<ActBtn, ActBtnInfo>;
 
 interface ColActBtnInfo {
+    emit: string;
     icon: string;
     click: string;
     actPermi?: string;
@@ -101,23 +107,68 @@ interface ColActBtnInfo {
 
 const tableColActBtnConf = {
     [ColActBtn.EDIT]: {
+        emit: 'onClickUpdate',
         icon: 'Edit',
         click: 'handleUpdate(row)',
         actPermi: 'edit',
         text: '修改',
     },
     [ColActBtn.REMOVE]: {
+        emit: 'onClickDelete',
         icon: 'Delete',
         click: 'handleDelete(row)',
         actPermi: 'remove',
         text: '删除',
     },
     [ColActBtn.INFO]: {
+        emit: 'onClickShowInfo',
         icon: 'View',
         click: 'showInfo(row)',
         text: '详情',
     },
 } as Record<ColActBtn, ColActBtnInfo>;
+
+const actionHandlers: Record<string, (emit: string, dataTypeStr: string) => {
+    event: string, emit: string,
+    funcName: string, data: string
+}> = {
+    updateList: emit => ({
+        emit: "params: IPagingParams",
+        funcName: 'getList',
+        event: emit,
+        data: 'paging.value',
+    }),
+    onClickAdd: emit => ({
+        emit: "",
+        funcName: 'handleAdd',
+        event: emit,
+        data: "void",
+    }),
+    onClickUpdate: (emit, typeDef) => ({
+        emit: `val: ${typeDef}`,
+        funcName: 'handleUpdate',
+        event: emit,
+        data: "single",
+    }),
+    onClickShowInfo: (emit, typeDef) => ({
+        emit: `val: ${typeDef}`,
+        funcName: 'showInfo',
+        event: emit,
+        data: "single",
+    }),
+    onClickDelete: (emit, typeDef) => ({
+        emit: `val: ${typeDef}[]`,
+        funcName: 'handleDelete',
+        event: emit,
+        data: "multi",
+    }),
+    onClickExport: emit => ({
+        emit: "",
+        funcName: 'handleExport',
+        event: emit,
+        data: "void",
+    }),
+}
 
 function isStrTuple2(i: [string, string?]): i is [string, string] {
     return !!i[1];
@@ -154,7 +205,19 @@ export function tableViewCompViewModel(tableViewDefinition: TableViewDefinition)
     const modulePermi = prefix2Module(api.module?.baseUrlPrefix);
     const permiPrefix = `${config.projectName}:${modulePermi}`;
     const tableColumns = cols.map(col => tableColViewModel(col));
-    const colActBtnList = colActBtnArr.map(actBtn => tableColActBtnConf[actBtn]);
+    const colActBtnList = (colActBtnArr || [])
+        .map(actBtn => tableColActBtnConf[actBtn]);
+    const importDataType = ApiUtils.getResultDataTypeImportRecord(api);
+    const usingCurRow = new Set(colActBtnList.map(({emit}) => emit));
+    const events = new Set([
+        ...actBtnList.map(({emit}) => emit),
+        ...usingCurRow,
+    ]);
+    const eventList = [...events]
+        .map(emit => actionHandlers[emit](emit, dataTypeName))
+        .map(info => ({
+            ...info, curRow: usingCurRow.has(info.event),
+        }));
 
     return {
         tableDef,
@@ -165,5 +228,7 @@ export function tableViewCompViewModel(tableViewDefinition: TableViewDefinition)
         dataTypeName,
         tableColumns,
         colActBtnList,
+        importDataType,
+        eventList,
     };
 }

@@ -15,6 +15,7 @@ import {FilterDefinition} from "../src/frontend/view/definition/page/FilterDefin
 import {ViewUtils} from "../src/frontend/view/definition/page/ViewUtils";
 import {
     ActBtn,
+    ColActBtn,
     TableColType,
     TableDefinition,
     TableViewDefinition
@@ -182,3 +183,5 @@ export const memberTableViewDef: TableViewDefinition = {
         {label: "会员类型", prop: "status", type: TableColType.DICT, dictName: "ypx_member_type", align: "center"},
     ], queryMemberApiDef, "memberList", true),
 }
+
+memberTableViewDef.tableDef.addActBtn(ColActBtn.INFO, ColActBtn.EDIT);
