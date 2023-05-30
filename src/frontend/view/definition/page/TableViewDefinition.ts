@@ -44,6 +44,7 @@ export interface TableColDefinition {
     prop: string;
     width?: string;
     type: TableColType;
+    // TODO: 改为直接引用enum的定义，若没有ruoyiDict则添加DictDesc import
     dictName?: string;
 }
 export enum TableColType {

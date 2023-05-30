@@ -1,6 +1,6 @@
-import {ObjectTypeDefinition} from "../../dto/definition/TypeDefinition";
 import {ApiDefinition} from "../definition/ApiDefinition";
 import {JavaType} from "../../dto/definition/JavaType";
+import {tsTypeString} from "../../utils/TypeUtils";
 
 export class ApiUtils {
     /**
@@ -25,9 +25,11 @@ export class ApiUtils {
      */
     static getResultDataTypeName(api: ApiDefinition) {
         let dataType = ApiUtils.getResultDataType(api);
-        let dataTypeName = '';
-        if (dataType && dataType.type instanceof ObjectTypeDefinition)
-            dataTypeName = dataType.type.className;
-        return dataTypeName;
+        if (dataType) {
+            return tsTypeString(dataType);
+        }
+        else {
+            return "";
+        }
     }
 }

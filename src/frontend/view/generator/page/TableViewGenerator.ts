@@ -12,6 +12,7 @@ import {addNewImport, emptyImportLines, generateImportLines, getTypeImportsFrom}
 import {tsTypeString} from "../../../../utils/TypeUtils";
 import {compileEjsTmp} from "../../../../ejsTmp/EjsUtils";
 import {ejsTmp} from "../../../../ejsTmp/EjsTmp";
+import {tableViewCompViewModel} from "../../../../utils/VueComponentUtils";
 
 function isStrTuple2(i: [string, string?]): i is [string, string] {
     return !!i[1];
@@ -118,7 +119,7 @@ export class TableViewGenerator {
     // }
 
     static generate(tableViewDefinition: TableViewDefinition) {
-        return compileEjsTmp(ejsTmp.tableViewTmp, tableViewDefinition);
+        return compileEjsTmp(ejsTmp.tableViewTmp, tableViewCompViewModel(tableViewDefinition));
         // let text = '';
         // text += TableViewGenerator.generateTemplate(tableViewDefinition);
         // text += TableViewGenerator.generateScript(tableViewDefinition);
