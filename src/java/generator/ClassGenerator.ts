@@ -67,6 +67,13 @@ export class ClassGenerator {
             const importByType = JavaGeneratorUtils.buildImportByType(classDefinition.baseClass);
             if (importByType)
                 classDefinition.addImport(importByType);
+            if (classDefinition.baseClass.genericTypes && classDefinition.baseClass.genericTypes.length > 0) {
+                classDefinition.baseClass.genericTypes.forEach(genericType => {
+                   const importByGenericType = JavaGeneratorUtils.buildImportByType(genericType);
+                   if (importByGenericType)
+                       classDefinition.addImport(importByGenericType);
+                });
+            }
         }
     }
 
@@ -79,6 +86,11 @@ export class ClassGenerator {
         if (classDefinition.baseInterfaces && classDefinition.baseInterfaces.length > 0) {
             classDefinition.baseInterfaces.forEach(baseInterface => {
                 classDefinition.addImport(baseInterface.packageName + '.' + baseInterface.typeName);
+                if (baseInterface.genericTypes && baseInterface.genericTypes.length > 0) {
+                    baseInterface.genericTypes.forEach(genericType => {
+                        classDefinition.addImport(genericType.packageName + '.' + genericType.typeName);
+                    });
+                }
             });
         }
     }

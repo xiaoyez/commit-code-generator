@@ -41,6 +41,11 @@ export class InterfaceGenerator {
         if (interfaceDefinition.baseInterfaces && interfaceDefinition.baseInterfaces.length > 0) {
             interfaceDefinition.baseInterfaces.forEach(baseInterface => {
                 interfaceDefinition.addImport(baseInterface.packageName + '.' + baseInterface.typeName);
+                if (baseInterface.genericTypes && baseInterface.genericTypes.length > 0) {
+                    baseInterface.genericTypes.forEach(genericType => {
+                        interfaceDefinition.addImport(genericType.packageName + '.' + genericType.typeName);
+                    });
+                }
             });
         }
     }
