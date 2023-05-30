@@ -3,7 +3,6 @@ import {ObjectTypeDefinition, TypeDefinition} from "../dto/definition/TypeDefini
 import {convertPackageToPath} from "./TSPathUtils";
 import {DataEnum} from "../db/definition/DataEnum";
 import {compileEjsTmp} from "../ejsTmp/EjsUtils";
-import {ejsTmp} from "../ejsTmp/EjsTmp";
 import {tsObjDefTypeName} from "./TypeUtils";
 import {ModuleDefinition} from "../api/definition/ModuleDefinition";
 
@@ -158,6 +157,11 @@ export function getImportLinesRecord(imports: ImportLinesInfo) {
     }
     return res;
 }
+
+let ejsTmp: typeof import('../ejsTmp/EjsTmp').ejsTmp;
+(function () {
+    import('../ejsTmp/EjsTmp').then(m => ejsTmp = m.ejsTmp);
+})();
 
 export function generateImportLines(imports: ImportLinesInfo|ImportLinesRecord) {
     if (imports instanceof Map) {
