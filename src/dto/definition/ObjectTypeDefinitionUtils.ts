@@ -119,7 +119,7 @@ export class ObjectTypeDefinitionUtils {
     static castTableCreateDefinitionToDomainTypeDefinition<T extends Record<string, DataColumnDefinition>>(tableCreateDefinition: TableCreateDefinition<T>): DomainTypeDefinition {
         return new DomainTypeDefinition({
             className: upperFirst(camelCase(tableCreateDefinition.tableName)),
-            packageName: config.domainPackage,
+            packageName: undefined,
             properties: tableCreateDefinition.columns ? Object.values(tableCreateDefinition.columns).map(column => {
                 return ObjectTypeDefinitionUtils.castDataColumnDefinitionToIDomainPropertyDefinition(column)
             }) : [],
