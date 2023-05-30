@@ -1,6 +1,12 @@
 export const config = {
     // 生成的文件的基础目录
     baseDir: 'C:\\Users\\31427\\Desktop\\code',
+    // 前端子项目根目录
+    frontRoot: 'ruoyi-ui\\src',
+    // 项目包名
+    projectPackage: 'com.ruoyi.common',
+    // 项目名称
+    projectName: 'test',
     // 实体类所在的包名
     domainPackage: 'domain',
     // DTO类所在的包名
