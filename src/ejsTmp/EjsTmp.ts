@@ -125,15 +125,9 @@ export const ejsTmp = {
         filePath: './src/ejsTmp/frontend/view/TableViewTemplate.ejs',
         imports: {
             forEach,
-            ActBtn,
-            prefix2Module,
-            ApiUtils,
             TableColType,
-            ColActBtn,
-            getTypeImportsFrom,
-            generateImportLines,
-            tsTypeString,
-        }
+        },
+        needOtherTmp: true,
     },
     formDialogTmp: {
         filePath: './src/ejsTmp/frontend/view/FormDialogTemplate.ejs',
