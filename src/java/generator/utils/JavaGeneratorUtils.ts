@@ -1,5 +1,4 @@
 import {ObjectTypeDefinition, TypeDefinition} from "../../../dto/definition/TypeDefinition";
-import {ClassDefinition} from "../../definition/ClassDefinition";
 import {JavaType} from "../../../dto/definition/JavaType";
 import {JavaTypeDefinition} from "../../definition/JavaTypeDefinition";
 import {AnnotationDefinition} from "../../definition/AnnotationDefinition";
