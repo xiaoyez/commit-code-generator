@@ -22,7 +22,8 @@ export const ejsTmp = {
         imports: {
             forEach,
             JavaGeneratorUtils
-        }
+        },
+        variable: 'def',
     },
     javaInterfaceTmp: {
         filePath: './src/ejsTmp/backend/InterfaceTemplate.ejs',

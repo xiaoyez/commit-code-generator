@@ -1,22 +1,22 @@
-package <%= packageName%>;
-<%forEach(Array.from(imports), i => {%>
+package <%= def.packageName%>;
+<%forEach(Array.from(def.imports), i => {%>
 import <%= i%>;<%});%>
 
 /**
- * <%= comment%>
- */<%forEach(annotations, annotation => {%>
+ * <%= def.comment%>
+ */<%forEach(def.annotations, annotation => {%>
 <%=JavaGeneratorUtils.generateAnnotation(annotation)%><%})%>
-public class <%= typeName%> <%
-    if (baseClass) {
-%>extends <%= JavaGeneratorUtils.generateType(baseClass) %><%}%><%if (baseInterfaces && baseInterfaces.length > 0) {%> implements <%= baseInterfaces.map(baseInterface => JavaGeneratorUtils.generateType(baseInterface)).join(', ') %><%}%>{
-    <%forEach(fields, field => {%>
+public class <%= def.typeName%> <%
+    if (def.baseClass) {
+%>extends <%= JavaGeneratorUtils.generateType(def.baseClass) %><%}%><%if (def.baseInterfaces && def.baseInterfaces.length > 0) {%> implements <%= def.baseInterfaces.map(baseInterface => JavaGeneratorUtils.generateType(baseInterface)).join(', ') %><%}%>{
+    <%forEach(def.fields, field => {%>
     /**
      * <%= field.comment%>
      */<%forEach(field.annotations, annotation => {%>
     <%= JavaGeneratorUtils.generateAnnotation(annotation)%><%})%>
     <%=field.modifier%> <%=JavaGeneratorUtils.generateType(field.type)%> <%=field.name%>;
 <%})%>
-<%forEach(methods, method => {%>
+<%forEach(def.methods, method => {%>
     /**
      * <%=method.comment%>
 <%forEach(method.parameters, param => {%>     * @param <%=param.name%> <%= param.comment || '' %><%})%>
