@@ -36,7 +36,7 @@ export class DTOGenerator {
     static castToClassDefinition(definition: ObjectTypeDefinition) {
         const packageName = DTOGenerator.generatePackage(definition);
 
-        const dtoClassDefinition = new ClassDefinition(packageName,definition.className);
+        const dtoClassDefinition = new ClassDefinition(packageName,definition.className,definition.comment);
 
         DTOGenerator.addLombokAnnotation(dtoClassDefinition);
 
