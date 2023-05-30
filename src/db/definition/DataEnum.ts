@@ -7,7 +7,7 @@ import {config} from "../../config/Config";
 interface IDataEnum {
     name: string;
     options: IDataEnumOption[];
-    package: string;
+    package?: string;
     ruoyiDict?: string;
     comment: string;
 }
@@ -18,7 +18,7 @@ interface IDataEnum {
 export class DataEnum {
     name!: string;
     options!: DataEnumOption[];
-    package!: string;
+    package?: string;
     ruoyiDict?: string;
     comment!: string;
 
@@ -38,7 +38,7 @@ export class DataEnum {
         return new DataEnum({
             name,
             options,
-            package: `${config.projectPackage}.${config.constantPackage}.${config.projectName}`,
+            package: `${config.projectPackage}.${config.constantPackage}`,
             comment,
             ruoyiDict,
         });

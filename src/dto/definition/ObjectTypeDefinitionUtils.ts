@@ -30,7 +30,7 @@ export class ObjectTypeDefinitionUtils {
     }
 
     /**
-     * 将视图创建定义转换为对象定义。
+     * 将视图创建定义转换为实体对象定义。
      * @param viewCreateDefinition
      */
     static castViewCreateDefinitionToDomainTypeDefinition(viewCreateDefinition: ViewCreateDefinition): DomainTypeDefinition {
