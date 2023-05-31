@@ -9,12 +9,6 @@ import {getFullPackageName, PackageType} from "./PackageUtils";
 // 公共模块
 const CommonModule = 'common';
 
-// 核心类型
-const CoreTypes = new Set([
-    'IRespData',
-    'IRespPaging',
-])
-
 // 导入类型
 enum ImportType {
     Object = 0,
@@ -27,6 +21,21 @@ interface TSImportInfo {
     importName: string;
     importType?: ImportType; // default: Object
 }
+
+// 核心类型导入信息
+const CoreTypesImportInfo: Record<string, TSImportInfo> = {
+    IRespData: {
+        importPath: '@/dataType/common',
+        importName: 'IRespData',
+        importType: ImportType.Type,
+    },
+
+    IRespPaging: {
+        importPath: '@/dataType/common',
+        importName: 'IRespPaging',
+        importType: ImportType.Type,
+    },
+};
 
 // 导入行数组信息
 type ImportLinesInfo = Map<string, Map<string, ImportType>>;
@@ -69,8 +78,10 @@ export function addNewImport(info: TSImportInfo, cur: ImportLinesInfo, isType?: 
  */
 function getTypeImportInfo(def: ObjectTypeDefinition): TSImportInfo {
     let importName = tsObjDefTypeName(def);
-    let subPackage = CoreTypes.has(importName) ? CommonModule : def.packageName;
-    let packageName = getFullPackageName(PackageType.DTO, subPackage);
+    if (CoreTypesImportInfo[importName]) {
+        return CoreTypesImportInfo[importName];
+    }
+    let packageName = getFullPackageName(PackageType.DTO, def.packageName);
     let importPath = convertPackageToPath(packageName);
     return {importPath, importName, importType: ImportType.Type}
 }
@@ -162,7 +173,7 @@ let ejsTmp: typeof import('../ejsTmp/EjsTmp').ejsTmp;
     import('../ejsTmp/EjsTmp').then(m => ejsTmp = m.ejsTmp);
 })();
 
-export function generateImportLines(imports: ImportLinesInfo|ImportLinesRecord) {
+export function generateImportLines(imports: ImportLinesInfo | ImportLinesRecord) {
     if (imports instanceof Map) {
         imports = getImportLinesRecord(imports);
     }
