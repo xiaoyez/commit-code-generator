@@ -1,10 +1,9 @@
 import {ApiDefinition} from "../definition/ApiDefinition";
 import {ModuleDefinition} from "../definition/ModuleDefinition";
 import {ModuleUtils} from "../utils/ModuleUtils";
-import {saveToPath} from "../../utils/TSPathUtils";
+import {controllerTsModuleId, saveToPath} from "../../utils/TSPathUtils";
 import {compileEjsTmp} from "../../ejsTmp/EjsUtils";
 import {ejsTmp} from "../../ejsTmp/EjsTmp";
-import {getFullPackageName, PackageType} from "../../utils/PackageUtils";
 
 /**
  * 生成ts的api调用函数
@@ -32,8 +31,5 @@ export function generateTsApiModule(modDef: ModuleDefinition) {
  */
 export function generateTsApiFileModule(modDef: ModuleDefinition, genIndex = false) {
     let content = generateTsApiModule(modDef);
-
-    let packageName = ModuleUtils.buildPackageName(modDef);
-    let fullPackageName = getFullPackageName(PackageType.CONTROLLER, packageName);
-    saveToPath(content, fullPackageName, genIndex);
+    saveToPath(content, controllerTsModuleId(modDef), genIndex);
 }

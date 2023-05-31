@@ -1,16 +1,25 @@
 import {config} from "../config/Config";
 import {exist, mkdirs, writeStringToFile} from "./FileUtils";
 import {
+    getFullPackageName,
     getPackageTypeFromFullType,
     PackageType,
     SubPackageOfType
 } from "./PackageUtils";
+import {ModuleDefinition} from "../api/definition/ModuleDefinition";
+import {ModuleUtils} from "../api/utils/ModuleUtils";
 
 const frontSubPackage = new Map([
     [PackageType.DOMAIN, config.tsDataDef],
     [PackageType.DTO, config.tsDataDef],
     [PackageType.CONTROLLER, config.tsApiDef],
 ]);
+
+export function controllerTsModuleId(modDef: ModuleDefinition) {
+    let packageName = ModuleUtils.buildPackageName(modDef);
+    let fullPackageName = getFullPackageName(PackageType.CONTROLLER, packageName);
+    return `${fullPackageName}.${modDef.moduleName.replace('Controller', '')}`;
+}
 
 /**
  * 转换包名为导入路径
