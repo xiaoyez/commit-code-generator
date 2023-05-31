@@ -154,7 +154,7 @@ export class ControllerGenerator {
      * @private
      */
     private static writeFile(packageName: string, content:string, moduleName: string) {
-        const path = `${config.baseDir}\\${packageName.replace(/\./g, '\\')}`;
+        const path = `${config.baseDir}\\${config.projectName}\\${packageName.replace(/\./g, '\\')}`;
         if (!exist(path))
             mkdirs(path);
         const file = `${path}\\${moduleName}.java`;

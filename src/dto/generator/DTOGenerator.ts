@@ -55,7 +55,7 @@ export class DTOGenerator {
      * @private
      */
     private static generateJavaFile(definition: ObjectTypeDefinition, text: string) {
-        const filePath = config.baseDir + `\\${getJavaFilePath(getDomainPackage(definition.packageName),definition.className)}`;
+        const filePath = config.baseDir + `\\${config.projectName}\\${getJavaFilePath(getDomainPackage(definition.packageName),definition.className)}`;
         const fileDir = getParent(filePath);
         if (!exist(fileDir))
             mkdirs(fileDir);

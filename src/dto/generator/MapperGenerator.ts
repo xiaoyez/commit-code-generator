@@ -33,7 +33,7 @@ export class MapperGenerator {
      * @private
      */
     private static writeFile(domain: DomainTypeDefinition, content: string) {
-        const path = `${config.baseDir}\\${config.projectPackage.replace(/\./g, '\\')}\\${config.mapperPackage}`;
+        const path = `${config.baseDir}\\${config.projectName}\\${config.projectPackage.replace(/\./g, '\\')}\\${config.mapperPackage}`;
         const fileName = `${domain.className}Mapper.java`;
         const filePath = `${path}\\${fileName}`;
         if (!exist(path)) {
