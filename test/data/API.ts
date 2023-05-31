@@ -2,13 +2,11 @@ import {ApiDefinition} from "../../src/api/definition/ApiDefinition";
 import {RequestMethod} from "../../src/api/definition/RequestMethod";
 import {ModuleDefinition} from "../../src/api/definition/ModuleDefinition";
 import {config} from "../../src/config/Config";
-
-const rootModule = new ModuleDefinition({
-    baseUrlPrefix: `/${config.projectName}`, moduleName: config.projectName
-})
+import {TableDataInfoTypeDefinition} from "../../src/api/definition/TableDataInfoTypeDefinition";
+import {tbMemberDomainTypeDef, TbMemberSearchDTODef} from "./DTO";
 
 export const TbMemberController = new ModuleDefinition({
-    baseUrlPrefix: "/member", isFile: true, moduleName: "member", parent: rootModule
+    baseUrlPrefix: "/test/member", isFile: true, moduleName: "member",comment:"会员管理Controller"
 })
 
 export const getMemberListApi = new ApiDefinition({
@@ -16,7 +14,9 @@ export const getMemberListApi = new ApiDefinition({
     comment: "获取分页会员列表",
     method: RequestMethod.GET,
     module: TbMemberController,
-    params: undefined,
-    result: undefined,
-    url: ""
+    params: TbMemberSearchDTODef,
+    result: TableDataInfoTypeDefinition.createTableDataInfo(tbMemberDomainTypeDef),
+    url: "/list"
 })
+
+TbMemberController.addApi(getMemberListApi);
