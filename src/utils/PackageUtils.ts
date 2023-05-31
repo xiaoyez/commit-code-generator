@@ -16,7 +16,6 @@ const specialDTO = new Set([
 ]);
 
 export const SubPackageOfType = new Map([
-    [PackageType.CORE,'core'],
     [PackageType.DOMAIN, config.domainPackage],
     [PackageType.DTO, `${config.dtoPackage}.${config.dtoPackage}`],
     [PackageType.MAPPER,config.mapperPackage],
@@ -26,11 +25,12 @@ export const SubPackageOfType = new Map([
 ]);
 
 export function getFullPackageName(defType: PackageType, packageName?: string) {
-    if (defType === PackageType.DTO && packageName && specialDTO.has(packageName)) {
-        defType = PackageType.CORE;
+    let base = `${config.projectPackage}.${SubPackageOfType.get(defType)}`;
+    let res = packageName ? `${base}.${packageName}` : base;
+    if (defType === PackageType.CONTROLLER) {
+        res += '.controller';
     }
-    const base = `${config.projectPackage}.${SubPackageOfType.get(defType)}`;
-    return packageName ? `${base}.${packageName}` : base;
+    return res;
 }
 
 const matchOrder = [...SubPackageOfType]
