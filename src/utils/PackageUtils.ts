@@ -10,7 +10,7 @@ export enum PackageType {
     SERVICE,
 }
 
-const packageOfType = new Map([
+export const SubPackageOfType = new Map([
     [PackageType.CORE,'core'],
     [PackageType.DOMAIN, config.domainPackage],
     [PackageType.DTO, `${config.dtoPackage}.${config.dtoPackage}`],
@@ -21,11 +21,11 @@ const packageOfType = new Map([
 ]);
 
 export function getFullPackageName(defType: PackageType, packageName?: string) {
-    const base = `${config.projectPackage}.${packageOfType.get(defType)}`;
+    const base = `${config.projectPackage}.${SubPackageOfType.get(defType)}`;
     return packageName ? `${base}.${packageName}` : base;
 }
 
-const matchOrder = [...packageOfType]
+const matchOrder = [...SubPackageOfType]
     .sort((a, b) => b[1].length - a[1].length)
     .map(([key]) => key);
 
@@ -33,7 +33,7 @@ export function getPackageTypeFromFullType(fullType: string) {
     if (fullType.startsWith(config.projectPackage)) {
         fullType = fullType.substring(config.projectPackage.length + 1);
         for (let type of matchOrder) {
-            if (fullType.startsWith(packageOfType.get(type)!)) {
+            if (fullType.startsWith(SubPackageOfType.get(type)!)) {
                 return type;
             }
         }
