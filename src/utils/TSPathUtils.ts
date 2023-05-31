@@ -1,6 +1,6 @@
 import {config} from "../config/Config";
 import {exist, mkdirs, writeStringToFile} from "./FileUtils";
-import {getPackageTypeFromFullType, PackageType, SubPackageOfType} from "./PackageUtils";
+import {getPackageTypeFromFullType, isSuffixPackageType, PackageType, SubPackageOfType} from "./PackageUtils";
 
 const frontSubPackage = new Map([
     [PackageType.DOMAIN, config.tsDataDef],
@@ -9,18 +9,24 @@ const frontSubPackage = new Map([
 ]);
 
 /**
- * 转换包名为路径
+ * 转换包名为导入路径
  * @param fullPackageName
  */
 export function convertPackageToPath(fullPackageName: string) {
     let packType = getPackageTypeFromFullType(fullPackageName);
-    if (packType === PackageType.CORE) {
-        throw new Error(`core package 不应该在TSPathUtils中处理`);
+    if (typeof packType !== 'number') {
+        throw new Error(`特殊包名的导入路径不应该使用convertPackageToPath获取`);
     }
     let fePath = fullPackageName.replace(config.projectPackage, "@");
-    let packBase = `@.${SubPackageOfType.get(packType)}`;
+
     if (frontSubPackage.has(packType)) {
-        fePath.replace(packBase, `@.${frontSubPackage.get(packType)}`);
+        if (isSuffixPackageType(packType)) {
+            fePath.replace(SubPackageOfType.get(packType)!, '');
+            fePath.replace('@', `@.${frontSubPackage.get(packType)}`);
+        } else {
+            let packBase = SubPackageOfType.get(packType)!;
+            fePath.replace(packBase, frontSubPackage.get(packType)!);
+        }
     }
 
     return fePath.replace(/\./g, '/');
@@ -39,8 +45,7 @@ export function convertPackageToSavePath(fullPackageName: string, genIndex = fal
     if (genIndex) {
         pathPackage = fePath;
         fileName = 'index.ts';
-    }
-    else {
+    } else {
         let fileNameIdx = fePath.lastIndexOf('/');
         pathPackage = fePath.substring(0, fileNameIdx);
         fileName = `${fePath.substring(fileNameIdx + 1)}.ts`;

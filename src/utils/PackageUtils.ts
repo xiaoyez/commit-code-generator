@@ -39,6 +39,10 @@ export function getFullPackageName(defType: PackageType, packageName?: string) {
     return res;
 }
 
+export function isSuffixPackageType(defType: PackageType) {
+    return isSuffixPackage.has(defType);
+}
+
 // 完整包名的匹配顺序从长到短，较长子包名优先匹配，处理子包名有嵌套层级的情况
 const matchOrder = [...SubPackageOfType]
     .sort((a, b) => b[1].length - a[1].length)
