@@ -12,7 +12,8 @@ public interface <%= typeName%> <%if (baseInterfaces && baseInterfaces.length > 
     /**
      * <%=method.comment%>
 <%forEach(method.parameters, param => {%>     * @param <%=param.name%> <%= param.comment || '' %><%})%>
-     */<%forEach(method.annotations, annotation => {%>
+     */
+<%forEach(method.annotations, annotation => {%>
     <%= JavaGeneratorUtils.generateAnnotation(annotation)%>
 <%})%>    <%=method.modifer || 'public'%> <%=JavaGeneratorUtils.generateType(method.returnType)%> <%=method.name%>(<%forEach(method.parameters, (param, index) => {
         %><%forEach(param.annotations, annotation => {%><%= JavaGeneratorUtils.generateAnnotation(annotation) + ' '
