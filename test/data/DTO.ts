@@ -1,8 +1,8 @@
 import {ObjectTypeDefinitionUtils} from "../../src/dto/definition/ObjectTypeDefinitionUtils";
-import {tbMemberTableDef} from "./DbData";
+import {sysDeptTableDef, sysUserTableDef, tbMemberTableDef} from "./DbData";
 import {ObjectTypeDefinition, TypeDefinition} from "../../src/dto/definition/TypeDefinition";
 import {JavaType} from "../../src/dto/definition/JavaType";
-import {MemberStatusEnumDef} from "./enums";
+import {MemberLabelEnumDef, MemberStatusEnumDef} from "./enums";
 
 /**
  * 会员表对应的实体类的定义
@@ -35,12 +35,18 @@ export const TbMemberSearchDTODef = TypeDefinition.create(new ObjectTypeDefiniti
         {
             paramName: 'deptId',
             paramType: TypeDefinition.create(JavaType.Integer),
-            paramDesc: '所属部门'
+            paramDesc: '所属部门',
+            foreignKey: true,
+            referenceTable: sysDeptTableDef,
+            referenceColumn: sysDeptTableDef.columns.deptId,
         },
         {
             paramName: 'userId',
             paramType: TypeDefinition.create(JavaType.Integer),
-            paramDesc: '所属用户'
+            paramDesc: '所属用户',
+            foreignKey: true,
+            referenceTable: sysUserTableDef,
+            referenceColumn: sysUserTableDef.columns.userId,
         },
         {
             paramName: 'status',
@@ -51,7 +57,8 @@ export const TbMemberSearchDTODef = TypeDefinition.create(new ObjectTypeDefiniti
         {
             paramName: 'label',
             paramType: TypeDefinition.create(JavaType.Integer),
-            paramDesc: '会员标签'
+            paramDesc: '会员标签',
+            enumType: MemberLabelEnumDef,
         },
 
     ],

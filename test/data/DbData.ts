@@ -182,3 +182,39 @@ export const testDbDef = new DbDefinition({
     tables: [tbMemberTableDef],
     views: [],
 })
+
+export const sysDeptTableDef = new TableCreateDefinition({
+    tableName: "sys_dept",
+    comment: "部门表",
+    columns: {
+        deptId: new DataColumnDefinition({
+            name: "dept_id",
+            comment: "部门id",
+            typeName: SqlType.BIGINT,
+            length: 20,
+            isPrimaryKey: true,
+            autoIncrement: true,
+            nullable: false,
+            isEnum: false
+        }),
+    },
+
+});
+
+export const sysUserTableDef = new TableCreateDefinition({
+    tableName: "sys_user",
+    comment: "用户表",
+    columns: {
+        userId: new DataColumnDefinition({
+            name: "user_id",
+            comment: "用户id",
+            typeName: SqlType.BIGINT,
+            length: 20,
+            isPrimaryKey: true,
+            autoIncrement: true,
+            nullable: false,
+            isEnum: false
+        }),
+    },
+
+});

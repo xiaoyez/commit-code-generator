@@ -24,3 +24,5 @@ export const MemberStatusEnumDef = new DataEnum({
     package: "",
 
 })
+
+export const MemberLabelEnumDef = DataEnum.createCommon('MemberLabel',[], '会员标签', 'ypx_member_label');
