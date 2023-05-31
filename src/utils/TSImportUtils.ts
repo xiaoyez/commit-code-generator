@@ -6,9 +6,6 @@ import {tsObjDefTypeName} from "./TypeUtils";
 import {ModuleDefinition} from "../api/definition/ModuleDefinition";
 import {getFullPackageName, PackageType} from "./PackageUtils";
 
-// 公共模块
-const CommonModule = 'common';
-
 // 导入类型
 enum ImportType {
     Object = 0,
@@ -44,7 +41,7 @@ type ImportLinesInfo = Map<string, Map<string, ImportType>>;
 type ImportLinesRecord = Record<string, { type?: string[], objs?: string[] }>;
 
 /**
- * 创建空的导入信息表
+ * 创建导入信息的空表
  */
 export function emptyImportLines(): ImportLinesInfo {
     return new Map();
