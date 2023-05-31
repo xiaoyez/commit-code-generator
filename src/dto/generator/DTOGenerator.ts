@@ -8,7 +8,7 @@ import {JavaType} from "../definition/JavaType";
 import {config} from "../../config/Config";
 import {isOfType} from "../../utils/TypeUtils";
 import {exist, getParent, mkdirs, writeStringToFile} from "../../utils/FileUtils";
-import {getDomainPackage, getJavaFilePath} from "../../utils/JavaUtils";
+import {getDomainPackage, getDtoPackage, getJavaFilePath} from "../../utils/JavaUtils";
 import {ClassDefinition} from "../../java/definition/ClassDefinition";
 import {LombokAnnotationDefinitions} from "../../java/definition/common/LombokAnnotationDefinitions";
 import {FieldDefinition} from "../../java/definition/FieldDefinition";
@@ -107,7 +107,10 @@ export class DTOGenerator {
      * @private
      */
     private static generatePackage(definition: ObjectTypeDefinition) {
-        return getDomainPackage(definition.packageName);
+        if (definition instanceof DomainTypeDefinition)
+            return getDomainPackage(definition.packageName);
+        else
+            return getDtoPackage(definition.packageName);
     }
 
 }
