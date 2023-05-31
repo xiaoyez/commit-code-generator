@@ -1,14 +1,13 @@
-import {FilterGenerator} from "../../src/frontend/view/generator/page/FilterGenerator";
-import {TableViewGenerator} from "../../src/frontend/view/generator/page/TableViewGenerator";
 import {memberFilterDef, memberTableViewDef} from "../data/view";
+import {PageGenerator} from "../../src/frontend/view/generator/PageGenerator";
 
 
 describe("ComponentGenerator", () => {
     it('generate filter comp', () => {
-        console.log(FilterGenerator.generate(memberFilterDef));
+        console.log(PageGenerator.generateFilter(memberFilterDef));
     });
 
     it('generate table comp', () => {
-        console.log(TableViewGenerator.generate(memberTableViewDef));
+        console.log(PageGenerator.generateTableView(memberTableViewDef));
     })
 });
