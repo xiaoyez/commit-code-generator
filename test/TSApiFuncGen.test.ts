@@ -71,10 +71,10 @@ describe('api call script', () => {
 
     it('generate api call func', function () {
         let prefix = ModuleUtils.buildBaseUrlPrefix(userApi);
-        console.log(generateTsApiFunc(userApi.apis[0],  prefix));
+        console.log(generateTsApiFunc(userApi.apis[0], prefix));
     });
 
     it('generate api module to file', function () {
-        generateTsApiFileModule(userApi, 'front-end');
+        generateTsApiFileModule(userApi);
     });
 });

@@ -5,6 +5,7 @@ import {DataEnum} from "../db/definition/DataEnum";
 import {compileEjsTmp} from "../ejsTmp/EjsUtils";
 import {tsObjDefTypeName} from "./TypeUtils";
 import {ModuleDefinition} from "../api/definition/ModuleDefinition";
+import {getFullPackageName, PackageType} from "./PackageUtils";
 
 // 基包
 const BasePackage = `${config.projectPackage}.${config.dtoPackage}`;
@@ -71,7 +72,7 @@ export function addNewImport(info: TSImportInfo, cur: ImportLinesInfo, isType?: 
  */
 function getTypeImportInfo(def: ObjectTypeDefinition): TSImportInfo {
     let importName = tsObjDefTypeName(def);
-    let packageName = CoreTypes.has(importName) ? CommonModule : def.packageName;
+    let packageName = CoreTypes.has(importName) ? CommonModule : getFullPackageName(PackageType.DTO, def.packageName);
     let importPath = convertPackageToPath(packageName);
     return {importPath, importName, importType: ImportType.Type}
 }
@@ -82,7 +83,7 @@ function getTypeImportInfo(def: ObjectTypeDefinition): TSImportInfo {
  */
 export function getEnumImportInfo(def: DataEnum): TSImportInfo {
     return {
-        importPath: convertPackageToPath(def.package),
+        importPath: convertPackageToPath(getFullPackageName(PackageType.CONSTANT, def.package)),
         importName: def.name,
         importType: ImportType.Object,
     };
@@ -94,7 +95,7 @@ export function getEnumImportInfo(def: DataEnum): TSImportInfo {
  */
 export function getEnumDescImportInfo(def: DataEnum): TSImportInfo {
     return {
-        importPath: convertPackageToPath(def.package),
+        importPath: convertPackageToPath(getFullPackageName(PackageType.CONSTANT, def.package)),
         importName: def.name + "Desc",
         importType: ImportType.Object,
     };

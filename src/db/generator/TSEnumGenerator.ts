@@ -2,6 +2,7 @@ import {DataEnum} from "../definition/DataEnum";
 import {saveToPath} from "../../utils/TSPathUtils";
 import {compileEjsTmp} from "../../ejsTmp/EjsUtils";
 import {ejsTmp} from "../../ejsTmp/EjsTmp";
+import {getFullPackageName, PackageType} from "../../utils/PackageUtils";
 
 /**
  * 生成单个Enum定义
@@ -22,15 +23,15 @@ export function generateEnumModuleDefine(defs: DataEnum[]) {
 /**
  * 生成定义Enum和常量定义的ts文件
  * @param defs 需保证所有定义的package相同
- * @param subPath 子项目根路径
  * @param genIndex 是否生成为index.ts
  */
-export function generateEnumDefsToFile(defs: DataEnum[], subPath = "", genIndex = false) {
+export function generateEnumDefsToFile(defs: DataEnum[], genIndex = false) {
     if (!defs || defs.length === 0) {
         return;
     }
 
-    let content = generateEnumModuleDefine(defs);
+    const content = generateEnumModuleDefine(defs);
+    const fullPackageName = getFullPackageName(PackageType.CONSTANT, defs[0].package);
 
-    saveToPath(content, defs[0].package, subPath, genIndex);
+    saveToPath(content, fullPackageName, !defs[0].package);
 }
