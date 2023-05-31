@@ -14,6 +14,14 @@ import {FieldDefinition} from "../../java/definition/FieldDefinition";
 import {MethodDefinition} from "../../java/definition/MethodDefinition";
 import {JavaType} from "../../dto/definition/JavaType";
 import {ClassGenerator} from "../../java/generator/ClassGenerator";
+import {
+    AjaxResultTypeDefinition,
+    castAjaxResultTypeDefinitionToClassDefinition
+} from "../definition/AjaxResultTypeDefinition";
+import {
+    castTableDataInfoTypeDefinitionToClassDefinition,
+    TableDataInfoTypeDefinition
+} from "../definition/TableDataInfoTypeDefinition";
 
 export class ControllerGenerator {
 
@@ -92,7 +100,18 @@ export class ControllerGenerator {
      * @param api
      */
     static buildMethod(api: ApiDefinition) {
-        const resultType = api.result?TypeDefinition.create(api.result.type,api.result.genericTypes):TypeDefinition.create(JavaType.void);
+        let resultType: TypeDefinition|ClassDefinition = TypeDefinition.create(JavaType.void);
+        if (api.result)
+        {
+            if (api.result instanceof AjaxResultTypeDefinition)
+            {
+                resultType = castAjaxResultTypeDefinitionToClassDefinition(api.result);
+            }
+            if (api.result instanceof TableDataInfoTypeDefinition)
+            {
+                resultType = castTableDataInfoTypeDefinitionToClassDefinition(api.result);
+            }
+        }
         const methodDefinition = new MethodDefinition(api.apiName, resultType);
         methodDefinition.addAnnotation(ControllerGenerator.buildRequestMappingAnnotation(api.method,api.url));
         if (api.params) {
