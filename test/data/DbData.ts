@@ -1,7 +1,7 @@
 import {SqlType} from "../../src/db/definition/SqlType";
 import {TableCreateDefinition} from "../../src/db/definition/TableCreateDefinition";
 import {DataColumnDefinition} from "../../src/db/definition/DataColumnDefinition";
-import {MemberStatus} from "./enums";
+import {MemberStatusEnumDef} from "./enums";
 import {DbDefinition} from "../../src/db/definition/DbDefinition";
 
 /**
@@ -145,7 +145,7 @@ export const tbMemberTableDef = new TableCreateDefinition({
             length: 1,
             nullable: true,
             isEnum: true,
-            enumType: MemberStatus,
+            enumType: MemberStatusEnumDef,
             defaultValue: '1',
         }),
         toSeaTime: new DataColumnDefinition({

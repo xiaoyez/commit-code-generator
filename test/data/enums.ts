@@ -1,6 +1,6 @@
 import {DataEnum} from "../../src/db/definition/DataEnum";
 
-export const MemberStatus = new DataEnum({
+export const MemberStatusEnumDef = new DataEnum({
     name: "MemberStatus",
     comment: "会员状态",
     options: [

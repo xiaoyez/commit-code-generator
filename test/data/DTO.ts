@@ -2,7 +2,7 @@ import {ObjectTypeDefinitionUtils} from "../../src/dto/definition/ObjectTypeDefi
 import {tbMemberTableDef} from "./DbData";
 import {ObjectTypeDefinition, TypeDefinition} from "../../src/dto/definition/TypeDefinition";
 import {JavaType} from "../../src/dto/definition/JavaType";
-import {MemberStatus} from "./enums";
+import {MemberStatusEnumDef} from "./enums";
 
 /**
  * 会员表对应的实体类的定义
@@ -46,7 +46,7 @@ export const TbMemberSearchDTODef = TypeDefinition.create(new ObjectTypeDefiniti
             paramName: 'status',
             paramType: TypeDefinition.create(JavaType.Integer),
             paramDesc: '会员状态',
-            enumType: MemberStatus,
+            enumType: MemberStatusEnumDef,
         },
         {
             paramName: 'label',
