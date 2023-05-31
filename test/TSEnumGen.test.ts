@@ -59,6 +59,6 @@ export const AuditStatusConstantDesc = {
     })
 
     it('generate to file', () => {
-        generateEnumDefsToFile([dataEnum, enum2], 'front-end', true);
+        generateEnumDefsToFile([dataEnum, enum2], true);
     })
 });
