@@ -11,7 +11,7 @@ import {
     SelectInputControl,
     TextInputControl
 } from "./FormDefinition";
-import {lowerFirst} from "lodash";
+import {camelCase, lowerFirst} from "lodash";
 import {ObjectTypeDefinitionUtils} from "../../../../dto/definition/ObjectTypeDefinitionUtils";
 import {singular} from "../../../../utils/StringUtils";
 import {DataColumnDefinition} from "../../../../db/definition/DataColumnDefinition";
@@ -70,7 +70,7 @@ export class ViewUtils {
 
             let listName = '';
             if (propertyDefinition.referenceTable)
-                listName = lowerFirst(propertyDefinition.referenceTable.tableName) + 'List';
+                listName = lowerFirst(camelCase(propertyDefinition.referenceTable.tableName)) + 'List';
             let iterArrayType: ObjectTypeDefinition = undefined!;
             if (propertyDefinition.referenceTable)
                 iterArrayType = ObjectTypeDefinitionUtils.castTableCreateDefinitionToObjectTypeDefinition(propertyDefinition.referenceTable);
@@ -78,14 +78,15 @@ export class ViewUtils {
             if (propertyDefinition.referenceTable) {
                 const pkCol = Object.values(propertyDefinition.referenceTable.columns).find(column => (column as DataColumnDefinition).isPrimaryKey) as DataColumnDefinition;
                 key = pkCol?.name ? pkCol.name : '';
+                key = lowerFirst(camelCase(key));
             }
 
             let value = '';
             if (propertyDefinition.referenceColumn) {
                 if (typeof propertyDefinition.referenceColumn === 'string')
-                    value = propertyDefinition.referenceColumn;
+                    value = lowerFirst(camelCase(propertyDefinition.referenceColumn));
                 else
-                    value = propertyDefinition.referenceColumn.name;
+                    value = lowerFirst(camelCase(propertyDefinition.referenceColumn.name));
             }
 
             return new SelectInputControl(
@@ -103,9 +104,9 @@ export class ViewUtils {
     }
 
     static castApiDefinitionToTableDefinition(apiDefinition: ApiDefinition): TableDefinition | null {
-        if (apiDefinition.result && apiDefinition.result.genericTypes && apiDefinition.result.genericTypes[0] instanceof DomainTypeDefinition)
+        if (apiDefinition.result && apiDefinition.result.genericTypes && apiDefinition.result.genericTypes[0].type instanceof DomainTypeDefinition)
         {
-            const cols = apiDefinition.result.genericTypes[0].properties.map(property => ViewUtils.castDomainPropertyDefinitionToTableColDefinition(property));
+            const cols = apiDefinition.result.genericTypes[0].type.properties.map(property => ViewUtils.castDomainPropertyDefinitionToTableColDefinition(property));
             return new TableDefinition(cols, apiDefinition, undefined ,apiDefinition.result instanceof TableDataInfoTypeDefinition);
         }
         return null;
