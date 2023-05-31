@@ -11,6 +11,7 @@ import {MethodDefinition} from "../../java/definition/MethodDefinition";
 import {JavaType} from "../../dto/definition/JavaType";
 import {InterfaceGenerator} from "../../java/generator/InterfaceGenerator";
 import {ParameterDefinition} from "../../java/definition/ParameterDefinition";
+import {getFullPackageName, PackageType} from "../../utils/PackageUtils";
 
 export class ServiceGenerator {
 
@@ -22,7 +23,7 @@ export class ServiceGenerator {
         if (!module.isFile) {
             return;
         }
-        const packageName = ModuleUtils.buildPackageName(module) + '.service';
+        const packageName = getFullPackageName(PackageType.SERVICE, ModuleUtils.buildPackageName(module));
         const serviceInterfaceDefinition = ServiceGenerator.buildServiceInterfaceDefinition(module);
         // 创建java文件并写入内容
         ServiceGenerator.writeFile(packageName,InterfaceGenerator.generate(serviceInterfaceDefinition),module.moduleName);

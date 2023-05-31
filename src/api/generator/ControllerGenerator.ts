@@ -22,6 +22,7 @@ import {
     castTableDataInfoTypeDefinitionToClassDefinition,
     TableDataInfoTypeDefinition
 } from "../definition/TableDataInfoTypeDefinition";
+import {getFullPackageName, PackageType} from "../../utils/PackageUtils";
 
 export class ControllerGenerator {
 
@@ -33,7 +34,7 @@ export class ControllerGenerator {
         if(!module.isFile) {
             return;
         }
-        const packageName = ModuleUtils.buildPackageName(module)+ '.controller';
+        const packageName = getFullPackageName(PackageType.CONTROLLER, ModuleUtils.buildPackageName(module));
 
         const controllerClassDefinition = ControllerGenerator.castToClassDefinition(packageName, module);
 

@@ -30,6 +30,9 @@ export function getFullPackageName(defType: PackageType, packageName?: string) {
     if (defType === PackageType.CONTROLLER) {
         res += '.controller';
     }
+    if (defType === PackageType.SERVICE) {
+        res += '.service';
+    }
     return res;
 }
 

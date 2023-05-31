@@ -35,7 +35,6 @@ let memberDtoPack = `${dtoPack}.member`;
 
 export const memberStatusEnumDef = new DataEnum({
     name: "MemberStatusConstant",
-    package: `${config.projectPackage}.${config.constantPackage}.member`,
     comment: "会员类型",
     options: [
         new DataEnumOption({
