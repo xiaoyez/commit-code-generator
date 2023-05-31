@@ -1,6 +1,6 @@
-import {FilterGenerator} from "../src/frontend/view/generator/page/FilterGenerator";
-import {memberFilterViewDef, memberTableViewDef} from "./common";
-import {TableViewGenerator} from "../src/frontend/view/generator/page/TableViewGenerator";
+import {FilterGenerator} from "../../src/frontend/view/generator/page/FilterGenerator";
+import {memberFilterViewDef, memberTableViewDef} from "../common";
+import {TableViewGenerator} from "../../src/frontend/view/generator/page/TableViewGenerator";
 
 
 describe("ComponentGenerator", () => {

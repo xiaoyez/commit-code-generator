@@ -1,5 +1,5 @@
-import {DDLSqlGenerator} from "../src/db/generator/DDLSqlGenerator";
-import {tbMemberTableDef, testDbDef} from "./data/DbData";
+import {DDLSqlGenerator} from "../../src/db/generator/DDLSqlGenerator";
+import {tbMemberTableDef, testDbDef} from "../data/DbData";
 
 test('test generateCreateTableSql', () => {
    const sql = DDLSqlGenerator.generateCreateTableSql(tbMemberTableDef);

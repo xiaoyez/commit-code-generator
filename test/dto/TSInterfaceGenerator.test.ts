@@ -1,11 +1,11 @@
 import {
     generateInterfaceDefine,
     generateInterfaceDefsToFile,
-} from "../src/dto/generator/TSInterfaceGenerator";
-import {JavaType} from "../src/dto/definition/JavaType";
-import {ObjectTypeDefinition, TypeDefinition} from "../src/dto/definition/TypeDefinition";
-import {config} from "../src/config/Config";
-import {auditStatusEnumDef} from "./common";
+} from "../../src/dto/generator/TSInterfaceGenerator";
+import {JavaType} from "../../src/dto/definition/JavaType";
+import {ObjectTypeDefinition, TypeDefinition} from "../../src/dto/definition/TypeDefinition";
+import {config} from "../../src/config/Config";
+import {auditStatusEnumDef} from "../common";
 
 describe('TSInterfaceGenerator', () => {
 

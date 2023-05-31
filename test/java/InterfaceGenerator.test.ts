@@ -1,7 +1,7 @@
-import {InterfaceDefinition} from "../src/java/definition/InterfaceDefinition";
-import {InterfaceGenerator} from "../src/java/generator/InterfaceGenerator";
-import {ClassDefinition} from "../src/java/definition/ClassDefinition";
-import {XyMapperDefinitions} from "../src/java/definition/common/XyMapperDefinitions";
+import {InterfaceDefinition} from "../../src/java/definition/InterfaceDefinition";
+import {InterfaceGenerator} from "../../src/java/generator/InterfaceGenerator";
+import {ClassDefinition} from "../../src/java/definition/ClassDefinition";
+import {XyMapperDefinitions} from "../../src/java/definition/common/XyMapperDefinitions";
 
 const TbCommodityMapper = new InterfaceDefinition('com.cgmanage.web.modules.ypx.mapper', 'TbCommodityMapper',[],[],'商品Mapper接口');
 

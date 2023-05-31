@@ -1,14 +1,14 @@
-import {ModuleDefinition} from "../src/api/definition/ModuleDefinition";
-import {ApiDefinition} from "../src/api/definition/ApiDefinition";
-import {RequestMethod} from "../src/api/definition/RequestMethod";
-import {TableDataInfoTypeDefinition} from "../src/api/definition/TableDataInfoTypeDefinition";
-import {tableUserDefinition} from "./DDLSqlGenerator.test";
-import {ObjectTypeDefinitionUtils} from "../src/dto/definition/ObjectTypeDefinitionUtils";
-import {ObjectTypeDefinition, TypeDefinition} from "../src/dto/definition/TypeDefinition";
-import {JavaType} from "../src/dto/definition/JavaType";
-import {ControllerGenerator} from "../src/api/generator/ControllerGenerator";
-import {AjaxResultTypeDefinition} from "../src/api/definition/AjaxResultTypeDefinition";
-import {ServiceGenerator} from "../src/api/generator/ServiceGenerator";
+import {ModuleDefinition} from "../../src/api/definition/ModuleDefinition";
+import {ApiDefinition} from "../../src/api/definition/ApiDefinition";
+import {RequestMethod} from "../../src/api/definition/RequestMethod";
+import {TableDataInfoTypeDefinition} from "../../src/api/definition/TableDataInfoTypeDefinition";
+import {tableUserDefinition} from "../db/DDLSqlGenerator.test";
+import {ObjectTypeDefinitionUtils} from "../../src/dto/definition/ObjectTypeDefinitionUtils";
+import {ObjectTypeDefinition, TypeDefinition} from "../../src/dto/definition/TypeDefinition";
+import {JavaType} from "../../src/dto/definition/JavaType";
+import {ControllerGenerator} from "../../src/api/generator/ControllerGenerator";
+import {AjaxResultTypeDefinition} from "../../src/api/definition/AjaxResultTypeDefinition";
+import {ServiceGenerator} from "../../src/api/generator/ServiceGenerator";
 
 const ypxModule = new ModuleDefinition({
     baseUrlPrefix: "/ypx", moduleName: "ypx"

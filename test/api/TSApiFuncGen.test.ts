@@ -1,15 +1,15 @@
-import {ModuleDefinition} from "../src/api/definition/ModuleDefinition";
-import {ApiDefinition} from "../src/api/definition/ApiDefinition";
-import {RequestMethod} from "../src/api/definition/RequestMethod";
-import {TableDataInfoTypeDefinition} from "../src/api/definition/TableDataInfoTypeDefinition";
-import {ObjectTypeDefinitionUtils} from "../src/dto/definition/ObjectTypeDefinitionUtils";
-import {tableUserDefinition} from "./DDLSqlGenerator.test";
-import {ObjectTypeDefinition, TypeDefinition} from "../src/dto/definition/TypeDefinition";
-import {JavaType} from "../src/dto/definition/JavaType";
-import {AjaxResultTypeDefinition} from "../src/api/definition/AjaxResultTypeDefinition";
-import {generateTsApiFileModule, generateTsApiFunc} from "../src/api/generator/TSApiCallGenerator";
-import {ModuleUtils} from "../src/api/utils/ModuleUtils";
-import {config} from "../src/config/Config";
+import {ModuleDefinition} from "../../src/api/definition/ModuleDefinition";
+import {ApiDefinition} from "../../src/api/definition/ApiDefinition";
+import {RequestMethod} from "../../src/api/definition/RequestMethod";
+import {TableDataInfoTypeDefinition} from "../../src/api/definition/TableDataInfoTypeDefinition";
+import {ObjectTypeDefinitionUtils} from "../../src/dto/definition/ObjectTypeDefinitionUtils";
+import {tableUserDefinition} from "../db/DDLSqlGenerator.test";
+import {ObjectTypeDefinition, TypeDefinition} from "../../src/dto/definition/TypeDefinition";
+import {JavaType} from "../../src/dto/definition/JavaType";
+import {AjaxResultTypeDefinition} from "../../src/api/definition/AjaxResultTypeDefinition";
+import {generateTsApiFileModule, generateTsApiFunc} from "../../src/api/generator/TSApiCallGenerator";
+import {ModuleUtils} from "../../src/api/utils/ModuleUtils";
+import {config} from "../../src/config/Config";
 
 describe('api call script', () => {
     const demoModule = new ModuleDefinition({

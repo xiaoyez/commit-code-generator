@@ -1,9 +1,9 @@
-import {DataEnum} from "../src/db/definition/DataEnum";
-import {DataEnumOption} from "../src/db/definition/DataEnumOption";
+import {DataEnum} from "../../src/db/definition/DataEnum";
+import {DataEnumOption} from "../../src/db/definition/DataEnumOption";
 import {
     generateEnumDefsToFile, generateSingleEnumDefine
-} from "../src/db/generator/TSEnumGenerator";
-import {auditStatusEnumDef} from "./common";
+} from "../../src/db/generator/TSEnumGenerator";
+import {auditStatusEnumDef} from "../common";
 import {cloneDeep} from "lodash";
 
 describe('TSEnumGenerator', () => {
