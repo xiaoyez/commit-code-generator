@@ -24,14 +24,19 @@ export const SubPackageOfType = new Map([
     [PackageType.SERVICE, config.servicePackage],
 ]);
 
+const isSuffixPackage = new Set([
+    PackageType.CONTROLLER,
+    PackageType.SERVICE,
+]);
+
 export function getFullPackageName(defType: PackageType, packageName?: string) {
-    let base = `${config.projectPackage}.${SubPackageOfType.get(defType)}`;
-    let res = packageName ? `${base}.${packageName}` : base;
-    if (defType === PackageType.CONTROLLER) {
-        res += '.controller';
+    let base = config.projectPackage;
+    if (!isSuffixPackage.has((defType))) {
+        base += `.${SubPackageOfType.get(defType)}`;
     }
-    if (defType === PackageType.SERVICE) {
-        res += '.service';
+    let res = packageName ? `${base}.${packageName}` : base;
+    if (isSuffixPackage.has(defType)) {
+        res += `.${SubPackageOfType.get(defType)}`;
     }
     return res;
 }
