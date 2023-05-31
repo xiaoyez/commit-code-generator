@@ -1,6 +1,10 @@
 import {config} from "../config/Config";
 import {exist, mkdirs, writeStringToFile} from "./FileUtils";
-import {getPackageTypeFromFullType, isSuffixPackageType, PackageType, SubPackageOfType} from "./PackageUtils";
+import {
+    getPackageTypeFromFullType,
+    PackageType,
+    SubPackageOfType
+} from "./PackageUtils";
 
 const frontSubPackage = new Map([
     [PackageType.DOMAIN, config.tsDataDef],
@@ -10,23 +14,18 @@ const frontSubPackage = new Map([
 
 /**
  * 转换包名为导入路径
- * @param fullPackageName
+ * @param fullModuleId
  */
-export function convertPackageToPath(fullPackageName: string) {
-    let packType = getPackageTypeFromFullType(fullPackageName);
+export function convertModuleIdToImportPath(fullModuleId: string) {
+    let packType = getPackageTypeFromFullType(fullModuleId);
     if (typeof packType !== 'number') {
         throw new Error(`特殊包名的导入路径不应该使用convertPackageToPath获取`);
     }
-    let fePath = fullPackageName.replace(config.projectPackage, "@");
+    let fePath = fullModuleId.replace(config.projectPackage, "@");
 
     if (frontSubPackage.has(packType)) {
-        if (isSuffixPackageType(packType)) {
-            fePath.replace(SubPackageOfType.get(packType)!, '');
-            fePath.replace('@', `@.${frontSubPackage.get(packType)}`);
-        } else {
-            let packBase = SubPackageOfType.get(packType)!;
-            fePath.replace(packBase, frontSubPackage.get(packType)!);
-        }
+        let packBase = SubPackageOfType.get(packType)!;
+        fePath.replace(packBase, frontSubPackage.get(packType)!);
     }
 
     return fePath.replace(/\./g, '/');
@@ -34,11 +33,11 @@ export function convertPackageToPath(fullPackageName: string) {
 
 /**
  * 转换包名为保存路径
- * @param fullPackageName
+ * @param fullModuleId
  * @param genIndex
  */
-export function convertPackageToSavePath(fullPackageName: string, genIndex = false) {
-    let fePath = convertPackageToPath(fullPackageName);
+export function convertModuleIdToSavePath(fullModuleId: string, genIndex = false) {
+    let fePath = convertModuleIdToImportPath(fullModuleId);
 
     let pathPackage: string;
     let fileName: string;
@@ -65,11 +64,11 @@ export function convertPackageToSavePath(fullPackageName: string, genIndex = fal
 /**
  * 保存到路径(在对应路径下创建文件并写入内容)
  * @param content
- * @param packageName
+ * @param fullModuleId
  * @param genIndex
  */
-export function saveToPath(content: string, packageName: string, genIndex = false) {
-    let {dirPath, fileName} = convertPackageToSavePath(packageName, genIndex);
+export function saveToPath(content: string, fullModuleId: string, genIndex = false) {
+    let {dirPath, fileName} = convertModuleIdToSavePath(fullModuleId, genIndex);
     let filePath = `${dirPath}\\${fileName}`;
 
     if (!exist(dirPath))

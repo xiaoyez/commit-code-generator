@@ -20,27 +20,10 @@ export const SubPackageOfType = new Map([
     [PackageType.SERVICE, config.servicePackage],
 ]);
 
-// 子包名为后缀模式的生成类型
-const isSuffixPackage = new Set([
-    PackageType.CONTROLLER,
-    PackageType.SERVICE,
-]);
-
 // 将不同内容类型的包id转换为完整包名
 export function getFullPackageName(defType: PackageType, packageName?: string) {
-    let base = config.projectPackage;
-    if (!isSuffixPackage.has((defType))) {
-        base += `.${SubPackageOfType.get(defType)}`;
-    }
-    let res = packageName ? `${base}.${packageName}` : base;
-    if (isSuffixPackage.has(defType)) {
-        res += `.${SubPackageOfType.get(defType)}`;
-    }
-    return res;
-}
-
-export function isSuffixPackageType(defType: PackageType) {
-    return isSuffixPackage.has(defType);
+    let base = `${config.projectPackage}.${SubPackageOfType.get(defType)}`;
+    return packageName ? `${base}.${packageName}` : base;
 }
 
 // 完整包名的匹配顺序从长到短，较长子包名优先匹配，处理子包名有嵌套层级的情况
@@ -48,22 +31,12 @@ const matchOrder = [...SubPackageOfType]
     .sort((a, b) => b[1].length - a[1].length)
     .map(([key]) => key);
 
-const prefixMatchOrder= matchOrder
-    .filter((key) => !isSuffixPackage.has(key));
-const suffixMatchOrder = matchOrder
-    .filter((key) => isSuffixPackage.has(key));
-
 // 根据完整包名，匹配对应的生成内容类型
 export function getPackageTypeFromFullType(fullType: string) {
     if (fullType.startsWith(config.projectPackage)) {
         fullType = fullType.substring(config.projectPackage.length + 1);
-        for (let type of prefixMatchOrder) {
+        for (let type of matchOrder) {
             if (fullType.startsWith(SubPackageOfType.get(type)!)) {
-                return type;
-            }
-        }
-        for (let type of suffixMatchOrder) {
-            if (fullType.endsWith(SubPackageOfType.get(type)!)) {
                 return type;
             }
         }
