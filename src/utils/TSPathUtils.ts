@@ -5,7 +5,7 @@ import {getPackageTypeFromFullType, PackageType, SubPackageOfType} from "./Packa
 const frontSubPackage = new Map([
     [PackageType.DOMAIN, config.tsDataDef],
     [PackageType.DTO, config.tsDataDef],
-    [PackageType.CONTROLLER, 'api'],
+    [PackageType.CONTROLLER, config.tsApiDef],
 ]);
 
 /**

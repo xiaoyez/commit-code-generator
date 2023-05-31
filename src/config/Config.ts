@@ -20,6 +20,8 @@ export const config = {
     // service类所在的包名
     servicePackage: 'service',
     // 前端数据类型所在目录
-    tsDataDef: 'dataType'
+    tsDataDef: 'dataType',
+    // 前端api调用方法所在目录
+    tsApiDef: 'api',
 
 }
