@@ -1,4 +1,5 @@
 import {config} from "../config/Config";
+import {getFullPackageName, PackageType} from "./PackageUtils";
 
 /**
  * 获取java文件路径
@@ -15,5 +16,13 @@ export function getJavaFilePath(packageName: string,className: string)
  * @param domainPackage
  */
 export function getDomainPackage(domainPackage:string) {
-    return `${config.projectPackage}.${config.domainPackage}${domainPackage? '.' + domainPackage : ''}`;
+    return getFullPackageName(PackageType.DOMAIN, domainPackage);
+}
+
+/**
+ * 获取dto包名
+ * @param dtoPackage
+ */
+export function getDtoPackage(dtoPackage:string) {
+    return getFullPackageName(PackageType.DTO, dtoPackage);
 }
