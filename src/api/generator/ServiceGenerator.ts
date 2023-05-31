@@ -36,7 +36,7 @@ export class ServiceGenerator {
     static buildServiceInterfaceDefinition(module: ModuleDefinition) {
         const packageName = ModuleUtils.buildPackageName(module) + '.service';
 
-        const serviceInterfaceAnnotation = new InterfaceDefinition(packageName, ServiceGenerator.getServiceName(module.moduleName));
+        const serviceInterfaceAnnotation = new InterfaceDefinition(packageName, ServiceGenerator.getServiceName(module.moduleName), [],[],module.comment.replace('Controller','Service'));
 
         const methods: MethodDefinition[] = module.apis?.map(api => ServiceGenerator.buildMethod(api));
 

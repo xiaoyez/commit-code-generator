@@ -28,6 +28,11 @@ interface IModuleDefinition {
      * api列表
      */
     apis?: ApiDefinition[];
+
+    /**
+     * 注释
+     */
+    comment: string;
 }
 
 /**
@@ -58,6 +63,11 @@ export class ModuleDefinition implements IModuleDefinition {
      * api列表
      */
     apis: ApiDefinition[] = [];
+
+    /**
+     * 注释
+     */
+    comment!: string;
 
     constructor(props: IModuleDefinition) {
         Object.assign(this, props);

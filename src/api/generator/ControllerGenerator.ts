@@ -50,7 +50,7 @@ export class ControllerGenerator {
      * @param module
      */
     static castToClassDefinition(packageName: string, module: ModuleDefinition) {
-        const controllerClassDefinition = new ClassDefinition(packageName, module.moduleName);
+        const controllerClassDefinition = new ClassDefinition(packageName, module.moduleName, module.comment);
 
         ControllerGenerator.addSpringAnnotations(controllerClassDefinition, module);
 
@@ -113,7 +113,7 @@ export class ControllerGenerator {
                 resultType = castTableDataInfoTypeDefinitionToClassDefinition(api.result);
             }
         }
-        const methodDefinition = new MethodDefinition(api.apiName, resultType);
+        const methodDefinition = new MethodDefinition(api.apiName, resultType, api.comment);
         methodDefinition.addAnnotation(ControllerGenerator.buildRequestMappingAnnotation(api.method,api.url));
         if (api.params) {
             const paramDefinition = ModuleUtils.buildParams(api.params);
