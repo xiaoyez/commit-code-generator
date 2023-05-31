@@ -37,21 +37,21 @@ const CoreTypesImportInfo: Record<string, TSImportInfo> = {
     },
 };
 
-// 导入行数组信息
+// 导入信息表
 type ImportLinesInfo = Map<string, Map<string, ImportType>>;
 
-// 导入行记录
+// 导入行数组记录
 type ImportLinesRecord = Record<string, { type?: string[], objs?: string[] }>;
 
 /**
- * 创建空的导入行信息
+ * 创建空的导入信息表
  */
 export function emptyImportLines(): ImportLinesInfo {
     return new Map();
 }
 
 /**
- * 添加导入信息
+ * 添加单个导入信息
  * @param info
  * @param cur
  * @param isType
@@ -73,7 +73,7 @@ export function addNewImport(info: TSImportInfo, cur: ImportLinesInfo, isType?: 
 }
 
 /**
- * 获取类型导入信息
+ * 获取单个类型定义的导入信息
  * @param def
  */
 function getTypeImportInfo(def: ObjectTypeDefinition): TSImportInfo {
@@ -87,7 +87,7 @@ function getTypeImportInfo(def: ObjectTypeDefinition): TSImportInfo {
 }
 
 /**
- * 获取枚举导入信息
+ * 获取单个枚举定义的导入信息
  * @param def
  */
 export function getEnumImportInfo(def: DataEnum): TSImportInfo {
@@ -99,7 +99,7 @@ export function getEnumImportInfo(def: DataEnum): TSImportInfo {
 }
 
 /**
- * 获取枚举描述导入信息
+ * 获取单个枚举的描述对象的导入信息
  * @param def
  */
 export function getEnumDescImportInfo(def: DataEnum): TSImportInfo {
@@ -110,7 +110,11 @@ export function getEnumDescImportInfo(def: DataEnum): TSImportInfo {
     };
 }
 
-
+/**
+ * 获取当使用一个类型时，需要导入的类型定义信息
+ * @param def 要使用的类型
+ * @param cur 不创建新表，直接将导入信息添加到现有表中
+ */
 export function getTypeImportsFrom(def: TypeDefinition, cur?: ImportLinesInfo) {
     if (!cur) {
         cur = new Map();
@@ -129,6 +133,11 @@ export function getTypeImportsFrom(def: TypeDefinition, cur?: ImportLinesInfo) {
     return cur;
 }
 
+/**
+ * 获取一个类型其定义时所要导入内容的信息
+ * @param def 被定义的类型
+ * @param cur 不创建新表，直接将导入信息添加到现有表中
+ */
 export function getTypeUsingImports(def: ObjectTypeDefinition, cur?: ImportLinesInfo) {
     if (!cur) {
         cur = new Map();
@@ -145,6 +154,9 @@ export function getTypeUsingImports(def: ObjectTypeDefinition, cur?: ImportLines
     return cur;
 }
 
+/**
+ * 将导入信息表转换为易于ejs处理的导入行数组
+ */
 export function getImportLinesRecord(imports: ImportLinesInfo) {
     let res = {} as ImportLinesRecord;
     for (let [module, imported] of imports) {
@@ -173,6 +185,10 @@ let ejsTmp: typeof import('../ejsTmp/EjsTmp').ejsTmp;
     import('../ejsTmp/EjsTmp').then(m => ejsTmp = m.ejsTmp);
 })();
 
+/**
+ * 生成用于导入指定内容的代码片段
+ * @param imports
+ */
 export function generateImportLines(imports: ImportLinesInfo | ImportLinesRecord) {
     if (imports instanceof Map) {
         imports = getImportLinesRecord(imports);
@@ -180,6 +196,10 @@ export function generateImportLines(imports: ImportLinesInfo | ImportLinesRecord
     return compileEjsTmp(ejsTmp.tsImportLinesTmp, imports);
 }
 
+/**
+ * 生成一个对象类型定义模块需要的全部导入内容
+ * @param defs
+ */
 export function getInterfaceModuleImportLines(defs: ObjectTypeDefinition[]) {
     let imports = emptyImportLines();
     for (let def of defs) {
@@ -188,6 +208,10 @@ export function getInterfaceModuleImportLines(defs: ObjectTypeDefinition[]) {
     return imports.size ? getImportLinesRecord(imports) : void 0;
 }
 
+/**
+ * 生成一个Api请求方法模块需要的全部导入内容
+ * @param apis
+ */
 export function getApiCallModuleImportLines({apis}: ModuleDefinition) {
     let imports = apis.reduce((importMap, apiDef) => {
         if (apiDef.params) {
