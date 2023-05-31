@@ -1,12 +1,12 @@
 import {ApiDefinition} from "../../src/api/definition/ApiDefinition";
 import {RequestMethod} from "../../src/api/definition/RequestMethod";
 import {ModuleDefinition} from "../../src/api/definition/ModuleDefinition";
-import {config} from "../../src/config/Config";
 import {TableDataInfoTypeDefinition} from "../../src/api/definition/TableDataInfoTypeDefinition";
-import {tbMemberDomainTypeDef, TbMemberSearchDTODef} from "./DTO";
+import {TbMemberAddDTODef, tbMemberDomainTypeDef, TbMemberEditDTODef, TbMemberSearchDTODef} from "./DTO";
+import {AjaxResultTypeDefinition} from "../../src/api/definition/AjaxResultTypeDefinition";
 
 export const TbMemberController = new ModuleDefinition({
-    baseUrlPrefix: "/test/member", isFile: true, moduleName: "member",comment:"会员管理Controller"
+    baseUrlPrefix: "/test/member", isFile: true, moduleName: "TbMemberController",comment:"会员管理Controller"
 })
 
 export const getMemberListApi = new ApiDefinition({
@@ -19,4 +19,27 @@ export const getMemberListApi = new ApiDefinition({
     url: "/list"
 })
 
+export const addMemberApi = new ApiDefinition({
+    apiName: "addMember",
+    comment: "添加会员",
+    method: RequestMethod.POST,
+    module: TbMemberController,
+    params: TbMemberAddDTODef,
+    result: AjaxResultTypeDefinition.createAjax(),
+    url: ''
+});
+
+export const editMemberApi = new ApiDefinition({
+    apiName: "editMember",
+    comment: "编辑会员",
+    method: RequestMethod.PUT,
+    module: TbMemberController,
+    params: TbMemberEditDTODef,
+    result: AjaxResultTypeDefinition.createAjax(),
+    url: ''
+});
+
 TbMemberController.addApi(getMemberListApi);
+TbMemberController.addApi(addMemberApi);
+TbMemberController.addApi(editMemberApi);
+
