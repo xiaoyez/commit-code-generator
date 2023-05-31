@@ -93,7 +93,8 @@ export class ObjectTypeDefinitionUtils {
                 : column.typeName === SqlType.DATE ? TimePattern.DATE : undefined,
             foreignKey: column.foreignKey,
             referenceTable: column.referenceTable,
-            referenceColumn: column.referenceColumn
+            referenceColumn: column.referenceColumn,
+            enumType: column.enumType,
         };
     }
 
