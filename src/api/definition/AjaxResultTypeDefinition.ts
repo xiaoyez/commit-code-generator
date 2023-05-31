@@ -7,7 +7,7 @@ import {DTOGenerator} from "../../dto/generator/DTOGenerator";
 // AjaxResult
 const ajaxResult = new ObjectTypeDefinition({
     className: "AjaxResult",
-    packageName: `${config.projectPackage}.core.domain`,
+    packageName: 'domain',
     properties: []
 })
 

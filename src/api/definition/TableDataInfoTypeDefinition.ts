@@ -7,7 +7,7 @@ import {DTOGenerator} from "../../dto/generator/DTOGenerator";
 // TableDataInfo
 const tableDataInfo = new ObjectTypeDefinition({
     className: "TableDataInfo",
-    packageName: `${config.projectPackage}.core.page`,
+    packageName: 'page',
     properties: []
 })
 

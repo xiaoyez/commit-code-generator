@@ -1,4 +1,3 @@
-import {config} from "../config/Config";
 import {ObjectTypeDefinition, TypeDefinition} from "../dto/definition/TypeDefinition";
 import {convertPackageToPath} from "./TSPathUtils";
 import {DataEnum} from "../db/definition/DataEnum";
@@ -7,10 +6,8 @@ import {tsObjDefTypeName} from "./TypeUtils";
 import {ModuleDefinition} from "../api/definition/ModuleDefinition";
 import {getFullPackageName, PackageType} from "./PackageUtils";
 
-// 基包
-const BasePackage = `${config.projectPackage}.${config.dtoPackage}`;
 // 公共模块
-const CommonModule = `${BasePackage}.common`;
+const CommonModule = 'common';
 
 // 核心类型
 const CoreTypes = new Set([
@@ -72,7 +69,8 @@ export function addNewImport(info: TSImportInfo, cur: ImportLinesInfo, isType?: 
  */
 function getTypeImportInfo(def: ObjectTypeDefinition): TSImportInfo {
     let importName = tsObjDefTypeName(def);
-    let packageName = CoreTypes.has(importName) ? CommonModule : getFullPackageName(PackageType.DTO, def.packageName);
+    let subPackage = CoreTypes.has(importName) ? CommonModule : def.packageName;
+    let packageName = getFullPackageName(PackageType.DTO, subPackage);
     let importPath = convertPackageToPath(packageName);
     return {importPath, importName, importType: ImportType.Type}
 }
