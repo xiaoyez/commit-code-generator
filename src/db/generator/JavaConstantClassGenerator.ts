@@ -14,7 +14,7 @@ export class JavaConstantClassGenerator {
     static generateJavaConstantClass(dataEnum: DataEnum) {
         const text = JavaConstantClassGenerator.generateContent(dataEnum);
         const fullPackage = `${config.projectPackage}.${config.constantPackage}` + (dataEnum.package ? '.' + dataEnum.package : '');
-        const filePath = config.baseDir + `\\${getJavaFilePath(fullPackage,dataEnum.name)}`;
+        const filePath = config.baseDir + `\\${config.projectName}\\${getJavaFilePath(fullPackage,dataEnum.name)}`;
         const fileDir = getParent(filePath);
         if (!exist(fileDir))
             mkdirs(fileDir);
