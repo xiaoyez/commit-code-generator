@@ -106,7 +106,9 @@ export class ViewUtils {
     static castApiDefinitionToTableDefinition(apiDefinition: ApiDefinition): TableDefinition | null {
         if (apiDefinition.result && apiDefinition.result.genericTypes && apiDefinition.result.genericTypes[0].type instanceof DomainTypeDefinition)
         {
-            const cols = apiDefinition.result.genericTypes[0].type.properties.map(property => ViewUtils.castDomainPropertyDefinitionToTableColDefinition(property));
+            const cols = apiDefinition.result.genericTypes[0].type.properties
+                .filter(prop => !(prop.isPrimaryKey && prop.autoIncrement))
+                .map(property => ViewUtils.castDomainPropertyDefinitionToTableColDefinition(property));
             return new TableDefinition(cols, apiDefinition, undefined ,apiDefinition.result instanceof TableDataInfoTypeDefinition);
         }
         return null;
