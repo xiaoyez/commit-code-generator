@@ -10,6 +10,11 @@ export enum PackageType {
     SERVICE,
 }
 
+const specialDTO = new Set([
+    'AjaxResult',
+    'TableDataInfo',
+]);
+
 export const SubPackageOfType = new Map([
     [PackageType.CORE,'core'],
     [PackageType.DOMAIN, config.domainPackage],
@@ -21,6 +26,9 @@ export const SubPackageOfType = new Map([
 ]);
 
 export function getFullPackageName(defType: PackageType, packageName?: string) {
+    if (defType === PackageType.DTO && packageName && specialDTO.has(packageName)) {
+        defType = PackageType.CORE;
+    }
     const base = `${config.projectPackage}.${SubPackageOfType.get(defType)}`;
     return packageName ? `${base}.${packageName}` : base;
 }
