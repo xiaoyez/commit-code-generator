@@ -6,6 +6,5 @@ describe('TSEnumGenerator', () => {
 
     it('generate to file', () => {
         generateEnumDefsToFile([MemberStatusEnumDef]);
-        // TODO: 接口上缺注释
     })
 });

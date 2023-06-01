@@ -1,4 +1,7 @@
-export enum <%= def.name %> {
+<% if (def.comment) {
+%>/** <%= def.comment %> */
+<% }
+%>export enum <%= def.name %> {
 <% for (let prop of def.options) {
     if (prop.description) {
 %>    /** <%= prop.description %> */
