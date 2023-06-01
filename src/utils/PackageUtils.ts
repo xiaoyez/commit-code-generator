@@ -13,7 +13,7 @@ export enum PackageType {
 // 不同类型生成内容的子包名
 export const SubPackageOfType = new Map([
     [PackageType.DOMAIN, config.domainPackage],
-    [PackageType.DTO, `${config.dtoPackage}.${config.dtoPackage}`],
+    [PackageType.DTO, `${config.domainPackage}.${config.dtoPackage}`],
     [PackageType.MAPPER,config.mapperPackage],
     [PackageType.CONSTANT, config.constantPackage],
     [PackageType.CONTROLLER, config.controllerPackage],

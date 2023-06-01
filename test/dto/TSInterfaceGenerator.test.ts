@@ -6,6 +6,5 @@ describe('TSInterfaceGenerator', () => {
 
     it('generate to file', () => {
         generateInterfaceDefsToFile([tbMemberDomainTypeDef, (TbMemberSearchDTODef.type as ObjectTypeDefinition)]);
-        // TODO: 生成文件的时候套了两层dto
     });
 });

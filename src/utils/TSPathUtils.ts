@@ -34,7 +34,7 @@ export function convertModuleIdToImportPath(fullModuleId: string) {
 
     if (frontSubPackage.has(packType)) {
         let packBase = SubPackageOfType.get(packType)!;
-        fePath.replace(packBase, frontSubPackage.get(packType)!);
+        fePath = fePath.replace(packBase, frontSubPackage.get(packType)!);
     }
 
     return fePath.replace(/\./g, '/');

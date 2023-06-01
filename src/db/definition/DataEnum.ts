@@ -38,7 +38,6 @@ export class DataEnum {
         return new DataEnum({
             name,
             options,
-            package: `${config.projectPackage}.${config.constantPackage}`,
             comment,
             ruoyiDict,
         });
