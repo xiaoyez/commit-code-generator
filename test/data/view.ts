@@ -1,5 +1,5 @@
 import {ViewUtils} from "../../src/frontend/view/definition/page/ViewUtils";
-import {getMemberListApi} from "./API";
+import {addMemberApi, editMemberApi, getMemberInfoApi, getMemberListApi} from "./API";
 import {FilterDefinition} from "../../src/frontend/view/definition/page/FilterDefinition";
 import {
     ActBtn,
@@ -7,6 +7,7 @@ import {
     TableDefinition,
     TableViewDefinition
 } from "../../src/frontend/view/definition/page/TableViewDefinition";
+import {FormDialogDefinition} from "../../src/frontend/view/definition/page/FormDialogDefinition";
 
 export const memberFilterDef: FilterDefinition = {
     fileName: "MemberFilter",
@@ -20,3 +21,15 @@ export const memberTableViewDef: TableViewDefinition = {
 }
 
 memberTableViewDef.tableDef.addActBtn(ColActBtn.EDIT, ColActBtn.INFO, ColActBtn.REMOVE);
+
+export const memberFormViewDef: FormDialogDefinition = {
+    addApi: addMemberApi,
+    editApi: editMemberApi,
+    formDefinition: {
+        items: ViewUtils.castApiDefinitionToDataFormDefinition(getMemberListApi, {
+
+        }).items
+    },
+    infoApi: getMemberInfoApi,
+    width: "950px"
+}
