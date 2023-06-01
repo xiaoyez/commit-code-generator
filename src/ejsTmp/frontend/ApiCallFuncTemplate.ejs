@@ -1,4 +1,7 @@
-export function <%= api.apiName %>(<% if (api.params) {
+<% if (api.comment) {
+%>/** <%= api.comment %> */
+<% }
+%>export function <%= api.apiName %>(<% if (api.params) {
 %>params: <%= tsTypeString(api.params) %><%
 } %>) {
     return request<<%=

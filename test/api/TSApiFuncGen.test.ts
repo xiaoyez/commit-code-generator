@@ -12,6 +12,5 @@ describe('api call script', () => {
 
     it('generate api module to file', function () {
         generateTsApiFileModule(TbMemberController);
-        // TODO: 生成的文件的import有问题， 生成的api的函数上面没有注释
     });
 });
