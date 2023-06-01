@@ -7,7 +7,9 @@ import {
     TableDefinition,
     TableViewDefinition
 } from "../../src/frontend/view/definition/page/TableViewDefinition";
-import {FormDialogDefinition} from "../../src/frontend/view/definition/page/FormDialogDefinition";
+import {DisplayType, FormDialogDefinition, Rule} from "../../src/frontend/view/definition/page/FormDialogDefinition";
+import {TbMemberAddDTODef, TbMemberEditDTODef} from "./DTO";
+import {ObjectTypeDefinition} from "../../src/dto/definition/TypeDefinition";
 
 export const memberFilterDef: FilterDefinition = {
     fileName: "MemberFilter",
@@ -22,14 +24,49 @@ export const memberTableViewDef: TableViewDefinition = {
 
 memberTableViewDef.tableDef.addActBtn(ColActBtn.EDIT, ColActBtn.INFO, ColActBtn.REMOVE);
 
-export const memberFormViewDef: FormDialogDefinition = {
+const TbMemberAddDTOObjectTypeDef = TbMemberAddDTODef.type as ObjectTypeDefinition;
+
+export const memberFormDialogDef: FormDialogDefinition = {
     addApi: addMemberApi,
     editApi: editMemberApi,
-    formDefinition: {
-        items: ViewUtils.castApiDefinitionToDataFormDefinition(getMemberListApi, {
+    formDefinition: ViewUtils.castApiDefinitionToDataFormDefinition(getMemberListApi, {
+        realName: {
+            rule: Rule.create(TbMemberAddDTOObjectTypeDef.findProperty('realName')),
+            disabledInEdit: false
+        },
+        idCardNum: {
+            rule: Rule.idCardRule,
+            disabledInEdit: false
+        },
+        gender: {
+            disabledInEdit: false,
+        },
+        phoneNum: {
+            rule: Rule.phoneNumberRule,
+            disabledInEdit: false,
+        },
+        birthday: {
+            disabledInEdit: false,
+        },
+        remark: {
+            disabledInEdit: false,
+        },
+        deptId: {
+            displayType: DisplayType.ADD,
+            disabledInEdit: false,
+        },
+        userId: {
+            displayType: DisplayType.ADD,
+            disabledInEdit: false,
+        },
+        introduceMemberId: {
+            disabledInEdit: true,
+        },
+        label: {
+            disabledInEdit: true,
+        }
 
-        }).items
-    },
+    }),
     infoApi: getMemberInfoApi,
     width: "950px"
 }

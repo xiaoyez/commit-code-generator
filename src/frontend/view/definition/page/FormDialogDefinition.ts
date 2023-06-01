@@ -2,6 +2,7 @@ import {ApiDefinition} from "../../../../api/definition/ApiDefinition";
 import {IPropertyDefinition} from "../../../../dto/definition/TypeDefinition";
 import {JavaType} from "../../../../dto/definition/JavaType";
 import {FormDefinition, FormItemDefinition} from "./FormDefinition";
+import {create} from "lodash";
 
 /**
  * Api
@@ -49,8 +50,8 @@ export interface DataFormDefinition extends FormDefinition {
 }
 
 export interface DataFormFieldDefinition {
-    displayType: DisplayType;
-    rule: Rule;
+    displayType?: DisplayType;
+    rule?: Rule;
     disabledInEdit?: boolean;
 }
 
@@ -72,7 +73,7 @@ export class Rule {
         this.pattern = pattern;
     }
 
-    static create(property: IPropertyDefinition)
+    static create(property: IPropertyDefinition, pattern?:string)
     {
         let message = '';
         if (property.paramType.type === JavaType.String) {
@@ -81,7 +82,14 @@ export class Rule {
         if (property.paramType.type === JavaType.Integer) {
             message = '请选择' + property.paramDesc ;
         }
-        return new Rule(message);
+        return new Rule(message, true, pattern);
+    }
+
+    static createNotRequired(property: IPropertyDefinition, pattern?:string)
+    {
+        const rule = Rule.create(property,pattern);
+        rule.required = false;
+        return rule;
     }
 
     static idCardRule = new Rule('请输入真实身份证号',true, 'RegexLib.idCard');

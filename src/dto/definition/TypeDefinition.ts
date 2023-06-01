@@ -85,6 +85,10 @@ export class ObjectTypeDefinition implements IObjectTypeDefinition {
     static create(className: string, packageName: string, properties: IPropertyDefinition[], comment?: string) {
         return new ObjectTypeDefinition({className, packageName, properties, comment});
     }
+
+    findProperty(name: string) {
+        return this.properties.find(p => p.paramName === name);
+    }
 }
 
 /**
