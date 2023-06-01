@@ -1,6 +1,7 @@
 import {AnnotationDefinition} from "./AnnotationDefinition";
-import {TypeDefinition} from "../../dto/definition/TypeDefinition";
+import {ObjectTypeDefinition, TypeDefinition} from "../../dto/definition/TypeDefinition";
 import {ClassDefinition} from "./ClassDefinition";
+import {lowerFirst} from "lodash";
 
 /**
  * 方法参数定义
@@ -39,5 +40,10 @@ export class ParameterDefinition {
      */
     addAnnotation(annotation: AnnotationDefinition) {
         this.annotations.push(annotation);
+    }
+
+    static create(type: TypeDefinition) {
+        if (type.type instanceof ObjectTypeDefinition)
+            return new ParameterDefinition(lowerFirst(type.type.className), type);
     }
 }

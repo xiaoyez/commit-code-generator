@@ -115,13 +115,9 @@ export class ControllerGenerator {
         const methodDefinition = new MethodDefinition(api.apiName, resultType, api.comment);
         methodDefinition.addAnnotation(ControllerGenerator.buildRequestMappingAnnotation(api.method,api.url));
         if (api.params) {
-            const paramDefinition = ModuleUtils.buildParams(api.params.type as TypeDefinition);
-            if (paramDefinition)
-            {
-                if(api.method === RequestMethod.POST || api.method === RequestMethod.PUT)
-                    paramDefinition?.addAnnotation(SpringAnnotationDefinitions.RequestBody);
-                methodDefinition.addParameter(paramDefinition);
-            }
+            if(api.method === RequestMethod.POST || api.method === RequestMethod.PUT)
+                api.params.addAnnotation(SpringAnnotationDefinitions.RequestBody);
+            methodDefinition.addParameter(api.params);
         }
         return methodDefinition;
     }

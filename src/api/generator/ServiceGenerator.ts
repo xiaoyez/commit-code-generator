@@ -93,8 +93,7 @@ export class ServiceGenerator {
         const methodDefinition = new MethodDefinition(api.apiName,ServiceGenerator.buildResultType(api),api.comment);
         if (api.params)
         {
-            const paramDefinition = new ParameterDefinition(ModuleUtils.buildParamsName(api.params.type as TypeDefinition),api.params.type as TypeDefinition);
-            methodDefinition.addParameter(paramDefinition);
+            methodDefinition.addParameter(api.params);
         }
         return methodDefinition;
 
