@@ -38,9 +38,7 @@ export class ServiceGenerator {
 
         const serviceInterfaceAnnotation = new InterfaceDefinition(packageName, ServiceGenerator.getServiceName(module.moduleName), [],[],module.comment.replace('Controller','Service'));
 
-        const methods: MethodDefinition[] = module.apis?.map(api => ServiceGenerator.buildMethod(api));
-
-        serviceInterfaceAnnotation.methods = methods;
+        serviceInterfaceAnnotation.methods = module.apis?.map(api => ServiceGenerator.buildMethod(api));
         return serviceInterfaceAnnotation;
     }
 
@@ -95,7 +93,7 @@ export class ServiceGenerator {
         const methodDefinition = new MethodDefinition(api.apiName,ServiceGenerator.buildResultType(api),api.comment);
         if (api.params)
         {
-            const paramDefinition = new ParameterDefinition(ModuleUtils.buildParamsName(api.params),TypeDefinition.create(api.params.type,api.params.genericTypes));
+            const paramDefinition = new ParameterDefinition(ModuleUtils.buildParamsName(api.params.type as TypeDefinition),api.params.type as TypeDefinition);
             methodDefinition.addParameter(paramDefinition);
         }
         return methodDefinition;

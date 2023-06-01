@@ -1,4 +1,3 @@
-import {config} from "../config/Config";
 import {getFullPackageName, PackageType} from "./PackageUtils";
 
 /**

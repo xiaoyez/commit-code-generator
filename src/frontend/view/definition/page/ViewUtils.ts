@@ -20,7 +20,7 @@ import {ApiDefinition} from "../../../../api/definition/ApiDefinition";
 import {TableDataInfoTypeDefinition} from "../../../../api/definition/TableDataInfoTypeDefinition";
 import {FilterFormDefinition} from "./FilterDefinition";
 import {contains} from "../../../../utils/ArrayUtils";
-import {DataFormDefinition, DataFormFieldDefinition, DataFormItemDefinition, Rule} from "./FormDialogDefinition";
+import {DataFormDefinition, DataFormFieldDefinition, DataFormItemDefinition} from "./FormDialogDefinition";
 import {ApiUtils} from "../../../../api/utils/ApiUtils";
 
 export class ViewUtils {
@@ -30,8 +30,8 @@ export class ViewUtils {
             items: []
         }
         const apiParamType = apiDefinition.params?.type;
-        if(apiParamType && apiParamType instanceof ObjectTypeDefinition) {
-            filterFormDefinition.items = apiParamType.properties.map(property=>ViewUtils.castPropertyDefinitionToFormItemDefinition(property))
+        if(apiParamType && apiParamType instanceof TypeDefinition && apiParamType.type instanceof ObjectTypeDefinition) {
+            filterFormDefinition.items = apiParamType.type.properties.map(property=>ViewUtils.castPropertyDefinitionToFormItemDefinition(property))
         }
         return filterFormDefinition
     }

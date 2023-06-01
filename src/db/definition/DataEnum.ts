@@ -1,5 +1,4 @@
 import {DataEnumOption, IDataEnumOption} from "./DataEnumOption";
-import {config} from "../../config/Config";
 
 /**
  * 数据枚举接口

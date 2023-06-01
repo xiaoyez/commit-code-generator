@@ -2,9 +2,7 @@ import {
     DomainTypeDefinition, IDomainPropertyDefinition,
     IPropertyDefinition,
     ObjectTypeDefinition,
-    TypeDefinition
 } from "../definition/TypeDefinition";
-import {JavaType} from "../definition/JavaType";
 import {config} from "../../config/Config";
 import {isOfType} from "../../utils/TypeUtils";
 import {exist, getParent, mkdirs, writeStringToFile} from "../../utils/FileUtils";
@@ -40,11 +38,10 @@ export class DTOGenerator {
 
         DTOGenerator.addLombokAnnotation(dtoClassDefinition);
 
-        const fields = definition.properties.map(prop => {
+        dtoClassDefinition.fields = definition.properties.map(prop => {
             return DTOGenerator.generateField(prop);
         });
 
-        dtoClassDefinition.fields = fields;
         return dtoClassDefinition;
     }
 

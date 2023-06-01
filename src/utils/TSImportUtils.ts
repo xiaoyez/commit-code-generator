@@ -212,7 +212,7 @@ export function getInterfaceModuleImportLines(defs: ObjectTypeDefinition[]) {
 export function getApiCallModuleImportLines({apis}: ModuleDefinition) {
     let imports = apis.reduce((importMap, apiDef) => {
         if (apiDef.params) {
-            importMap = getTypeImportsFrom(apiDef.params, importMap);
+            importMap = getTypeImportsFrom(apiDef.params.type as TypeDefinition, importMap);
         }
 
         if (apiDef.result) {

@@ -67,8 +67,7 @@ export class ControllerGenerator {
      * @private
      */
     private static buildMethods(module: ModuleDefinition, controllerClassDefinition: ClassDefinition) {
-        const methods = module.apis?.map(api => ControllerGenerator.buildMethod(api));
-        controllerClassDefinition.methods = methods;
+        controllerClassDefinition.methods = module.apis?.map(api => ControllerGenerator.buildMethod(api));
     }
 
     /**
@@ -116,7 +115,7 @@ export class ControllerGenerator {
         const methodDefinition = new MethodDefinition(api.apiName, resultType, api.comment);
         methodDefinition.addAnnotation(ControllerGenerator.buildRequestMappingAnnotation(api.method,api.url));
         if (api.params) {
-            const paramDefinition = ModuleUtils.buildParams(api.params);
+            const paramDefinition = ModuleUtils.buildParams(api.params.type as TypeDefinition);
             if (paramDefinition)
             {
                 if(api.method === RequestMethod.POST || api.method === RequestMethod.PUT)
@@ -170,8 +169,8 @@ export class ControllerGenerator {
     private static generateParamDTOs(module: ModuleDefinition) {
         module.apis?.forEach(api => {
             if (api.params) {
-                if (api.params.type instanceof ObjectTypeDefinition)
-                    DTOGenerator.generate(api.params.type);
+                if (api.params.type instanceof TypeDefinition && api.params.type.type instanceof ObjectTypeDefinition)
+                    DTOGenerator.generate(api.params.type.type);
             }
         });
     }

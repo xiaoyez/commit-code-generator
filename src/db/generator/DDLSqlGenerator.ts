@@ -1,7 +1,7 @@
 import {DbDefinition} from "../definition/DbDefinition";
 import {TableCreateDefinition} from "../definition/TableCreateDefinition";
 import {DataColumnDefinition} from "../definition/DataColumnDefinition";
-import {JoinType, ViewCreateDefinition} from "../definition/ViewCreateDefinition";
+import {ViewCreateDefinition} from "../definition/ViewCreateDefinition";
 import {compileEjsTmp} from "../../ejsTmp/EjsUtils";
 import {ejsTmp} from "../../ejsTmp/EjsTmp";
 

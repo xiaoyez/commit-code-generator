@@ -5,7 +5,6 @@ import {
     ObjectTypeDefinition
 } from "./TypeDefinition";
 import {TableCreateDefinition} from "../../db/definition/TableCreateDefinition";
-import {config} from "../../config/Config";
 import {javaTypeMapper} from "./TypeMapper";
 import {camelCase, upperFirst} from "lodash";
 import {SqlType} from "../../db/definition/SqlType";
@@ -20,13 +19,12 @@ export class ObjectTypeDefinitionUtils {
      * @param tableCreateDefinition
      */
     static castTableCreateDefinitionToObjectTypeDefinition<T extends Record<string, DataColumnDefinition>>(tableCreateDefinition: TableCreateDefinition<T>): ObjectTypeDefinition {
-        const objectTypeDefinition = new ObjectTypeDefinition({
+        return new ObjectTypeDefinition({
             className: ObjectTypeDefinitionUtils.castTableNameToClassName(tableCreateDefinition.tableName),
             properties: tableCreateDefinition.columns?Object.values(tableCreateDefinition.columns).map(column => {
                 return ObjectTypeDefinitionUtils.castDataColumnDefinitionToIPropertyDefinition(column);
             }):[]
         })
-        return objectTypeDefinition;
     }
 
     /**
@@ -34,12 +32,11 @@ export class ObjectTypeDefinitionUtils {
      * @param viewCreateDefinition
      */
     static castViewCreateDefinitionToDomainTypeDefinition(viewCreateDefinition: ViewCreateDefinition): DomainTypeDefinition {
-        const domainTypeDefinition = new DomainTypeDefinition({
+        return  new DomainTypeDefinition({
             className: ObjectTypeDefinitionUtils.castTableNameToClassName(viewCreateDefinition.name),
             comment: viewCreateDefinition.comment,
             properties: ObjectTypeDefinitionUtils.createIDomainPropertyDefinitionsByViewCreateDefinition(viewCreateDefinition)
         })
-        return domainTypeDefinition;
     }
 
     /**

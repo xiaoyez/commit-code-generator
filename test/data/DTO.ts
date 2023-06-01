@@ -4,7 +4,6 @@ import {ObjectTypeDefinition, TypeDefinition} from "../../src/dto/definition/Typ
 import {JavaType} from "../../src/dto/definition/JavaType";
 import {MemberLabelEnumDef, MemberStatusEnumDef} from "./enums";
 import {TimePattern} from "../../src/dto/definition/TimePattern";
-import {omit} from "lodash";
 
 /**
  * 会员表对应的实体类的定义

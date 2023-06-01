@@ -1,6 +1,8 @@
 import {ModuleDefinition} from "./ModuleDefinition";
-import {TypeDefinition} from "../../dto/definition/TypeDefinition";
+import {ObjectTypeDefinition, TypeDefinition} from "../../dto/definition/TypeDefinition";
 import {RequestMethod} from "./RequestMethod";
+import {ParameterDefinition} from "../../java/definition/ParameterDefinition";
+import {lowerFirst} from "lodash";
 
 /**
  * Api定义
@@ -30,7 +32,7 @@ interface IApiDefinition {
     /**
      * 入参
      */
-    params?: TypeDefinition;
+    params?: ParameterDefinition;
 
     /**
      * 返参
@@ -47,7 +49,7 @@ export class ApiDefinition implements IApiDefinition {
     apiName!: string;
     url!: string;
     method!: RequestMethod;
-    params?: TypeDefinition;
+    params?: ParameterDefinition;
     result?: TypeDefinition;
     module?: ModuleDefinition;
     comment?: string;
@@ -56,7 +58,14 @@ export class ApiDefinition implements IApiDefinition {
         Object.assign(this, props);
     }
 
-    static create(apiName: string, url: string, method: RequestMethod, comment?:string, params?: TypeDefinition, result?: TypeDefinition) {
-        return new ApiDefinition({apiName, url, method, params, result,comment});
+    static create(apiName: string, url: string, method: RequestMethod, comment?:string, params?: TypeDefinition|ParameterDefinition, result?: TypeDefinition) {
+        let parameter : ParameterDefinition | undefined ;
+        if (params instanceof TypeDefinition)
+        {
+            parameter = new ParameterDefinition(lowerFirst((params.type as ObjectTypeDefinition).className),params);
+        }
+        else
+            parameter = params;
+        return new ApiDefinition({apiName, url, method, params: parameter, result,comment});
     }
 }

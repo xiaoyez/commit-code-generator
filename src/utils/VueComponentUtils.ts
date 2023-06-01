@@ -11,6 +11,7 @@ import {
 import {config} from "../config/Config";
 import {prefix2Module} from "../api/utils/ModuleUtils";
 import {ApiUtils} from "../api/utils/ApiUtils";
+import {TypeDefinition} from "../dto/definition/TypeDefinition";
 
 export function filterCompViewModel(filterDefinition: FilterDefinition) {
     const {
@@ -35,8 +36,8 @@ export function filterCompViewModel(filterDefinition: FilterDefinition) {
         .map(({info}) => info)
         .filter(isRange);
 
-    let importLines = getImportLinesRecord(getTypeImportsFrom(api.params!));
-    let queryTypeName = tsTypeString(api.params!);
+    let importLines = getImportLinesRecord(getTypeImportsFrom(api.params!.type as TypeDefinition));
+    let queryTypeName = tsTypeString(api.params!.type as TypeDefinition);
 
     return {
         items,

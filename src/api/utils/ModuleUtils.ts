@@ -55,7 +55,7 @@ export class ModuleUtils {
         if (!type) {
             return 'void';
         }
-        let typeName = '';
+        let typeName: string;
         if(type.type instanceof ObjectTypeDefinition)
         {
             typeName = type.type.className;
@@ -91,7 +91,7 @@ export class ModuleUtils {
         if (!params) {
             return '';
         }
-        let typeName = '';
+        let typeName :string;
         if(params.type instanceof ObjectTypeDefinition)
         {
             typeName = params.type.className;
@@ -101,8 +101,7 @@ export class ModuleUtils {
             typeName = params.type;
         }
         // 参数名
-        let paramName = lowerFirst(typeName);
-        return paramName;
+        return lowerFirst(typeName);
     }
 
 

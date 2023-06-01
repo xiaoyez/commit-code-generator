@@ -1,5 +1,4 @@
 import {DataColumnDefinition, IDataColumnType} from "./DataColumnDefinition";
-import {SqlType} from "./SqlType";
 
 
 /**

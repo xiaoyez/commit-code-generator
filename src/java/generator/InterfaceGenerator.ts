@@ -1,6 +1,5 @@
 import {InterfaceDefinition} from "../definition/InterfaceDefinition";
 import {JavaGeneratorUtils} from "./utils/JavaGeneratorUtils";
-import {MethodDefinition} from "../definition/MethodDefinition";
 import {compileEjsTmp} from "../../ejsTmp/EjsUtils";
 import {ejsTmp} from "../../ejsTmp/EjsTmp";
 
