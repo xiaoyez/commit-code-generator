@@ -8,4 +8,3 @@ export function singular(str: string) {
         str = str.substring(0, str.lastIndexOf('List'));
     return pluralize.singular(str);
 }
-

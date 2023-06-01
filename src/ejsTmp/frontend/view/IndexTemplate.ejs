@@ -1,0 +1,133 @@
+<template>
+  <div class="app-container">
+    <<%=kebabCase(filter.fileName)%>
+      :show-search="<%=filter.vShowName%>>"
+      @handle-query="handleQuery"
+    />
+
+    <<%=kebabCase(tableView.fileName)%>>
+      :data-list="listData.rows"
+      :total-rows="listData.total"
+      :loading="loading"
+      v-model:show-search="showSearch"
+      @update-list="getList"
+      @on-click-show-info="showInfo"
+<%forEach(tableView.actBtnArr, actBtn => {
+%><%if (actBtn === ActBtn.ADD){
+    %>      @on-click-add="handleAdd"<%
+    }%><%if (actBtn === ActBtn.EDIT){
+    %>      @on-click-update="handleUpdate"<%
+    }%><%if (actBtn === ActBtn.REMOVE){
+    %>      @on-click-delete="handleDelete"<%
+    }%><%if (actBtn === ActBtn.EXPORT){
+    %>      @on-click-export="handleExport"<%
+    }%><%
+})%>
+    />
+
+    <!-- 添加或修改会员对话框 -->
+    <member-form-dialog ref="createFormRef" @submitted="onSubmitted"/>
+  </div>
+</template>
+
+    <script setup lang="ts">
+import {ref} from "vue";
+import {useApi} from "@/utils/request";
+import {useGlobalProperties} from "@/utils/component";
+import type {IMemberDTO, IReqMemberList} from "@/views/ypx/member/memberAPI";
+import {listMember, delMember} from "@/views/ypx/member/memberAPI";
+import {COMMON_KEYS} from "@/constants/common";
+import <%=filter.fileName%> from "./<%=filter.fileName%>.vue";
+import <%=tableView.fileName%> from "./<%=tableView.fileName%>.vue";
+import <%=formDialog.fileName%> from "./<%=formDialog.fileName%>.vue";
+const {INJECT_QUERY_LIST_PARAM} = COMMON_KEYS;
+
+const proxy = useGlobalProperties();
+
+const loading = ref(true);
+
+const {
+    resData: listData,
+    getData: query<%=upperFirst(name)%>s,
+} = useApi(<%=tableView.tableDef.api.apiName%>, ({total, rows}) => ({
+    total: total || 0, rows: rows || [],
+}), {
+    total: 0, rows: [] as IMemberDTO[],
+})
+
+const deptStore = useDeptStore();
+
+const queryParams = ref<IReqMemberList>({
+    pageNum: 1,
+    pageSize: 10,
+});
+
+provide(INJECT_QUERY_LIST_PARAM, queryParams);
+
+/** 查询会员列表 */
+async function getList(params: IReqMemberList) {
+    loading.value = true;
+    await query<%=upperFirst(name)%>s(params);
+    loading.value = false;
+}
+
+
+const showSearch = ref(true);
+
+const createFormRef = ref();
+
+function onSubmitted() {
+    getList(queryParams.value);
+}
+
+/** 搜索按钮操作 */
+function handleQuery(params?: IReqMemberList) {
+    params = params || queryParams.value;
+    params.pageNum = 1;
+    getList(params);
+}
+
+<%forEach(tableView.actBtnArr, actBtn => {
+%><%if (actBtn === ActBtn.ADD){
+%>/** 新增按钮操作 */
+function handleAdd() {
+    createFormRef.value?.openAddDialog();
+}<%
+}%><%if (actBtn === ActBtn.EDIT){
+%>/** 修改按钮操作 */
+function handleUpdate(row: IMemberDTO) {
+    createFormRef.value?.openEditDialog(row);
+}
+<%
+}%><%if (actBtn === ActBtn.REMOVE){
+%>/** 删除按钮操作 */
+function handleDelete(rows: IMemberDTO[]) {
+    const idArr = rows.map(row => row.id);
+    proxy.$modal.confirm('是否确认删除参数编号为"' + idArr + '"的数据项？').then(function () {
+        return <%=deleteApi.apiName%>(idArr);
+    }).then(() => {
+        handleQuery();
+        proxy.$modal.msgSuccess("删除成功");
+    }).catch(() => {
+    });
+}
+<%
+}%><%if (actBtn === ActBtn.EXPORT){
+%>/** 导出按钮操作 */
+function handleExport() {
+    proxy.download("communicator/member/export", {
+        ...queryParams.value
+    }, `member_${new Date().getTime()}.xlsx`);
+}
+<%
+}%><%
+})%>
+/>
+
+function showInfo(info: IMemberDTO) {
+    createFormRef.value?.openInfoDialog(info);
+}
+
+handleQuery();
+deptStore.getShopList();
+</script>

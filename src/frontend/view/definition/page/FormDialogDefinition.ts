@@ -24,6 +24,7 @@ export interface FormDialogDefinition {
     // 弹窗宽度
     width: string;
     formDefinition: DataFormDefinition;
+    fileName: string;
 
 }
 

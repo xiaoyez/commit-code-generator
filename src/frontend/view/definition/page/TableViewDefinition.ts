@@ -7,7 +7,8 @@ export enum ActBtn {
 
 export interface TableViewDefinition {
     actBtnArr: ActBtn[],
-    tableDef:  TableDefinition
+    tableDef:  TableDefinition,
+    fileName: string,
 }
 
 export enum ColActBtn {

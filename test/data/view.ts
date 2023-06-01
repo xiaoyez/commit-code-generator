@@ -19,7 +19,8 @@ export const memberFilterDef: FilterDefinition = {
 
 export const memberTableViewDef: TableViewDefinition = {
     actBtnArr: [ActBtn.ADD,ActBtn.EDIT,ActBtn.REMOVE,ActBtn.EXPORT],
-    tableDef: ViewUtils.castApiDefinitionToTableDefinition(getMemberListApi) as TableDefinition
+    tableDef: ViewUtils.castApiDefinitionToTableDefinition(getMemberListApi) as TableDefinition,
+    fileName: 'MemberTableView',
 }
 
 memberTableViewDef.tableDef.addActBtn(ColActBtn.EDIT, ColActBtn.INFO, ColActBtn.REMOVE);
@@ -68,5 +69,6 @@ export const memberFormDialogDef: FormDialogDefinition = {
 
     }),
     infoApi: getMemberInfoApi,
-    width: "950px"
+    width: "950px",
+    fileName: 'MemberFormDialog',
 }
