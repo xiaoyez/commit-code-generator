@@ -2,7 +2,8 @@ import {
     DomainTypeDefinition,
     IDomainPropertyDefinition,
     IPropertyDefinition,
-    ObjectTypeDefinition, TypeDefinition
+    ObjectTypeDefinition,
+    TypeDefinition
 } from "../../../../dto/definition/TypeDefinition";
 import {JavaType} from "../../../../dto/definition/JavaType";
 import {
@@ -23,6 +24,7 @@ import {FilterFormDefinition} from "./FilterDefinition";
 import {contains} from "../../../../utils/ArrayUtils";
 import {DataFormDefinition, DataFormFieldDefinition, DataFormItemDefinition} from "./FormDialogDefinition";
 import {ApiUtils} from "../../../../api/utils/ApiUtils";
+import {TimePattern} from "../../../../dto/definition/TimePattern";
 
 export class ViewUtils {
 
@@ -59,7 +61,7 @@ export class ViewUtils {
             return {
                 label: propertyDefinition.paramDesc || '',
                 prop: propertyDefinition.paramName,
-                inputControl: undefined!,
+                inputControl: ViewUtils.castPropertyDefinitionToDateInputControl(propertyDefinition)
             }
         }
         return undefined!;
@@ -150,5 +152,15 @@ export class ViewUtils {
             ...fieldDefinition
         } as DataFormItemDefinition;
         return item;
+    }
+
+    private static castPropertyDefinitionToDateInputControl(propertyDefinition: IPropertyDefinition) {
+        const withTime = propertyDefinition.timePattern === TimePattern.DATETIME;
+        return new DateInputControl(false,
+            withTime,
+            propertyDefinition.paramName,
+            propertyDefinition.paramDesc || '',
+            undefined,
+            propertyDefinition.timePattern);
     }
 }

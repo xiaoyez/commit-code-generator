@@ -1,8 +1,44 @@
 import {SqlType} from "../../src/db/definition/SqlType";
 import {TableCreateDefinition} from "../../src/db/definition/TableCreateDefinition";
 import {DataColumnDefinition} from "../../src/db/definition/DataColumnDefinition";
-import {MemberStatusEnumDef} from "./enums";
+import {MemberLabelEnumDef, MemberStatusEnumDef} from "./enums";
 import {DbDefinition} from "../../src/db/definition/DbDefinition";
+
+export const sysDeptTableDef = new TableCreateDefinition({
+    tableName: "sys_dept",
+    comment: "部门表",
+    columns: {
+        deptId: new DataColumnDefinition({
+            name: "dept_id",
+            comment: "部门id",
+            typeName: SqlType.BIGINT,
+            length: 20,
+            isPrimaryKey: true,
+            autoIncrement: true,
+            nullable: false,
+            isEnum: false
+        }),
+    },
+
+});
+
+export const sysUserTableDef = new TableCreateDefinition({
+    tableName: "sys_user",
+    comment: "用户表",
+    columns: {
+        userId: new DataColumnDefinition({
+            name: "user_id",
+            comment: "用户id",
+            typeName: SqlType.BIGINT,
+            length: 20,
+            isPrimaryKey: true,
+            autoIncrement: true,
+            nullable: false,
+            isEnum: false
+        }),
+    },
+
+});
 
 /**
  * 会员表的定义
@@ -96,8 +132,11 @@ export const tbMemberTableDef = new TableCreateDefinition({
             comment: '所属门店',
             typeName: SqlType.INT,
             length: 11,
-            nullable: true,
             isEnum: false,
+            nullable: true,
+            foreignKey: true,
+            referenceTable: sysDeptTableDef,
+            referenceColumn: sysDeptTableDef.columns.deptId
         }),
         userId: new DataColumnDefinition({
             name: 'user_id',
@@ -106,6 +145,9 @@ export const tbMemberTableDef = new TableCreateDefinition({
             length: 11,
             nullable: true,
             isEnum: false,
+            foreignKey: true,
+            referenceTable: sysUserTableDef,
+            referenceColumn: sysUserTableDef.columns.userId
         }),
         password: new DataColumnDefinition({
             name: 'password',
@@ -128,6 +170,7 @@ export const tbMemberTableDef = new TableCreateDefinition({
             length: 11,
             nullable: true,
             isEnum: false,
+
         }),
         point: new DataColumnDefinition({
             name: 'point',
@@ -174,8 +217,21 @@ export const tbMemberTableDef = new TableCreateDefinition({
             length: 200,
             nullable: true,
         }),
+        label: new DataColumnDefinition({
+            name: 'label',
+            comment: '会员标签',
+            typeName: SqlType.INT,
+            length: 1,
+            isEnum:true,
+            enumType:MemberLabelEnumDef,
+            nullable: true
+        }),
     }
 });
+
+tbMemberTableDef.columns.introduceMemberId.foreignKey = true;
+tbMemberTableDef.columns.introduceMemberId.referenceTable = tbMemberTableDef;
+tbMemberTableDef.columns.introduceMemberId.referenceColumn = tbMemberTableDef.columns.id;
 
 export const testDbDef = new DbDefinition({
     dbName: "test",
@@ -183,38 +239,4 @@ export const testDbDef = new DbDefinition({
     views: [],
 })
 
-export const sysDeptTableDef = new TableCreateDefinition({
-    tableName: "sys_dept",
-    comment: "部门表",
-    columns: {
-        deptId: new DataColumnDefinition({
-            name: "dept_id",
-            comment: "部门id",
-            typeName: SqlType.BIGINT,
-            length: 20,
-            isPrimaryKey: true,
-            autoIncrement: true,
-            nullable: false,
-            isEnum: false
-        }),
-    },
 
-});
-
-export const sysUserTableDef = new TableCreateDefinition({
-    tableName: "sys_user",
-    comment: "用户表",
-    columns: {
-        userId: new DataColumnDefinition({
-            name: "user_id",
-            comment: "用户id",
-            typeName: SqlType.BIGINT,
-            length: 20,
-            isPrimaryKey: true,
-            autoIncrement: true,
-            nullable: false,
-            isEnum: false
-        }),
-    },
-
-});

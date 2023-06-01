@@ -8,19 +8,18 @@
 }%><%if (defControl instanceof SelectInputControl){
     const keyFiled = defControl.key || defControl.value
 %><el-select v-model="<%=modelName%>.<%=defControl.vModelName%>" placeholder="<%=defControl.placeholder%>" clearable filterable :disabled="<%=itemDef.disabledInEdit?'formType !== FORM_TYPE.ADD':'formType === FORM_TYPE.INFO'%>">
-<el-option v-for="<%=defControl.iterName%> in <%=defControl.listName%>" :key="<%=defControl.iterName%>.<%=keyFiled%>" :label="<%=defControl.iterName%>.<%=defControl.label%>" :value="<%=defControl.iterName%>.<%=defControl.value%>"/>
-    </el-select><%
+          <el-option v-for="<%=defControl.iterName%> in <%=defControl.listName%>" :key="<%=defControl.iterName%>.<%=keyFiled%>" :label="<%=defControl.iterName%>.<%=defControl.label%>" :value="<%=defControl.iterName%>.<%=defControl.value%>"/>
+        </el-select><%
     }%><%if (defControl instanceof DateInputControl) {
         const modelStr = defControl.isRange ? (modelName + '.') : "" + defControl.model
         const compType = 'date' + (defControl.withTime ? "time" : '')
     %><el-date-picker
-    v-model="<%=modelStr%>"
-    value-format="<%=defControl.format%>"
-    type="<%=compType%>"
-    placeholder="<%=defControl.startPlaceholder%>"
-    :disabled="<%=itemDef.disabledInEdit?'formType !== FORM_TYPE.ADD':'formType === FORM_TYPE.INFO'%>"
-%>
-    /><%
+          v-model="<%=modelStr%>"
+          value-format="<%=defControl.format%>"
+          type="<%=compType%>"
+          placeholder="<%=defControl.startPlaceholder%>"
+          :disabled="<%=itemDef.disabledInEdit?'formType !== FORM_TYPE.ADD':'formType === FORM_TYPE.INFO'%>"
+        /><%
         }%>
       </el-form-item><%
         })%>
@@ -104,7 +103,7 @@ function openAddDialog() {
 
 function openInfoDialog(row: IMemberDTO) {
     reset();
-    title.value = "<%=infoApi.comment.replace('获取','').replace('详情','')%>";
+    title.value = "<%=infoApi.comment.replace('获取','')%>";
     form.value = row;
     open.value = true;
     formType.value = FORM_TYPE.INFO;

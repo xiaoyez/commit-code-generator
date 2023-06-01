@@ -74,6 +74,21 @@ interface IDataColBase {
      * 默认值。
      */
     defaultValue?: string
+
+    /**
+     * 是否为外键
+     */
+    foreignKey?: boolean;
+
+    /**
+     * 外键对应的表
+     */
+    referenceTable?: TableCreateDefinition;
+
+    /**
+     * 外键对应的列
+     */
+    referenceColumn?: string| DataColumnDefinition;
 }
 
 // 整型SqlType
