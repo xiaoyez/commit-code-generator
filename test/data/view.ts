@@ -29,9 +29,9 @@ const TbMemberAddDTOObjectTypeDef = TbMemberAddDTODef.type as ObjectTypeDefiniti
 export const memberFormDialogDef: FormDialogDefinition = {
     addApi: addMemberApi,
     editApi: editMemberApi,
-    formDefinition: ViewUtils.castApiDefinitionToDataFormDefinition(getMemberListApi, {
+    formDefinition: ViewUtils.castApiDefinitionToDataFormDefinition(getMemberInfoApi, {
         realName: {
-            rule: Rule.create(TbMemberAddDTOObjectTypeDef.findProperty('realName')),
+            rule: Rule.create(TbMemberAddDTOObjectTypeDef.findProperty('realName')!),
             disabledInEdit: false
         },
         idCardNum: {

@@ -3,7 +3,7 @@ import {compileEjsTmp} from "../../../ejsTmp/EjsUtils";
 import {ejsTmp} from "../../../ejsTmp/EjsTmp";
 import {TableViewDefinition} from "../definition/page/TableViewDefinition";
 import {FormDialogDefinition} from "../definition/page/FormDialogDefinition";
-import {filterCompViewModel, tableViewCompViewModel} from "../../../utils/VueComponentUtils";
+import {filterCompViewModel, formDialogViewModel, tableViewCompViewModel} from "../../../utils/VueComponentUtils";
 
 export class PageGenerator {
     static generateFilter(filterDefinition: FilterDefinition) {
@@ -15,6 +15,6 @@ export class PageGenerator {
     }
 
     static generateFormDialog(formDialogDefinition: FormDialogDefinition) {
-        return compileEjsTmp(ejsTmp.formDialogTmp, formDialogDefinition);
+        return compileEjsTmp(ejsTmp.formDialogTmp, formDialogViewModel(formDialogDefinition));
     }
 }

@@ -6,6 +6,7 @@ import {
 } from "../../../../dto/definition/TypeDefinition";
 import {JavaType} from "../../../../dto/definition/JavaType";
 import {
+    DateInputControl,
     DictSelectInputControl,
     FormItemDefinition,
     SelectInputControl,
@@ -51,6 +52,14 @@ export class ViewUtils {
                 label: propertyDefinition.paramDesc || '',
                 prop: propertyDefinition.paramName,
                 inputControl: ViewUtils.castPropertyDefinitionToSelectInputControl(propertyDefinition)
+            }
+        }
+        else if (propertyDefinition.paramType.type === JavaType.Date) {
+
+            return {
+                label: propertyDefinition.paramDesc || '',
+                prop: propertyDefinition.paramName,
+                inputControl: undefined!,
             }
         }
         return undefined!;

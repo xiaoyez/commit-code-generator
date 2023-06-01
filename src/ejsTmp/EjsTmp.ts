@@ -8,6 +8,12 @@ import {ActBtn, ColActBtn, TableColType} from "../frontend/view/definition/page/
 import {ModuleUtils, prefix2Module} from "../api/utils/ModuleUtils";
 import {ApiUtils} from "../api/utils/ApiUtils";
 import {tsTypeString} from "../utils/TypeUtils";
+import {
+    DateInputControl,
+    DictSelectInputControl,
+    SelectInputControl,
+    TextInputControl
+} from "../frontend/view/definition/page/FormDefinition";
 
 export interface EjsTmp {
     filePath: string;
@@ -137,6 +143,10 @@ export const ejsTmp = {
             ApiUtils,
             getTypeImportsFrom,
             generateImportLines,
+            SelectInputControl,
+            TextInputControl,
+            DictSelectInputControl,
+            DateInputControl,
         }
     }
 } satisfies Record<string, EjsTmp>;

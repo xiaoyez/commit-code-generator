@@ -12,6 +12,7 @@ import {config} from "../config/Config";
 import {prefix2Module} from "../api/utils/ModuleUtils";
 import {ApiUtils} from "../api/utils/ApiUtils";
 import {TypeDefinition} from "../dto/definition/TypeDefinition";
+import {FormDialogDefinition} from "../frontend/view/definition/page/FormDialogDefinition";
 
 export function filterCompViewModel(filterDefinition: FilterDefinition) {
     const {
@@ -231,5 +232,14 @@ export function tableViewCompViewModel(tableViewDefinition: TableViewDefinition)
         colActBtnList,
         importDataType,
         eventList,
+    };
+}
+
+export function formDialogViewModel(formDialogDefinition: FormDialogDefinition) {
+    let { formDefinition } = formDialogDefinition;
+    let { modelName } = formDefinition;
+    return {
+        modelName: modelName || 'form',
+        ...formDialogDefinition
     };
 }
