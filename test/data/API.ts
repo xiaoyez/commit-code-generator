@@ -5,9 +5,11 @@ import {TableDataInfoTypeDefinition} from "../../src/api/definition/TableDataInf
 import {TbMemberAddDTODef, tbMemberDomainTypeDef, TbMemberEditDTODef, TbMemberSearchDTODef} from "./DTO";
 import {AjaxResultTypeDefinition} from "../../src/api/definition/AjaxResultTypeDefinition";
 import {ParameterDefinition} from "../../src/java/definition/ParameterDefinition";
+import {TypeDefinition} from "../../src/dto/definition/TypeDefinition";
+import {JavaType} from "../../src/dto/definition/JavaType";
 
 export const TbMemberController = new ModuleDefinition({
-    baseUrlPrefix: "/test/member", isFile: true, moduleName: "TbMemberController",comment:"会员管理Controller"
+    baseUrlPrefix: "/test/member", isFile: true, moduleName: "TbMemberController", comment: "会员管理Controller"
 })
 
 export const getMemberListApi = new ApiDefinition({
@@ -19,6 +21,16 @@ export const getMemberListApi = new ApiDefinition({
     result: TableDataInfoTypeDefinition.createTableDataInfo(tbMemberDomainTypeDef),
     url: "/list"
 })
+
+export const getMemberInfoApi = new ApiDefinition({
+    apiName: "getMemberInfo",
+    comment: "获取会员详情",
+    method: RequestMethod.GET,
+    module: TbMemberController,
+    params: new ParameterDefinition('id', TypeDefinition.create(JavaType.Integer), '会员id'),
+    result: AjaxResultTypeDefinition.createAjax(tbMemberDomainTypeDef),
+    url: "/info"
+});
 
 export const addMemberApi = new ApiDefinition({
     apiName: "addMember",
@@ -43,4 +55,5 @@ export const editMemberApi = new ApiDefinition({
 TbMemberController.addApi(getMemberListApi);
 TbMemberController.addApi(addMemberApi);
 TbMemberController.addApi(editMemberApi);
+TbMemberController.addApi(getMemberInfoApi);
 
