@@ -2,7 +2,7 @@
 %>/** <%= api.comment %> */
 <% }
 %>export function <%= api.apiName %>(<% if (api.params) {
-%>params: <%= tsTypeString(api.params) %><%
+%><%= api.params.name %>: <%= tsTypeString(api.params.type) %><%
 } %>) {
     return request<<%=
     api.result ? tsTypeString(api.result) : 'void'
@@ -11,6 +11,6 @@
         method: "<%= api.method %>",<% if (api.params) {%>
         <%=
         api.method === 'get' ? 'params' : 'data'
-        %>: params<% } %>
+        %>: <%= api.params.name %><% } %>
     });
 }
