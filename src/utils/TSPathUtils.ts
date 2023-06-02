@@ -15,10 +15,15 @@ const frontSubPackage = new Map([
     [PackageType.CONTROLLER, config.tsApiDef],
 ]);
 
-export function controllerTsModuleId(modDef: ModuleDefinition) {
-    let packageName = ModuleUtils.buildPackageName(modDef);
+export function controllerTsModuleId(modDef?: ModuleDefinition) {
+    let packageName = modDef && ModuleUtils.buildPackageName(modDef);
     let fullPackageName = getFullPackageName(PackageType.CONTROLLER, packageName);
-    return `${fullPackageName}.${modDef.moduleName.replace('Controller', '')}`;
+    if (modDef) {
+        return `${fullPackageName}.${modDef.moduleName.replace('Controller', '')}`;
+    }
+    else {
+        return fullPackageName;
+    }
 }
 
 /**

@@ -3,6 +3,7 @@ import {ObjectTypeDefinition, TypeDefinition} from "../../dto/definition/TypeDef
 import {lowerFirst} from "lodash";
 import {ParameterDefinition} from "../../java/definition/ParameterDefinition";
 import {getApiCallModuleImportLines} from "../../utils/TSImportUtils";
+import {ApiDefinition} from "../definition/ApiDefinition";
 
 export class ModuleUtils {
 
@@ -110,10 +111,11 @@ export class ModuleUtils {
      * 生成tsApiModule的ViewModel
      * @param modDef
      */
-    static tsApiModuleViewModel(modDef: ModuleDefinition) {
-        let importLines = getApiCallModuleImportLines(modDef);
-        let { apis } = modDef;
-        let urlPrefix = ModuleUtils.buildBaseUrlPrefix(modDef);
+    static tsApiModuleViewModel(modDef: ModuleDefinition|ApiDefinition[]) {
+        let modInfo = Array.isArray(modDef) ? void 0 : modDef;
+        let apis = Array.isArray(modDef) ? modDef : modDef.apis;
+        let importLines = getApiCallModuleImportLines(apis);
+        let urlPrefix = modInfo ? ModuleUtils.buildBaseUrlPrefix(modInfo) : '';
         return { importLines, apis, urlPrefix };
     }
 }

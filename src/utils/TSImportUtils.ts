@@ -1,10 +1,11 @@
 import {ObjectTypeDefinition, TypeDefinition} from "../dto/definition/TypeDefinition";
-import {convertModuleIdToImportPath} from "./TSPathUtils";
+import {controllerTsModuleId, convertModuleIdToImportPath} from "./TSPathUtils";
 import {DataEnum} from "../db/definition/DataEnum";
 import {compileEjsTmp} from "../ejsTmp/EjsUtils";
 import {tsObjDefTypeName} from "./TypeUtils";
 import {ModuleDefinition} from "../api/definition/ModuleDefinition";
 import {getFullPackageName, PackageType} from "./PackageUtils";
+import {ApiDefinition} from "../api/definition/ApiDefinition";
 
 // 导入类型
 enum ImportType {
@@ -130,6 +131,24 @@ export function getTypeImportsFrom(def: TypeDefinition, cur?: ImportLinesInfo) {
     return cur;
 }
 
+export function getApiImportsFrom(apiDef: ApiDefinition, cur?: ImportLinesInfo) {
+    if (!cur) {
+        cur = new Map();
+    }
+
+    let moduleId = controllerTsModuleId(apiDef.module);
+    addNewImport({
+        importPath: convertModuleIdToImportPath(moduleId),
+        importName: apiDef.apiName,
+    }, cur);
+
+    if (apiDef.params) {
+        getTypeImportsFrom(apiDef.params.type as TypeDefinition, cur);
+    }
+
+    return cur;
+}
+
 /**
  * 获取一个类型其定义时所要导入内容的信息
  * @param def 被定义的类型
@@ -209,7 +228,7 @@ export function getInterfaceModuleImportLines(defs: ObjectTypeDefinition[]) {
  * 生成一个Api请求方法模块需要的全部导入内容
  * @param apis
  */
-export function getApiCallModuleImportLines({apis}: ModuleDefinition) {
+export function  getApiCallModuleImportLines(apis: ApiDefinition[]) {
     let imports = apis.reduce((importMap, apiDef) => {
         if (apiDef.params) {
             importMap = getTypeImportsFrom(apiDef.params.type as TypeDefinition, importMap);
