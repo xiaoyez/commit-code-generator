@@ -52,6 +52,18 @@ export const editMemberApi = new ApiDefinition({
     url: ''
 });
 
+export const deleteMemberApi = new ApiDefinition({
+    apiName: "deleteMember",
+    comment: "删除会员",
+    method: RequestMethod.DELETE,
+    module: TbMemberController,
+    params: new ParameterDefinition('id', TypeDefinition.create(JavaType.List, [
+        TypeDefinition.create(JavaType.Integer)
+    ]), '删除的会员id'),
+    result: AjaxResultTypeDefinition.createAjax(),
+    url: ''
+});
+
 TbMemberController.addApi(getMemberListApi);
 TbMemberController.addApi(addMemberApi);
 TbMemberController.addApi(editMemberApi);

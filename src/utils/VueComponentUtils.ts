@@ -1,5 +1,5 @@
 import {FilterDefinition} from "../frontend/view/definition/page/FilterDefinition";
-import {getImportLinesRecord, getTypeImportsFrom} from "./TSImportUtils";
+import {getApiImportsFrom, getImportLinesRecord, getTypeImportsFrom} from "./TSImportUtils";
 import {tsTypeString} from "./TypeUtils";
 import {filterInputViewModel, FilterInputVM, FilterTimeRangeVM} from "./VueControlUtils";
 import {
@@ -13,6 +13,7 @@ import {prefix2Module} from "../api/utils/ModuleUtils";
 import {ApiUtils} from "../api/utils/ApiUtils";
 import {TypeDefinition} from "../dto/definition/TypeDefinition";
 import {FormDialogDefinition} from "../frontend/view/definition/page/FormDialogDefinition";
+import {IndexDefinition} from "../frontend/view/definition/page/IndexDefinition";
 
 export function filterCompViewModel(filterDefinition: FilterDefinition) {
     const {
@@ -235,6 +236,10 @@ export function tableViewCompViewModel(tableViewDefinition: TableViewDefinition)
     };
 }
 
+function formItemViewModule() {
+
+}
+
 export function formDialogViewModel(formDialogDefinition: FormDialogDefinition) {
     let {formDefinition, width} = formDialogDefinition;
     let {modelName} = formDefinition;
@@ -243,4 +248,21 @@ export function formDialogViewModel(formDialogDefinition: FormDialogDefinition) 
         modelName: modelName || 'form',
         width: width || '500px',
     };
+}
+
+export function commonPageViewModel(pageDef: IndexDefinition) {
+    let importData = getApiImportsFrom(pageDef.filter.api);
+    let dataType = ApiUtils.getResultDataType(pageDef.tableView.tableDef.api);
+    if (dataType) {
+        getTypeImportsFrom(dataType, importData);
+    }
+
+    if (pageDef.deleteApi) {
+        getApiImportsFrom(pageDef.deleteApi, importData);
+    }
+
+    return {
+        ...pageDef,
+        importLines: getImportLinesRecord(importData),
+    }
 }

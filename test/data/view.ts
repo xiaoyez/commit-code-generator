@@ -1,5 +1,5 @@
 import {ViewUtils} from "../../src/frontend/view/definition/page/ViewUtils";
-import {addMemberApi, editMemberApi, getMemberInfoApi, getMemberListApi} from "./API";
+import {addMemberApi, deleteMemberApi, editMemberApi, getMemberInfoApi, getMemberListApi} from "./API";
 import {FilterDefinition} from "../../src/frontend/view/definition/page/FilterDefinition";
 import {
     ActBtn,
@@ -10,6 +10,7 @@ import {
 import {FormDialogDefinition, Rule} from "../../src/frontend/view/definition/page/FormDialogDefinition";
 import {TbMemberAddDTODef} from "./DTO";
 import {ObjectTypeDefinition} from "../../src/dto/definition/TypeDefinition";
+import {IndexDefinition} from "../../src/frontend/view/definition/page/IndexDefinition";
 
 export const memberFilterDef: FilterDefinition = {
     fileName: "MemberFilter",
@@ -69,4 +70,12 @@ export const memberFormDialogDef: FormDialogDefinition = {
     infoApi: getMemberInfoApi,
     width: "950px",
     fileName: 'MemberFormDialog',
+}
+
+export const memberPage: IndexDefinition = {
+    deleteApi: deleteMemberApi,
+    filter: memberFilterDef,
+    tableView: memberTableViewDef,
+    formDialog: memberFormDialogDef,
+    name: "member"
 }

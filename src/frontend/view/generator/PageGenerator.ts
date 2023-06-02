@@ -3,7 +3,12 @@ import {compileEjsTmp} from "../../../ejsTmp/EjsUtils";
 import {ejsTmp} from "../../../ejsTmp/EjsTmp";
 import {TableViewDefinition} from "../definition/page/TableViewDefinition";
 import {FormDialogDefinition} from "../definition/page/FormDialogDefinition";
-import {filterCompViewModel, formDialogViewModel, tableViewCompViewModel} from "../../../utils/VueComponentUtils";
+import {
+    commonPageViewModel,
+    filterCompViewModel,
+    formDialogViewModel,
+    tableViewCompViewModel
+} from "../../../utils/VueComponentUtils";
 import {IndexDefinition} from "../definition/page/IndexDefinition";
 
 export class PageGenerator {
@@ -20,6 +25,6 @@ export class PageGenerator {
     }
 
     static generateIndexPageContent(indexDefinition: IndexDefinition) {
-
+        return compileEjsTmp(ejsTmp.pageIndexTmp, commonPageViewModel(indexDefinition));
     }
 }

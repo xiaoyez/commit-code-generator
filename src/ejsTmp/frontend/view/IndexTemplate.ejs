@@ -14,13 +14,17 @@
       @on-click-show-info="showInfo"
 <%forEach(tableView.actBtnArr, actBtn => {
 %><%if (actBtn === ActBtn.ADD){
-    %>      @on-click-add="handleAdd"<%
+    %>      @on-click-add="handleAdd"
+    <%
     }%><%if (actBtn === ActBtn.EDIT){
-    %>      @on-click-update="handleUpdate"<%
+    %>  @on-click-update="handleUpdate"
+    <%
     }%><%if (actBtn === ActBtn.REMOVE){
-    %>      @on-click-delete="handleDelete"<%
+    %>  @on-click-delete="handleDelete"
+    <%
     }%><%if (actBtn === ActBtn.EXPORT){
-    %>      @on-click-export="handleExport"<%
+    %>  @on-click-export="handleExport"
+    <%
     }%><%
 })%>
     />
@@ -30,12 +34,11 @@
   </div>
 </template>
 
-    <script setup lang="ts">
+<script setup lang="ts">
 import {ref} from "vue";
 import {useApi} from "@/utils/request";
 import {useGlobalProperties} from "@/utils/component";
-import type {IMemberDTO, IReqMemberList} from "@/views/ypx/member/memberAPI";
-import {listMember, delMember} from "@/views/ypx/member/memberAPI";
+<%= compileEjsTmp(ejsTmp.tsImportLinesTmp, importLines) %>
 import {COMMON_KEYS} from "@/constants/common";
 import <%=filter.fileName%> from "./<%=filter.fileName%>.vue";
 import <%=tableView.fileName%> from "./<%=tableView.fileName%>.vue";

@@ -1,4 +1,4 @@
-import {forEach} from "lodash";
+import {forEach, kebabCase, upperFirst} from "lodash";
 import {JavaGeneratorUtils} from "../java/generator/utils/JavaGeneratorUtils";
 import {JoinType} from "../db/definition/ViewCreateDefinition";
 import {compileEjsTmp} from "./EjsUtils";
@@ -148,6 +148,16 @@ export const ejsTmp = {
             DictSelectInputControl,
             DateInputControl,
         }
+    },
+    pageIndexTmp: {
+        filePath: './src/ejsTmp/frontend/view/indexTemplate.ejs',
+        imports: {
+            forEach,
+            kebabCase,
+            ActBtn,
+            upperFirst,
+        },
+        needOtherTmp: true,
     }
 } satisfies Record<string, EjsTmp>;
 
