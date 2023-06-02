@@ -9,6 +9,7 @@ export interface TableViewDefinition {
     actBtnArr: ActBtn[],
     tableDef:  TableDefinition,
     fileName: string,
+    packageName?: string,
 }
 
 export enum ColActBtn {

@@ -8,6 +8,7 @@ export interface FilterDefinition {
 
     api: ApiDefinition;
 
+    packageName?: string;
 }
 
 export interface FilterFormDefinition extends FormDefinition {

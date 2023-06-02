@@ -8,6 +8,7 @@ export enum PackageType {
     CONSTANT,
     CONTROLLER,
     SERVICE,
+    COMPONENT,
 }
 
 // 不同类型生成内容的子包名
@@ -18,6 +19,7 @@ export const SubPackageOfType = new Map([
     [PackageType.CONSTANT, config.constantPackage],
     [PackageType.CONTROLLER, config.controllerPackage],
     [PackageType.SERVICE, config.servicePackage],
+    [PackageType.COMPONENT, `${config.compPackage}.${config.projectName}`],
 ]);
 
 // 将不同内容类型的包id转换为完整包名

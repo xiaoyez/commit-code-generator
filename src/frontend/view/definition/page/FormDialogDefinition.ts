@@ -24,7 +24,7 @@ export interface FormDialogDefinition {
     width: string;
     formDefinition: DataFormDefinition;
     fileName: string;
-
+    packageName?: string;
 }
 
 /*

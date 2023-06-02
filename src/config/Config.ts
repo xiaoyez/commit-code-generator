@@ -23,5 +23,6 @@ export const config = {
     tsDataDef: 'dataType',
     // 前端api调用方法所在目录
     tsApiDef: 'api',
-
+    // Vue组件所在目录
+    compPackage: 'views',
 }
