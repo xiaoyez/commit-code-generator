@@ -1,7 +1,7 @@
 <template>
-  <el-dialog :title="title" v-model="open" width="907px" append-to-body>
-    <el-form ref="formRef" :model="<%=modelName%>" :rules="rules" label-width="100px" :inline="true"><%
-        forEach(formDefinition.items,itemDef=>{%>
+  <el-dialog :title="title" v-model="open" width="<%= width %>>" append-to-body>
+    <el-form ref="formRef" :model="<%= modelName %>" :rules="rules" label-width="100px" :inline="true"><%
+    forEach(formDefinition.items,itemDef=>{%>
       <el-form-item label="<%=itemDef.label%>" prop="<%=itemDef.prop%>"><%const defControl = itemDef.inputControl%>
         <%if(defControl instanceof TextInputControl){
         %><el-input v-model="<%=modelName%>.<%=defControl.vModelName%>" placeholder="<%=defControl.placeholder%>" :disabled="<%=itemDef.disabledInEdit?'formType !== FORM_TYPE.ADD':'formType === FORM_TYPE.INFO'%>"/><%

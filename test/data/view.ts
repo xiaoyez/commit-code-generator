@@ -7,8 +7,8 @@ import {
     TableDefinition,
     TableViewDefinition
 } from "../../src/frontend/view/definition/page/TableViewDefinition";
-import {DisplayType, FormDialogDefinition, Rule} from "../../src/frontend/view/definition/page/FormDialogDefinition";
-import {TbMemberAddDTODef, TbMemberEditDTODef} from "./DTO";
+import {FormDialogDefinition, Rule} from "../../src/frontend/view/definition/page/FormDialogDefinition";
+import {TbMemberAddDTODef} from "./DTO";
 import {ObjectTypeDefinition} from "../../src/dto/definition/TypeDefinition";
 
 export const memberFilterDef: FilterDefinition = {
@@ -53,11 +53,9 @@ export const memberFormDialogDef: FormDialogDefinition = {
             disabledInEdit: false,
         },
         deptId: {
-            displayType: DisplayType.ADD,
             disabledInEdit: false,
         },
         userId: {
-            displayType: DisplayType.ADD,
             disabledInEdit: false,
         },
         introduceMemberId: {

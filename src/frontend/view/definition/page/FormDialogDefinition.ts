@@ -2,7 +2,6 @@ import {ApiDefinition} from "../../../../api/definition/ApiDefinition";
 import {IPropertyDefinition} from "../../../../dto/definition/TypeDefinition";
 import {JavaType} from "../../../../dto/definition/JavaType";
 import {FormDefinition, FormItemDefinition} from "./FormDefinition";
-import {create} from "lodash";
 
 /**
  * Api
@@ -38,7 +37,6 @@ export interface FormDialogDefinition {
  * 弹窗表单项定义
  */
 export interface DataFormItemDefinition extends FormItemDefinition {
-    displayType: DisplayType;
     disabledInEdit?: boolean;
     rule: Rule;
 }
@@ -51,15 +49,9 @@ export interface DataFormDefinition extends FormDefinition {
 }
 
 export interface DataFormFieldDefinition {
-    displayType?: DisplayType;
     rule?: Rule;
     disabledInEdit?: boolean;
 }
-
-export enum DisplayType {
-    ADD,EDIT,INFO
-}
-
 
 export class Rule {
     required: boolean;

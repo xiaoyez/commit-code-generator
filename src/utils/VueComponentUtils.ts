@@ -236,10 +236,11 @@ export function tableViewCompViewModel(tableViewDefinition: TableViewDefinition)
 }
 
 export function formDialogViewModel(formDialogDefinition: FormDialogDefinition) {
-    let { formDefinition } = formDialogDefinition;
-    let { modelName } = formDefinition;
+    let {formDefinition, width} = formDialogDefinition;
+    let {modelName} = formDefinition;
     return {
+        ...formDialogDefinition,
         modelName: modelName || 'form',
-        ...formDialogDefinition
+        width: width || '500px',
     };
 }
