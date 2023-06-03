@@ -1,1 +1,5 @@
-<el-input v-model="<%= modelPath %>" placeholder="<%= placeholder %>"/>
+<el-input v-model="<%= info.modelPath
+%>" placeholder="<%= info.placeholder
+%>"<% if (info.displayJudge) {
+%> :display="<%= info.displayJudge
+%>"<% } %>/>

@@ -17,5 +17,8 @@ if (info.isRange) {
 }
 else if (info.placeholder) { %>
   placeholder="<%= info.placeholder %>"<%
+}
+if (info.displayJudge) { %>
+  :display="<%= info.displayJudge %>"<%
 } %>
 />

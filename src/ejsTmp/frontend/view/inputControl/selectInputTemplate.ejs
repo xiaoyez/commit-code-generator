@@ -1,10 +1,13 @@
 <el-select v-model="<%=
-  modelPath %>" placeholder="<%= placeholder
-%>" clearable filterable>
+info.modelPath %>" placeholder="<%= info.placeholder
+%>" clearable filterable<%
+if (info.displayJudge) {
+%> :display="<%= info.displayJudge %>"<%
+} %>>
   <el-option v-for="<%=
-    iterName %> in <%= listName
-    %>" :key="<%= iterName %>.<%= keyFiled
-    %>" :label="<%= iterName %>.<%= label
-    %>" :value="<%= iterName %>.<%= value
+    info.iterName %> in <%= info.listName
+    %>" :key="<%= info.iterName %>.<%= info.keyFiled
+    %>" :label="<%= info.iterName %>.<%= info.label
+    %>" :value="<%= info.iterName %>.<%= info.value
   %>"/>
 </el-select>

@@ -50,7 +50,7 @@ export class SelectInputControl extends InputControl {
 
 export class DictSelectInputControl extends SelectInputControl {
     constructor(vModelName: string, placeholder: string, dictName: string, iterName: string,) {
-        super(vModelName,placeholder,`getDict('${dictName}')`,iterName,'value','label','value');
+        super(vModelName,placeholder,`getDict('${dictName}').value`,iterName,'value','label','value');
     }
 }
 

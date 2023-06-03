@@ -9,6 +9,7 @@ import {
 interface FilterControlVM {
     modelPath: string;
     tmpName: keyof typeof ejsTmp;
+    displayJudge?: string;
 }
 
 export interface FilterTextVM extends FilterControlVM {
