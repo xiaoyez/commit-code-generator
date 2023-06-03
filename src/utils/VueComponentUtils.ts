@@ -302,6 +302,15 @@ export function formDialogViewModel(formDialogDefinition: FormDialogDefinition) 
     };
 }
 
+const PageTableCallback = {
+    updateList: 'getList',
+    onClickAdd: 'handleAdd',
+    onClickUpdate: 'handleUpdate',
+    onClickShowInfo: 'showInfo',
+    onClickDelete: 'handleDelete',
+    onClickExport: 'handleExport',
+} as Record<string, string>;
+
 export function commonPageViewModel(pageDef: IndexDefinition) {
     let importData = getApiImportsFrom(pageDef.filter.api);
     let dataType = ApiUtils.getResultDataType(pageDef.tableView.tableDef.api);
@@ -313,8 +322,12 @@ export function commonPageViewModel(pageDef: IndexDefinition) {
         getApiImportsFrom(pageDef.deleteApi, importData);
     }
 
+    const { events: tableEmits } = tableViewEvents(pageDef.tableView);
+
     return {
         ...pageDef,
         importLines: getImportLinesRecord(importData),
+        tableEmits,
+        emitCallbacks: PageTableCallback,
     }
 }
