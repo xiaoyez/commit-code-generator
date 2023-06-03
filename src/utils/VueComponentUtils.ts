@@ -218,7 +218,7 @@ function tableViewEvents(tableViewDefinition: TableViewDefinition) {
         .map(actBtn => tableColActBtnConf[actBtn]);
     const toEntry = (isCol: boolean) =>
         ({emit}: {emit: string}) =>
-            [emit, true] as [string, boolean];
+            [emit, isCol] as [string, boolean];
 
     const events = new Map([
         ['updateList', false],
