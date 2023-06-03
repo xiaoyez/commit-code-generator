@@ -290,7 +290,9 @@ export function formDialogViewModel(formDialogDefinition: FormDialogDefinition) 
     }
 
     return {
-        ...formDialogDefinition,
+        addApi,
+        infoApi,
+        editApi,
         modelName,
         width: width || '500px',
         items,
