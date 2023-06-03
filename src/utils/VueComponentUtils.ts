@@ -205,28 +205,47 @@ function tableColViewModel(col: TableColDefinition) {
     };
 }
 
-export function tableViewCompViewModel(tableViewDefinition: TableViewDefinition) {
+/**
+ * TableView组件对外事件相关信息, 返回值中events键为事件名，值为是否是表格内操作触发
+ * @param tableViewDefinition
+ */
+function tableViewEvents(tableViewDefinition: TableViewDefinition) {
     const {tableDef, actBtnArr} = tableViewDefinition;
-    const {api, dataName, cols, colActBtnArr} = tableDef;
-    const dataTypeName = ApiUtils.getResultDataTypeName(api)
+    const {colActBtnArr} = tableDef;
     const actBtnList = (actBtnArr || [])
         .map(actBtn => tableActBtnConf[actBtn]);
+    const colActBtnList = (colActBtnArr || [])
+        .map(actBtn => tableColActBtnConf[actBtn]);
+    const toEntry = (isCol: boolean) =>
+        ({emit}: {emit: string}) =>
+            [emit, true] as [string, boolean];
+
+    const events = new Map([
+        ['updateList', false],
+        ...actBtnList.map(toEntry(false)),
+        ...colActBtnList.map(toEntry(true)),
+    ]);
+
+    return {
+        actBtnList,
+        colActBtnList,
+        events,
+    }
+}
+
+export function tableViewCompViewModel(tableViewDefinition: TableViewDefinition) {
+    const {tableDef} = tableViewDefinition;
+    const {api, dataName, cols} = tableDef;
+    const dataTypeName = ApiUtils.getResultDataTypeName(api)
     const modulePermi = prefix2Module(api.module?.baseUrlPrefix);
     const permiPrefix = `${config.projectName}:${modulePermi}`;
     const tableColumns = cols.map(col => tableColViewModel(col));
-    const colActBtnList = (colActBtnArr || [])
-        .map(actBtn => tableColActBtnConf[actBtn]);
     const importDataType = ApiUtils.getResultDataTypeImportRecord(api);
-    const usingCurRow = new Set(colActBtnList.map(({emit}) => emit));
-    const events = new Set([
-        ...actBtnList.map(({emit}) => emit),
-        ...usingCurRow,
-    ]);
-    const eventList = [...events]
-        .map(emit => actionHandlers[emit](emit, dataTypeName))
-        .map(info => ({
-            ...info, curRow: usingCurRow.has(info.event),
-        }));
+    const {actBtnList, colActBtnList, events} = tableViewEvents(tableViewDefinition);
+
+    const eventList = [...events].map(([emit, curRow]) => ({
+        ...actionHandlers[emit](emit, dataTypeName), curRow,
+    }));
 
     return {
         tableDef,
