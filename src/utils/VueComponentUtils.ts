@@ -12,8 +12,16 @@ import {config} from "../config/Config";
 import {prefix2Module} from "../api/utils/ModuleUtils";
 import {ApiUtils} from "../api/utils/ApiUtils";
 import {TypeDefinition} from "../dto/definition/TypeDefinition";
-import {FormDialogDefinition} from "../frontend/view/definition/page/FormDialogDefinition";
+import {DataFormItemDefinition, FormDialogDefinition} from "../frontend/view/definition/page/FormDialogDefinition";
 import {IndexDefinition} from "../frontend/view/definition/page/IndexDefinition";
+import {FormItemDefinition} from "../frontend/view/definition/page/FormDefinition";
+
+function filterCompVM(def: FormItemDefinition, modelName: string) {
+    let {label, prop, inputControl} = def;
+    return {
+        label, prop, info: filterInputViewModel(modelName, inputControl)
+    }
+}
 
 export function filterCompViewModel(filterDefinition: FilterDefinition) {
     const {
@@ -26,9 +34,7 @@ export function filterCompViewModel(filterDefinition: FilterDefinition) {
     const vShowName = filterFormDef.vShowName || 'showSearch';
 
     let items = filterFormDef.items
-        .map(({label, prop, inputControl}) => ({
-            label, prop, info: filterInputViewModel(modelName, inputControl)
-        }));
+        .map(item => filterCompVM(item, modelName));
 
     function isRange(info: FilterInputVM): info is FilterTimeRangeVM {
         return info.tmpName === 'filterDateControlTmp' && info.isRange;
@@ -236,17 +242,42 @@ export function tableViewCompViewModel(tableViewDefinition: TableViewDefinition)
     };
 }
 
-function formItemViewModule() {
+function formItemViewModule(def: DataFormItemDefinition, modelName: string) {
+    let res = filterCompVM(def, modelName);
+    res.info.displayJudge = def.disabledInEdit
+        ? 'formType !== FORM_TYPE.ADD'
+        : 'formType === FORM_TYPE.INFO';
 
+    return res;
 }
 
 export function formDialogViewModel(formDialogDefinition: FormDialogDefinition) {
-    let {formDefinition, width} = formDialogDefinition;
-    let {modelName} = formDefinition;
+    const {formDefinition, width, infoApi, addApi, editApi} = formDialogDefinition;
+
+    const modelName = formDefinition.modelName || 'form';
+    const items = formDefinition.items.map(item => formItemViewModule(item, modelName));
+    const rules = formDefinition.items
+        .filter(it => it.rule)
+        .map(({prop, rule}) => ({prop, rule}))
+
+    const resultTypeName = ApiUtils.getResultDataTypeName(infoApi);
+
+    const imports = getApiImportsFrom(infoApi);
+    getApiImportsFrom(addApi, imports);
+    getApiImportsFrom(editApi, imports);
+    let resultType = ApiUtils.getResultDataType(infoApi);
+    if (resultType) {
+        getTypeImportsFrom(resultType, imports);
+    }
+
     return {
         ...formDialogDefinition,
-        modelName: modelName || 'form',
+        modelName,
         width: width || '500px',
+        items,
+        rules,
+        resultTypeName,
+        importLines: getImportLinesRecord(imports),
     };
 }
 

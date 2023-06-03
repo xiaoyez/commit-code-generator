@@ -3,17 +3,8 @@ import {JavaGeneratorUtils} from "../java/generator/utils/JavaGeneratorUtils";
 import {JoinType} from "../db/definition/ViewCreateDefinition";
 import {compileEjsTmp} from "./EjsUtils";
 import {fieldTypeString} from "../utils/TypeUtils";
-import {generateImportLines, getTypeImportsFrom} from "../utils/TSImportUtils";
-import {ActBtn, ColActBtn, TableColType} from "../frontend/view/definition/page/TableViewDefinition";
-import {ModuleUtils, prefix2Module} from "../api/utils/ModuleUtils";
-import {ApiUtils} from "../api/utils/ApiUtils";
+import {ActBtn, TableColType} from "../frontend/view/definition/page/TableViewDefinition";
 import {tsTypeString} from "../utils/TypeUtils";
-import {
-    DateInputControl,
-    DictSelectInputControl,
-    SelectInputControl,
-    TextInputControl
-} from "../frontend/view/definition/page/FormDefinition";
 
 export interface EjsTmp {
     filePath: string;
@@ -141,15 +132,8 @@ export const ejsTmp = {
         filePath: './src/ejsTmp/frontend/view/FormDialogTemplate.ejs',
         imports: {
             forEach,
-            ModuleUtils,
-            ApiUtils,
-            getTypeImportsFrom,
-            generateImportLines,
-            SelectInputControl,
-            TextInputControl,
-            DictSelectInputControl,
-            DateInputControl,
-        }
+        },
+        needOtherTmp: true,
     },
     pageIndexTmp: {
         filePath: './src/ejsTmp/frontend/view/indexTemplate.ejs',
