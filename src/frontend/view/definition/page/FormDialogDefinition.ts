@@ -56,36 +56,38 @@ export interface DataFormFieldDefinition {
 
 export class Rule {
     required: boolean;
-    message: string;
+    message?: string;
     trigger: string;
     pattern?: string;
+    patternMessage?: string;
 
-    constructor(message: string, required: boolean = true, pattern?: string, trigger: string = 'blur') {
+    constructor(message?: string, required: boolean = true, pattern?: string, patternMsg?: string, trigger: string = 'blur') {
         this.required = required;
         this.message = message;
         this.trigger = trigger;
         this.pattern = pattern;
+        this.patternMessage = patternMsg;
     }
 
-    static create(property: IPropertyDefinition, pattern?:string)
-    {
-        let message = '';
-        if (property.paramType.type === JavaType.String) {
+    static create(property: IPropertyDefinition, pattern?: string, patternMsg?: string) {
+        let message;
+        if (property.paramType.type === JavaType.Integer) {
+            message = '请选择' + property.paramDesc;
+        } else {
             message = property.paramDesc + '不能为空';
         }
-        if (property.paramType.type === JavaType.Integer) {
-            message = '请选择' + property.paramDesc ;
-        }
-        return new Rule(message, true, pattern);
+        return new Rule(message, true, pattern, patternMsg);
     }
 
-    static createNotRequired(property: IPropertyDefinition, pattern?:string)
-    {
-        const rule = Rule.create(property,pattern);
-        rule.required = false;
-        return rule;
+    static createNotRequired(pattern: string, patternMsg: string) {
+        return new Rule(void 0, false, pattern, patternMsg);
     }
 
-    static idCardRule = new Rule('请输入真实身份证号',true, 'RegexLib.idCard');
-    static phoneNumberRule = new Rule('请输入真实手机号',true, 'RegexLib.phoneNumber');
+    static get idCardRule() {
+        return new Rule('身份证号不能为空', true, '`RegexLib`.idCard', '请输入真实身份证号');
+    }
+
+    static get phoneNumberRule() {
+        return new Rule('手机号不能为空', true, 'RegexLib.phoneNumber', '请输入真实手机号');
+    }
 }

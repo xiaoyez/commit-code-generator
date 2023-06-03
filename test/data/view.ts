@@ -37,7 +37,7 @@ export const memberFormDialogDef: FormDialogDefinition = {
             disabledInEdit: false
         },
         idCardNum: {
-            rule: Rule.idCardRule,
+            rule: Object.assign(Rule.idCardRule, {required: false}),
             disabledInEdit: false
         },
         gender: {
