@@ -149,8 +149,14 @@ export class ViewUtils {
         let item = ViewUtils.castPropertyDefinitionToFormItemDefinition(prop) as DataFormItemDefinition;
         item = {
             ...item,
-            ...fieldDefinition
+            rule: fieldDefinition.rule,
+            disabledInEdit: fieldDefinition.disabledInEdit,
         } as DataFormItemDefinition;
+        if (item.inputControl instanceof SelectInputControl) {
+            if (!item.inputControl.label && fieldDefinition.labelKey) {
+                item.inputControl.label = fieldDefinition.labelKey;
+            }
+        }
         return item;
     }
 

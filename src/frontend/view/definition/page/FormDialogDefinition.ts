@@ -51,6 +51,7 @@ export interface DataFormDefinition extends FormDefinition {
 export interface DataFormFieldDefinition {
     rule?: Rule;
     disabledInEdit?: boolean;
+    labelKey?: string;
 }
 
 export class Rule {

@@ -55,12 +55,15 @@ export const memberFormDialogDef: FormDialogDefinition = {
         },
         deptId: {
             disabledInEdit: false,
+            labelKey: 'deptName',
         },
         userId: {
             disabledInEdit: false,
+            labelKey: 'nickName',
         },
         introduceMemberId: {
             disabledInEdit: true,
+            labelKey: 'realName'
         },
         label: {
             disabledInEdit: true,
