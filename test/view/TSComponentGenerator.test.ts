@@ -18,4 +18,8 @@ describe("ComponentGenerator", () => {
     it('generate common page', () => {
         console.log(PageGenerator.generateIndexPageContent(memberPage));
     });
+
+    it('generate view files', () => {
+        PageGenerator.generateViewPageFile(memberPage);
+    });
 });
